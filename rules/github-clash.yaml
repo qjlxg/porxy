@@ -1,0 +1,1909 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver: [223.5.5.5, 119.29.29.29]
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  nameserver: [https://853.66a.net:443/dns-query, https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+  fallback: [https://doh.dns.sb/dns-query, https://dns.cloudflare.com/dns-query, https://dns.twnic.tw/dns-query, tls://8.8.4.4:853]
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    geosite:
+      - gfw
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - +.google.com
+      - +.facebook.com
+      - +.youtube.com
+  nameserver-policy:
+    geosite:cn,private,apple:
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    www.baidu.com,+.google.cn: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:自定义广告白名单: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:adblock,自定义广告拦截: rcode://success
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+rule-providers:
+  adblock:
+    type: http
+    behavior: classical
+    path: ./rule_providers/adblock.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/adblock.yml
+    interval: 21600
+    format: yaml
+  proxy:
+    type: http
+    behavior: classical
+    path: ./rule_providers/proxy.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/proxy.yml
+    interval: 86400
+    format: yaml
+  direct:
+    type: http
+    behavior: classical
+    path: ./rule_providers/direct.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/direct.yml
+    interval: 86400
+    format: yaml
+  region:
+    type: http
+    behavior: classical
+    path: ./rule_providers/region.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/region.yml
+    interval: 86400
+    format: yaml
+  direct2:
+    behavior: domain
+    type: http
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    interval: 86400
+    path: ./ruleset/direct2.yaml
+    format: yaml
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+    format: yaml
+  ProxyGFWlist:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyGFWlist.yaml
+    path: ./ruleset/ProxyGFWlist.yaml
+    interval: 86400
+    format: yaml
+  ChinaCompanyIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaCompanyIp.yaml
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+    format: yaml
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaDomain.yaml
+    path: ./ruleset/ChinaDomain.yaml
+    interval: 86400
+    format: yaml
+  ChinaIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaIp.yaml
+    path: ./ruleset/ChinaIp.yaml
+    interval: 86400
+    format: yaml
+  ChinaMedia:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaMedia.yaml
+    path: ./ruleset/ChinaMedia.yaml
+    interval: 86400
+    format: yaml
+  LocalAreaNetwork:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml
+    path: ./ruleset/LocalAreaNetwork.yaml
+    interval: 86400
+    format: yaml
+  自定义广告拦截:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com//HDYOU/ClashADRule/main/self_payload_ad.yml
+    path: ./ruleset/自定义广告拦截.yaml
+    interval: 86400
+    format: yaml
+  自定义广告白名单:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/HDYOU/ClashADRule/main/self_payload_whitelist.yml
+    path: ./ruleset/自定义广告白名单.yaml
+    interval: 86400
+    format: yaml
+  MetaCubeX-cn-domain:
+    behavior: domain
+    interval: 86400
+    path: ./ruleset/cn_domain.yaml
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/cn_domain.yaml
+proxies:
+  - {name: 🇯🇵 739|日本 高速 cdn 1, server: cdncdncdn.aikunapp.com, port: 443, type: vmess, uuid: e9ff847b-e8ff-4690-bd68-d024c63c381e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: r-b97NpIyW0lqPZnAR.sm-node.com, network: ws, ws-opts: {path: "/vmess_ws/smjc/index?ed=8192", headers: {Host: cdn-jp.sm-node.com}}, udp: true}
+  - {name: 🇺🇸 739|美国 高速 cdn 1, server: cdncdncdn.aikunapp.com, port: 443, type: vmess, uuid: e9ff847b-e8ff-4690-bd68-d024c63c381e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: r-MdSVWcPmyD3cK4hp.sm-node.com, network: ws, ws-opts: {path: "/vmess_ws/smjc/index?ed=8192", headers: {Host: cdn-us.sm-node.com}}, udp: true}
+  - {name: "🇯🇵 1110|日本 001 #4", server: tls.96.node-for-bigairport.win, port: 443, type: vmess, uuid: ef5fca10-41bc-4623-87a3-1170a7b51827, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: tls.96.node-for-bigairport.win}}, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 6, server: 37.19.198.160, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 美国_1219005, server: 156.146.38.168, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 917 918 920|0 13|🇺🇸 美国3|@HSSkyBoy, server: 156.146.38.168, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 美国 161, server: sgfqkqmltcy.site, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /rbqqvws, headers: {Host: sgfqkqmltcy.site}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 17, server: 92.118.112.101, port: 9483, type: ss, cipher: chacha20-ietf-poly1305, password: dQLjqK57BaQsL6xaUBgbaV, udp: true}
+  - {name: 🇺🇸 美国_1219071, server: 205.134.180.139, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: lWaGPVFjmnag, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 3, server: 212.102.47.132, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 917 918 920|0 13|🇺🇸 美国|@HSSkyBoy, server: 212.102.47.131, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: "🇺🇸 975|🇺🇸_US_美国_1 #1", server: 79.110.53.169, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇭🇰 88|香港/维多利亚/CDN加速, server: eryteftxwbcv_cdn.hfhfb.homes, port: 2095, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: hkcdn9.fask511.cfd}}, udp: true}
+  - {name: 🇺🇸 _US_美国, server: 79.110.53.169, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇺🇸 975|🇺🇸_US_美国_10, server: 54.244.200.142, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇭🇰 香港/维多利亚/CDN加速, server: eryteftxwbcv_cdn.hfhfb.homes, port: 2095, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: hkcdn9.fask511.cfd}}, udp: true}
+  - {name: 🇺🇸 88|美国/落山鸡/CDN加速, server: afgsdvxc_cdn.hfhfb.homes, port: 2095, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: mgcdn17.fask511.cfd}}, udp: true}
+  - {name: 🇺🇸 美国_1219041094, server: 104.207.155.64, port: 1633, type: ss, cipher: chacha20-ietf-poly1305, password: o_A7inN1yqeWtOTL, udp: true}
+  - {name: 🇭🇰 88|香港 02/维多利亚/CDN加速, server: qxcstxwbcv_cdn.hfhfb.homes, port: 2095, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: hkcdntow5.fask511.cfd}}, udp: true}
+  - {name: 🇺🇸 VM-TCP-NA 美国-142.0.134.24245017, server: 142.0.134.242, port: 45017, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 64, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 23|91 97|美国_1217121 #1", server: 154.83.2.254, port: 443, type: vmess, uuid: 3f638f34-8dba-4186-bc43-2716a7ddd4be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /az05.beyondy.cfd:443/link, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|91 97|美国_1217029, server: 173.245.59.48, port: 443, type: vmess, uuid: 57f93e92-ebb9-4f16-9bdc-8225d2010995, alterId: 64, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /www.83645422.xyz:30000/path/240811062813, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇸🇬 739|新加坡 高速 cdn 1, server: cdncdncdn.aikunapp.com, port: 443, type: vmess, uuid: e9ff847b-e8ff-4690-bd68-d024c63c381e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: r-KLmTkFVXD5PqvtUC.sm-node.com, network: ws, ws-opts: {path: "/vmess_ws/smjc/index?ed=8192", headers: {Host: cdn-sg.sm-node.com}}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3J, server: 166.88.182.71, port: 47545, type: vmess, uuid: 2c111d7b-d7aa-42fe-850b-4783aa4139f0, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2N, server: 166.88.182.71, port: 47545, type: vmess, uuid: ddfe6ffd-cff2-4694-be98-fd110ace250e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2O, server: 166.88.182.71, port: 47545, type: vmess, uuid: 7973f2e7-2c23-4dff-aa55-264465322d87, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3K, server: 166.88.182.71, port: 47545, type: vmess, uuid: eabf5e3f-b0dc-4097-8a75-1fdb5f337ef2, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 10, server: 38.75.136.49, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国_1219041755, server: 38.75.136.49, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: "🇯🇵 [SS] 🇯🇵 SS-TCP-NA 🇯🇵 JP-149.22.87.241443", server: 149.22.87.241, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2H, server: 166.88.182.71, port: 47545, type: vmess, uuid: 013778cd-7879-44d5-a6f2-e33dcfa31eaa, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 27, server: 38.75.136.49, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇯🇵 日本_121904002, server: 149.22.87.240, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 82, server: 38.75.136.49, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 48, server: 38.75.136.49, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国 89 2, server: 38.75.136.49, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3C, server: 166.88.182.71, port: 47545, type: vmess, uuid: 03b3281d-3dbb-4a3e-b02f-b3cf7da67195, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2P, server: 166.88.182.71, port: 47545, type: vmess, uuid: 09ea4cab-9e32-4331-8d03-4b1fd347e717, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 42, server: 38.75.136.49, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1O, server: 166.88.182.71, port: 47545, type: vmess, uuid: 2c67773a-62b6-421d-8548-a313f48f692b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1Q, server: 166.88.182.71, port: 47545, type: vmess, uuid: 9edd3487-24cf-473b-bcd2-d8f66199914d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3E, server: 166.88.182.71, port: 47545, type: vmess, uuid: c4b29f84-6ff9-43ad-9aed-b1dd6f0f0134, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 98, server: 38.75.136.49, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2R, server: 166.88.182.71, port: 47545, type: vmess, uuid: 0843dff2-aadf-4e1e-a7b5-faac91962e54, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 84, server: 38.75.136.49, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1N, server: 166.88.182.71, port: 47545, type: vmess, uuid: 95a72c69-1d69-42bf-b010-63911e7dcf52, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3F, server: 166.88.182.71, port: 47545, type: vmess, uuid: 81acf3e6-bccb-4690-9bb7-213bb94c9e3e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3M, server: 166.88.182.71, port: 47545, type: vmess, uuid: d411f937-483e-4146-959e-563ede6fdbf3, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇰🇷 TG频道@mfbpn-0599-KR, server: 52.79.52.119, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇰🇷 13 17 30 35 36|🇰🇷KR-43.203.122.162-0873 | 19...., server: 43.203.122.162, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇨🇳 88|台湾/丈化/CDN加速, server: ghfxsdfxbcv_cdn.hfhfb.homes, port: 2086, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: twcdn12.fask511.cfd}}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2C, server: 166.88.182.71, port: 47545, type: vmess, uuid: 3cf9fe73-aaf7-4759-96b7-968e6ef53cf9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国_1219041731, server: 38.75.136.49, port: 2376, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 129, server: 38.75.136.49, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇭🇰 Hong Kong  Hong Kong, server: 141.98.234.93, port: 20012, type: ss, cipher: chacha20-ietf-poly1305, password: WfmxKX2FBJRU0Ie9VLIYDL, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3B, server: 166.88.182.71, port: 47545, type: vmess, uuid: bb1a06fd-7c86-4e6e-bc6d-c6f056d02739, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇯🇵 88|日本/冻精/CDN加速, server: aqerds_cdn.hfhfb.homes, port: 2086, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: rbcdn12.fask511.cfd}}, udp: true}
+  - {name: 🇰🇷 88|韩国/纯穿/CDN加速, server: qxcstxwbcv_cdn.hfhfb.homes, port: 2095, type: vmess, uuid: 0663228f-646a-4c7c-b14a-bde613c0c237, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/?ed=512", headers: {Host: krcdn19.fask511.cfd}}, udp: true}
+  - {name: 🇺🇸 美国 131, server: 38.75.136.49, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2V, server: 166.88.182.71, port: 47545, type: vmess, uuid: 85ade755-e1f8-40bc-aecd-5cbf6c0b2168, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2L, server: 166.88.182.71, port: 47545, type: vmess, uuid: 294650cd-f541-4619-a75d-ca580ea08236, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-2C, server: go.daluquan.top, port: 8080, type: vmess, uuid: 12cf1bef-c768-450a-bf0a-14a949773ef4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1T, server: go.daluquan.top, port: 8080, type: vmess, uuid: aa83fb7c-69d3-4e9a-8983-a79842996d73, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1W, server: go.daluquan.top, port: 8080, type: vmess, uuid: 70adc45a-8e50-4d3d-ba43-6a88854621d9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1K, server: go.daluquan.top, port: 8080, type: vmess, uuid: 88c0cdbb-4dc1-4382-b85d-382329396e57, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2T, server: 166.88.182.71, port: 47545, type: vmess, uuid: 0d792650-5b0d-4024-b849-bc916ac4cd40, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217128, server: 104.27.78.27, port: 443, type: vmess, uuid: 441da342-ce90-441e-bff9-d2ceb55e68ca, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /quiet-moon-132a.xetag42714.workers.dev:443/ivideos.sbs/linkws, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-2C, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 12cf1bef-c768-450a-bf0a-14a949773ef4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1U, server: go.daluquan.top, port: 8080, type: vmess, uuid: 4725ef0c-2f9a-4111-90e1-1612da2fdc3d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 23|91 97|美国_1217098, server: 104.25.175.97, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1S, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: e13fe08d-c8e2-4219-b930-e69c0e76962f, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 SG-68.183.235.122-0467 | 14.647MB, server: 68.183.235.122, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 1414|>🇸🇬 SG|Ns|1115|TG@FProxies|, server: 68.183.227.45, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 SS-TCP-NA 🇸🇬 SG-68.183.227.2368080, server: 68.183.227.236, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 SG-128.199.172.224-1259, server: 128.199.172.224, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 13 17 30 35 36|🇸🇬SG-68.183.227.45-0428 | 14.6..., server: 68.183.227.45, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 13 17|🇸🇬SG-68.183.227.236-0431 | 15...., server: 68.183.227.236, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 13 17 30|🇸🇬SG-68.183.235.122-0443 | 15...., server: 68.183.235.122, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 13 17 30|🇸🇬SG-128.199.172.224-0449 | 15..., server: 128.199.172.224, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1G, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: f8566ec2-2be0-43f6-b038-96954ea79b1e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1I, server: go.daluquan.top, port: 8080, type: vmess, uuid: f4581f65-c7f2-446f-ad95-4af0ad549189, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1I, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: f4581f65-c7f2-446f-ad95-4af0ad549189, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 22-1341-SG, server: 146.190.91.101, port: 30443, type: ss, cipher: chacha20-ietf-poly1305, password: 742cbd9e-91da-4897-8b17-dd94486d30c0, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 63, server: 38.75.136.49, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-2E, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: dba03d8c-2400-4666-a168-e046bf9e1d5c, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2K, server: 166.88.182.71, port: 47545, type: vmess, uuid: 76b19b62-4aa8-4863-9198-b7dae0a7d9a1, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1E, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: aac87115-f580-4705-bb21-5c0745f28f16, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1R, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 5a20d381-4bd2-4768-a472-f154dbac4158, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1F, server: go.daluquan.top, port: 8080, type: vmess, uuid: 66e653d8-3008-4fde-bf94-d514193bc4e0, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1M, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: b43fa79c-4cb1-4632-b12c-2d0bfc1e0213, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 美国_1219041725, server: 38.75.136.49, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-2A, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 1cd3c7b3-b3a6-4d06-93ec-5f7d3a00ae03, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 美国 191, server: 38.110.1.111, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1J, server: go.daluquan.top, port: 8080, type: vmess, uuid: eba008b6-9327-4223-beac-f0c40ad67ed5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1F, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 66e653d8-3008-4fde-bf94-d514193bc4e0, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1D, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 3bde5d7b-8ef0-43c9-8da4-34adccd31df9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1Y, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 40ba0150-94f1-4a8a-ae95-5033ff3a7eda, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1W, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 70adc45a-8e50-4d3d-ba43-6a88854621d9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1V, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 7b9805cc-82f2-49d2-9ca2-b3808075ae71, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Y, server: go.daluquan.top, port: 8080, type: vmess, uuid: 40ba0150-94f1-4a8a-ae95-5033ff3a7eda, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1U, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 4725ef0c-2f9a-4111-90e1-1612da2fdc3d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-2A, server: go.daluquan.top, port: 8080, type: vmess, uuid: 1cd3c7b3-b3a6-4d06-93ec-5f7d3a00ae03, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1N, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: bdd173a1-e1bf-4544-937d-98fb71359b85, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-2G, server: go.daluquan.top, port: 8080, type: vmess, uuid: f585718f-e4b7-40c3-93ba-f7d463497a72, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1L, server: go.daluquan.top, port: 8080, type: vmess, uuid: 85ea80a1-16c9-468d-87aa-a492dc091f40, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1H, server: go.daluquan.top, port: 8080, type: vmess, uuid: 408ef2f4-c4de-48a8-8268-856bceecbbd9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Q, server: go.daluquan.top, port: 8080, type: vmess, uuid: 6df7659e-9fc2-47fd-a1f5-41d99dd152dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-2G, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: f585718f-e4b7-40c3-93ba-f7d463497a72, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1O, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 7f86fb38-8bef-4abd-99ce-a6717207062e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1L, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 85ea80a1-16c9-468d-87aa-a492dc091f40, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1H, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 408ef2f4-c4de-48a8-8268-856bceecbbd9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1R, server: go.daluquan.top, port: 8080, type: vmess, uuid: 5a20d381-4bd2-4768-a472-f154dbac4158, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Z, server: go.daluquan.top, port: 8080, type: vmess, uuid: e4b6ee97-5cfa-4f4f-8780-2114249c6398, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1Q, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 6df7659e-9fc2-47fd-a1f5-41d99dd152dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1N, server: go.daluquan.top, port: 8080, type: vmess, uuid: bdd173a1-e1bf-4544-937d-98fb71359b85, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1P, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: a978f623-71e6-4d6b-8ade-a3f12532c293, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-2F, server: go.daluquan.top, port: 8080, type: vmess, uuid: d3551284-cc01-49e1-b6ad-bd6278245e21, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1T, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: aa83fb7c-69d3-4e9a-8983-a79842996d73, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1x, server: go.daluquan.top, port: 8080, type: vmess, uuid: 214c4114-a6c9-4775-aa25-754e48450380, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1K, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: 88c0cdbb-4dc1-4382-b85d-382329396e57, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 美国 177, server: 38.110.1.111, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国_1219041664, server: 38.75.136.49, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01优选-1D, server: go.daluquan.top, port: 8080, type: vmess, uuid: 3bde5d7b-8ef0-43c9-8da4-34adccd31df9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2B, server: 166.88.182.71, port: 47545, type: vmess, uuid: 4d1c6749-c81d-4aed-9b15-a15028e76327, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国 188, server: 38.110.1.111, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217113, server: 185.148.106.213, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇸🇬 582|🇸🇬 新加坡NEW01-1J, server: de-new01.daluquan.top, port: 8080, type: vmess, uuid: eba008b6-9327-4223-beac-f0c40ad67ed5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: de-new01.daluquan.top}}, udp: true}
+  - {name: 1 3 13 17 30 30 37|🇭🇰 HK_283, server: 141.98.234.93, port: 20012, type: ss, cipher: chacha20-ietf-poly1305, password: WfmxKX2FBJRU0Ie9VLIYDL, udp: true}
+  - {name: 🇭🇰 香港_121904184, server: 103.149.183.10, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 17 30|🇭🇰HK_470, server: 103.149.183.10, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: "🇰🇷 [SS] 🇰🇷 SS-TCP-NA 🇰🇷 KR-3.36.126.174443 3", server: 3.36.126.174, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇰🇷 TG频道@mfbpn-0974-KR, server: 3.36.65.244, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 美国 187 2, server: 38.110.1.111, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国 170, server: 38.110.1.111, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国 163 2, server: 38.110.1.111, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国 146, server: 38.110.1.111, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国 83, server: 38.75.136.49, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国 150, server: 38.110.1.111, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217112, server: 104.24.2.48, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 美国 172, server: 38.110.1.111, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 23|91 97|美国_1217019, server: 104.27.101.40, port: 443, type: vmess, uuid: 9b456c2a-f2c1-45e1-87a9-b7628b04bb24, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /beyonddsz.cfd:443/linkws, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: "🇺🇸 23|97|美国_1217120 #1", server: freepiker.ir, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2D, server: 166.88.182.71, port: 47545, type: vmess, uuid: 955fe59e-08de-4743-b9c7-fc709cc094ff, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2M, server: 166.88.182.71, port: 47545, type: vmess, uuid: 7c782b62-7d5b-4752-834f-87f6b98a3139, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1R, server: 166.88.182.71, port: 47545, type: vmess, uuid: 5afd23a9-c97e-405d-948c-cb73714dd8d2, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3L, server: 166.88.182.71, port: 47545, type: vmess, uuid: cf686f39-a8cb-4d55-8405-fba6d5c1e4a5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3D, server: 166.88.182.71, port: 47545, type: vmess, uuid: 84583993-591d-482b-9418-3d6c23f805e6, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1I, server: 166.88.182.71, port: 47545, type: vmess, uuid: 6a328700-c5a5-4e2f-b8ea-91c2d9e956a4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2W, server: 166.88.182.71, port: 47545, type: vmess, uuid: de0970b9-1e83-4064-b428-88a8ebab8cb2, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国 165 2, server: 38.110.1.111, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国 164, server: 38.110.1.111, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: "🇺🇸 926 931|美国_juzi8186_6 #1", server: 20.44.241.123, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 926 931|美国_juzi8186_8 #1", server: 4.145.26.112, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: Pool_🇸🇬 SG_160, server: 4.145.26.112, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1K, server: 166.88.182.71, port: 47545, type: vmess, uuid: cb620f72-c51c-47ee-b2fb-a6e2889a0a1e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1U, server: 166.88.182.71, port: 47545, type: vmess, uuid: bbd17811-292d-4463-82fa-26fbf79d4f47, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇯🇵 @LuxyNet💎❖🇯🇵❖JP❖1529, server: 140.83.63.38, port: 24445, type: vmess, uuid: 94c5ef37-4d82-49f9-c624-f01259374a17, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 17 30|🇯🇵JP_484, server: 172.105.199.111, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇭🇰 a香港线路214, server: 47.238.160.214, port: 53109, type: ssr, cipher: dummy, password: !<str> 38453854555, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: "🇺🇸 23|91 97|美国_1217060 #1", server: 104.25.129.176, port: 443, type: vmess, uuid: 9b456c2a-f2c1-45e1-87a9-b7628b04bb24, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /beyonddsz.cfd:443/linkws, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 975|_BG_加利亚->🇸_US_美国, server: 149.34.244.82, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 美国_juzi8186_4, server: 20.44.241.248, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217107, server: 172.64.192.148, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217111, server: 173.245.58.97, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇸🇬 23|80 91 97|新加坡_1217008, server: 4.145.30.221, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 1414|>🇯🇵 JP|Ns|1115|TG@FProxies| 14, server: 107.148.6.121, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇺🇸 美国_1219041719, server: 38.75.137.71, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 3, server: 38.68.135.208, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 61, server: 38.75.137.71, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 5, server: 38.68.134.202, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 21, server: 38.143.66.87, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国_121904305, server: 38.143.66.244, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 21 2, server: 38.121.43.27, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国_1219041647, server: 38.121.43.51, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国_1219041656, server: 38.121.43.51, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States 2, server: 142.202.48.105, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1218085, server: 38.110.1.252, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 9, server: 67.220.95.102, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 26 28 112 116|美国_US_🇺🇸_1576, server: 67.220.95.102, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国_1219041062, server: 142.202.49.75, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: "🇺🇸 [SS] 🇺🇸 _美国 24", server: 67.220.95.102, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 22, server: 38.110.1.46, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 22 2, server: 38.68.135.208, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 24, server: 38.68.134.202, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国_1219045949, server: 38.110.1.46, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_121904204, server: 38.110.1.51, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国_1219041711, server: 38.68.134.202, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 7, server: 38.68.134.202, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 14, server: 38.68.134.202, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 6, server: 38.68.134.202, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 10, server: 38.110.1.46, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 2, server: 38.91.100.211, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 28, server: 38.68.135.138, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 31 2, server: 38.68.135.138, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 4 2, server: 38.68.135.138, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 34 2, server: 38.68.135.138, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 31, server: 38.68.135.138, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 41, server: 38.68.135.138, port: 445, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 31, server: 38.121.43.27, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 23, server: 38.121.43.91, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 63, server: 38.121.43.91, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国_1219041662, server: 38.121.43.91, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国_1219041807, server: 38.121.43.91, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 29, server: 38.121.43.27, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 51, server: 38.121.43.91, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 64 2, server: 38.121.43.91, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 8, server: 38.143.66.87, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 52, server: 38.121.43.51, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 19, server: 38.121.43.91, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 42, server: 38.121.43.27, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 16, server: 38.121.43.91, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 60, server: 38.121.43.91, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 17 2, server: 38.121.43.91, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 46, server: 38.121.43.51, port: 445, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 20 2, server: 38.121.43.51, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 14, server: 38.121.43.51, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国_1219045865, server: 38.110.1.252, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States 2 2, server: 142.202.48.105, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States, server: 142.202.48.105, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国_1219045857, server: 38.110.1.252, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_1219045947, server: 38.110.1.197, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 34, server: 38.110.1.252, port: 9090, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041802, server: 38.75.137.71, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_121904284, server: 38.75.137.71, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 52, server: 38.114.114.69, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国_1219041781, server: 38.91.100.199, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国_1219041728, server: 38.91.100.199, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 48, server: 38.121.43.204, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 3 2, server: 142.202.49.122, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_121904254, server: 142.202.49.84, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: "🇺🇸 [SS] 🇺🇸 _美国 27", server: 67.220.95.102, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States, server: 38.110.1.105, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国_1219041751, server: 38.68.135.208, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041705, server: 38.68.134.202, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 12, server: 38.110.1.105, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 30 2, server: 167.88.62.24, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 3, server: 38.68.134.202, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 32, server: 38.110.1.103, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 22, server: 38.68.135.208, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 11, server: 38.110.1.35, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国_1219045952, server: 38.110.1.51, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 2, server: 38.68.134.202, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 4, server: 38.68.134.202, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 36, server: 38.68.134.202, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 2, server: 38.68.134.202, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 6, server: 38.110.1.105, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 6 2, server: 38.68.134.202, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 5, server: 38.110.1.105, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 37, server: 167.88.62.24, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 21, server: 38.110.1.46, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 12 2, server: 69.50.95.191, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 9, server: 38.68.135.138, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 29, server: 38.68.135.138, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 5 2, server: 38.68.135.138, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 26, server: 38.68.135.138, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 28, server: 38.121.43.91, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 33 2, server: 38.121.43.91, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国_1219041723, server: 38.121.43.27, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_1219041769, server: 38.121.43.91, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041803, server: 38.121.43.91, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 6 2, server: 38.121.43.91, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 28 2, server: 38.121.43.91, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 15 2, server: 38.121.43.91, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 23, server: 38.143.66.87, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国_1219041627, server: 38.121.43.91, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 10, server: 38.121.43.27, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 12, server: 38.121.43.27, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 20, server: 38.121.43.27, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 23 2, server: 38.121.43.91, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 55, server: 38.121.43.91, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 61, server: 38.121.43.51, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 25, server: 167.88.63.21, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国_1219041612, server: 38.121.43.154, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 18, server: 167.88.63.21, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国United States 11, server: 139.64.165.115, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_1219041783, server: 139.64.165.144, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States 4, server: 142.202.48.105, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 16, server: 38.110.1.12, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国_1219087, server: 38.110.1.252, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 36, server: 38.75.137.71, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 68 2, server: 23.150.152.56, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 53, server: 38.75.137.71, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 44, server: 38.75.137.71, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 134, server: 38.75.137.71, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 4, server: 38.91.100.199, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国_1219041620, server: 38.91.100.199, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 3 2, server: 38.91.100.199, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 12 2, server: 38.91.100.199, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_1219041639, server: 38.91.100.199, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 17 30|🇭🇰HK_469, server: 154.197.26.237, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣, server: 38.68.134.202, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 24, server: 38.110.1.35, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国_1219041784, server: 38.68.134.202, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041131, server: 38.110.1.35, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 2, server: 38.110.1.35, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 49, server: 167.88.62.24, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 21 2, server: 38.110.1.51, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国_1219045948, server: 38.110.1.46, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国_1219041652, server: 139.64.164.15, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 21, server: 38.91.100.199, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 75, server: 169.197.142.216, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_1219045950, server: 38.114.114.143, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 _US_美国 33 2, server: 169.197.142.216, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 92, server: 38.75.136.33, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 6, server: 38.114.114.143, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 920|美国+华盛顿Cogent通信公司, server: 38.114.114.143, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国_121904213, server: 38.143.66.87, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 28, server: 38.143.66.87, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 6, server: 38.121.43.27, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 40 2, server: 38.121.43.27, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 8, server: 38.121.43.91, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 37, server: 38.121.43.27, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国_1219041804, server: 38.121.43.27, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 13, server: 38.143.66.87, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_1219041780, server: 38.121.43.27, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 8 2, server: 38.143.66.87, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 58 2, server: 38.121.43.27, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-167.88.63.218119, server: 167.88.63.21, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 35, server: 38.121.43.27, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041680, server: 38.143.66.87, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_1219041688, server: 38.143.66.87, port: 445, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国_1219041136, server: 69.50.95.115, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041648, server: 38.121.43.91, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 25 2, server: 38.121.43.91, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 17, server: 38.143.66.87, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 15, server: 38.143.66.87, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国_1219041776, server: 38.121.43.27, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States 6, server: 38.143.66.87, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国_1219041704, server: 38.143.66.87, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 33, server: 38.121.43.51, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 51 2, server: 167.88.63.21, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国United States - Atlanta 🌎 SS-TCP-NA 4⃣, server: 167.88.63.21, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国_1219041121, server: 139.64.165.144, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国_1219041774, server: 139.64.165.115, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国United States 3, server: 139.64.165.115, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国United States 2, server: 139.64.165.115, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国United States, server: 139.64.165.115, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 897|🇭🇰 TG:@JUZIBAIPIAO_131, server: 38.86.135.141, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_1219041646, server: 139.64.165.115, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国United States 4 2, server: 139.64.165.115, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国United States 9, server: 139.64.165.115, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 13, server: 38.110.1.122, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 20, server: 38.110.1.12, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219093, server: 38.110.1.252, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_1219045951, server: 38.110.1.197, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国_1219089, server: 38.110.1.252, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1218080, server: 38.110.1.252, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国_1219073, server: 38.110.1.252, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 108, server: 38.75.137.71, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国_1219041724, server: 38.75.137.71, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-38.75.136.1085001, server: 38.75.136.108, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041789, server: 38.75.137.71, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国_1219041729, server: 38.75.137.71, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 2022.06.08_美国_2852, server: 38.114.114.69, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 101, server: 38.75.137.71, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 5, server: 38.75.137.71, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-23.157.40.268009, server: 23.157.40.26, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国_1219041790, server: 38.91.100.199, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国New York  NY  United States 22, server: 38.91.100.199, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041140, server: 67.220.95.102, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 60, server: 69.50.92.72, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国_1219041710, server: 69.50.95.191, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 43, server: 38.121.43.91, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 44, server: 139.64.164.15, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国_1219041709, server: 69.50.95.191, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 63, server: 69.50.95.53, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 38 2, server: 69.50.95.218, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 55, server: 69.50.95.191, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 39, server: 69.50.92.72, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_1219041609, server: 139.64.164.15, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 38, server: 69.50.95.53, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 30, server: 69.50.95.191, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States 15, server: 38.110.1.105, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国_1219041125, server: 38.110.1.35, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 33 2, server: 69.50.95.218, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 20, server: 69.50.95.191, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国_1219041707, server: 69.50.95.191, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-38.91.100.2112375, server: 38.91.100.211, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-169.197.142.2165000, server: 169.197.142.216, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 76, server: 38.75.136.33, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 25, server: 169.197.142.216, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 62, server: 169.197.142.216, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041686, server: 38.143.66.87, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 36, server: 69.50.95.218, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国_1219041696, server: 38.143.66.87, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国_1219041689, server: 38.143.66.87, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国_1219041674, server: 38.143.66.87, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219061, server: 69.50.95.218, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_1219085, server: 38.110.1.252, port: 5499, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 116, server: 23.150.152.56, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国_1219041773, server: 38.75.137.71, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 2022.06.08_美国_2641, server: 38.75.136.21, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 67, server: 23.150.152.16, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 50 2, server: 167.88.61.111, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 86, server: 23.157.40.89, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 65, server: 38.75.137.71, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 51, server: 23.157.40.5, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 60, server: 38.75.137.71, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国_121904283, server: 38.75.137.71, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 48, server: 23.157.40.5, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国_1219041761, server: 38.75.137.71, port: 445, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 4 2, server: 23.157.40.5, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 28, server: 69.50.95.218, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 20 2, server: 69.50.95.218, port: 5499, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国_1219041651, server: 69.50.95.191, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国_1219041767, server: 69.50.95.191, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 20, server: 169.197.142.120, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 43, server: 23.157.40.89, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-23.157.40.875498, server: 23.157.40.87, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国_121904291, server: 167.88.61.159, port: 5499, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 56, server: 38.75.137.71, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 41, server: 23.157.40.89, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041797, server: 38.75.137.71, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 50, server: 23.157.40.5, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 41, server: 69.50.95.191, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 25, server: 69.50.95.53, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 23, server: 69.50.95.191, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 19, server: 38.75.136.33, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 37, server: 23.157.40.87, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-167.88.61.1118000, server: 167.88.61.111, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 102, server: 23.157.40.5, port: 9090, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 35, server: 23.157.40.89, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 5, server: 23.157.40.5, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 29, server: 23.157.40.5, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 105, server: 23.157.40.89, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 61, server: 69.50.95.191, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 3, server: 69.50.95.115, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 15 2, server: 69.50.95.191, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 4, server: 69.50.95.191, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-23.157.40.55001, server: 23.157.40.5, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 3, server: 23.157.40.95, port: 5499, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 8, server: 23.150.152.56, port: 9090, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219080, server: 38.110.1.252, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国_1219041626, server: 69.50.95.191, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国_1219075, server: 38.110.1.252, port: 2376, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 36, server: 23.157.40.89, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 81, server: 23.157.40.5, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 44, server: 23.157.40.5, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 4, server: 23.157.40.5, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国_1219041806, server: 69.50.95.191, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国_1218062, server: 38.110.1.252, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 46, server: 23.157.40.5, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 10, server: 67.220.95.102, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 _BG_保加利亚->🇺🇸_US_美国, server: 149.34.244.82, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 美国Santa Clara  CA  United States 24, server: 23.157.40.120, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 38, server: 38.121.43.51, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 1 16 23 35|ChatGPT 🇸🇬 SG_464, server: 20.44.243.190, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 新加坡_1219002, server: 4.145.30.221, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国_1219041746, server: 38.91.100.199, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 13, server: 67.220.95.102, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国_1218076, server: 38.110.1.252, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-69.50.95.2188080, server: 69.50.95.218, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: "🇺🇸 565|美国-芝加哥-001 #1", server: 166.88.182.71, port: 47545, type: vmess, uuid: 3c7ee26d-a194-48e6-a6ae-2378a6eeea56, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 568|美国-芝加哥-001 #2", server: 166.88.182.71, port: 47545, type: vmess, uuid: 6b469585-4a07-4387-89cc-b28da026a9a7, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 2408|美国-芝加哥-001 #8", server: 166.88.182.71, port: 47545, type: vmess, uuid: 4ead13d1-f307-49b0-a828-a205a80ab570, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 2336|美国-芝加哥-001 #7", server: 166.88.182.71, port: 47545, type: vmess, uuid: 28f6d888-cbc5-4210-8cd2-b40cf566d9a8, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 570|美国-芝加哥-001 #3", server: 166.88.182.71, port: 47545, type: vmess, uuid: 3968cc63-8126-49d6-a7c2-14f119fa8182, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇭🇰 1418 1419|>🇭🇰 HK|Ms|0914|TG@FProxies| #5", server: 181.215.6.181, port: 80, type: vmess, uuid: af107203-1679-4d7e-cd40-2ece097a0613, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: down-cdn.dingtalk.com, network: ws, ws-opts: {path: /80}, udp: true}
+  - {name: 🇭🇰 a香港线路62, server: 47.242.171.62, port: 54458, type: ssr, cipher: dummy, password: !<str> 345784545, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: "🇺🇸 571|美国-芝加哥-001 #4", server: 166.88.182.71, port: 47545, type: vmess, uuid: 7cbe648b-aa46-4f7c-b7e2-1c4ea950f000, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇸🇬 新加坡Singapore - Singapore 🌏 SS-TCP-NA 4⃣, server: 107.148.37.70, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇺🇸 _US_美国 2, server: 51.120.1.158, port: 32091, type: ss, cipher: chacha20-ietf-poly1305, password: xjzsiMfTByKjA9URbdXWNp, udp: true}
+  - {name: 🇭🇰 >香港|Ls|1013|TG@FProxies|, server: 150.107.46.21, port: 8083, type: ssr, cipher: aes-256-cfb, password: iFqnzSscN, protocol: origin, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 a香港线路19, server: 47.238.161.19, port: 43232, type: ssr, cipher: dummy, password: !<str> 3478583545, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇺🇸 _US_美国 3, server: 51.120.1.158, port: 32091, type: ss, cipher: chacha20-ietf-poly1305, password: xjzsiMfTByKjA9URbdXWNp, udp: true}
+  - {name: 🇺🇸 _US_美国 4, server: 35.94.51.2, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 1 23|ChatGPT 🇸🇬 SG_463, server: 4.145.26.112, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 36|🇭🇰HK_59 |10.06Mb, server: 103.36.91.32, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: "🇸🇬 [SS] 🇸🇬 SS-TCP-NA 🇸🇬 SG-103.36.91.238388 4", server: 103.36.91.23, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇸🇬 新加坡 124, server: 20.44.243.190, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇨🇳 923|中国_juzi8186_251, server: 203.23.128.33, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇭🇰 香港98-1, server: 8.210.125.98, port: 55192, type: ssr, cipher: dummy, password: !<str> 78634754, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港242-1, server: 8.218.53.242, port: 47212, type: ssr, cipher: dummy, password: !<str> 8937475, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港88-1, server: 8.210.153.88, port: 53854, type: ssr, cipher: dummy, password: !<str> 263762356, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港98-2, server: 8.210.125.98, port: 46118, type: ssr, cipher: dummy, password: !<str> 83746789537845, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇨🇳 台湾_121904009, server: 223.165.4.173, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇭🇰 香港8-2, server: 8.218.104.8, port: 53603, type: ssr, cipher: dummy, password: !<str> 8973443, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇸🇬 新加坡_121904127, server: 57.155.30.207, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 23|97|美国_1217117 #1", server: 172.67.229.179, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇭🇰 香港201-2, server: 8.218.96.201, port: 47464, type: ssr, cipher: dummy, password: !<str> 8723487344, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港242-2, server: 8.218.53.242, port: 47670, type: ssr, cipher: dummy, password: !<str> 736475, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇺🇸 23|91 97|美国_1217106, server: 104.26.11.48, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23 23 23|97|美国_1217105, server: mbt.ircf.space, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇭🇰 香港_1219001, server: 117.18.64.205, port: 8084, type: ssr, cipher: aes-256-cfb, password: evPZJbNme, protocol: origin, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: cloudfront.net, udp: true}
+  - {name: "🇺🇸 23|91 97|美国_1217119 #1", server: 104.24.2.125, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217104, server: 104.27.79.228, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217110, server: 45.159.218.99, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217088, server: 104.27.65.143, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217109, server: 199.181.197.78, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|91 97|美国_1217115, server: 170.114.45.224, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: "🇺🇸 23|97|美国_1217118 #1", server: 104.25.80.188, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇺🇸 23|97|美国_1217094, server: 159.246.55.120, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: "🇺🇸 23|97|美国_1217116 #1", server: 172.67.71.225, port: 443, type: vmess, uuid: 8241ddc8-b5c5-4778-9635-331700c6ff48, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: restless-cherry-a0b5.yasinsky980.workers.dev, network: ws, ws-opts: {path: /jk.ylka.us.kg:8443/, headers: {Host: restless-cherry-a0b5.yasinsky980.workers.dev}}, udp: true}
+  - {name: 🇭🇰 香港61-2, server: 8.218.20.61, port: 48676, type: ssr, cipher: dummy, password: !<str> 873465345, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: "🇺🇸 926 931|美国_juzi8186_4 #1", server: 20.44.241.248, port: 80, type: vmess, uuid: b831381d-6324-4d53-ad4f-8cda48b30812, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 香港8-1, server: 8.218.104.8, port: 56578, type: ssr, cipher: dummy, password: !<str> 87346554, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 17 30|🇭🇰HK_468, server: 154.197.98.64, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇭🇰 香港201-1, server: 8.218.96.201, port: 54330, type: ssr, cipher: dummy, password: !<str> 234874755, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港61-1, server: 8.218.20.61, port: 47254, type: ssr, cipher: dummy, password: !<str> 683475, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港88-2, server: 8.210.153.88, port: 53386, type: ssr, cipher: dummy, password: !<str> 872364334, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇫🇷 4 5 6 17 23 23 23 30 36 51|法国(yudou66.com 玉豆免费节点)___, server: irvideo.cfd, port: 443, type: vmess, uuid: e537f2f5-2a0c-4f59-92c9-832ca6433bf3, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: irvideo.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: irvideo.cfd}}, udp: true}
+  - {name: 🇺🇸 _US_美国 5, server: 35.88.126.102, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇫🇷 4 5 17 23 23 23 30 36 37 51|法国(yudou66.com 玉豆免费节点)_, server: 163.5.159.231, port: 443, type: vmess, uuid: e537f2f5-2a0c-4f59-92c9-832ca6433bf3, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: irvideo.cfd}}, udp: true}
+  - {name: 🇯🇵 390|🇯🇵JP-57.181.42.233-5235 | 30.605MB, server: 57.181.42.233, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 1 17 35 37|🇭🇰 HK_282, server: 203.23.128.33, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇺🇸 美国 202, server: 3h-kazakhstan1.09vpn.com, port: 80, type: vmess, uuid: 567f4be5-12ab-42e1-b8d9-db6fd1fdd31c, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /vmess/, headers: {Host: 3h-kazakhstan1.09vpn.com}}, udp: true}
+  - {name: 🇭🇰 a香港线路187, server: 47.238.161.187, port: 57970, type: ssr, cipher: dummy, password: !<str> 3947865, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港52-1, server: 8.210.32.52, port: 53180, type: ssr, cipher: dummy, password: !<str> 98374575, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇯🇵 日本Tokyo  13  Japan, server: 54.248.54.190, port: 1234, type: ss, cipher: chacha20-ietf-poly1305, password: !<str> 1234, udp: true}
+  - {name: 30|🇯🇵JP_1155 |28.71Mb, server: 54.248.54.190, port: 1234, type: ss, cipher: chacha20-ietf-poly1305, password: !<str> 1234, udp: true}
+  - {name: 🇭🇰 香港52-2, server: 8.210.32.52, port: 47610, type: ssr, cipher: dummy, password: !<str> 34785678345, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇺🇸 美国 116, server: 38.6.226.201, port: 8080, type: vmess, uuid: cb2ed08a-2595-43ee-9fe7-5bac03806603, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /cb2ed08a-2595-43ee-9fe7-5bac03806603-vm}, udp: true}
+  - {name: 🇭🇰 香港173-1, server: 47.243.72.173, port: 54432, type: ssr, cipher: dummy, password: !<str> 7892346748, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇭🇰 香港173-2, server: 47.243.72.173, port: 53913, type: ssr, cipher: dummy, password: !<str> 823674455, protocol: auth_chain_a, obfs: tls1.2_ticket_auth, protocol-param: "", obfs-param: "", udp: true}
+  - {name: 🇺🇸 美国_1219047, server: 141.195.112.167, port: 20503, type: vmess, uuid: 239dca97-6ab8-47b4-8631-8eb7d31688eb, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国 204, server: 38.107.234.57, port: 80, type: vmess, uuid: 567f4be5-12ab-42e1-b8d9-db6fd1fdd31c, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /vmess/}, udp: true}
+  - {name: 🇸🇬 新加坡_1219006, server: a015.standard-nodes-chickenfarms.com, port: 50000, type: ss, cipher: aes-256-gcm, password: 176c983f-6a7f-4a96-9865-891a6c48ec86, udp: true}
+  - {name: 🇺🇸 美国_由快嘴科技提供：kkzui.com154_2_1, server: 3.clarity168.com, port: 443, type: vmess, uuid: 48f837fa-12d0-498d-b5f6-94f9979736a4, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /tk, headers: {Host: 3.clarity168.com}}, udp: true}
+  - {name: "🇰🇷 [SS] 🇰🇷 13|🇰🇷 韩国特殊|@ripaojiedian 28", server: 43.202.1.19, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇭🇰 242|💰🇺🇸 US 2.58.87.221 ◈ ws12269 ◈ Aiyun (HK) Network / ORG-AIYUN-RIPE ◈ 52f36, server: 2.58.87.221, port: 12269, type: vmess, uuid: db85ff0e-c33f-401d-c415-4c7cce135704, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: wrmelmwxlf.gktevlrqznwqqozy.fabpfs66gizmnojhcvqxwl.kytrcfzqla87gvgvs6c7kjnrubuh.cc}}, udp: true}
+  - {name: 🇺🇸 美国-芝加哥-001, server: 166.88.182.71, port: 47545, type: vmess, uuid: 9845fbe0-78e9-4505-96f2-bbd573a6bee1, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇸🇬 [97]🇸🇬SG-68.183.227.4-53063", server: 68.183.227.4, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: "🇨🇳 [115]🇹🇼TW-45.43.59.150-37453", server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: "🏳️‍🌈 521|[鸡场]-剩余流量：482.71 GB", server: a001.standard-nodes-chickenfarms.com, port: 50000, type: ss, cipher: aes-256-gcm, password: 176c983f-6a7f-4a96-9865-891a6c48ec86, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1F, server: 166.88.182.71, port: 47545, type: vmess, uuid: 2410ad67-1884-4513-9251-49025671d1bb, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1L, server: 166.88.182.71, port: 47545, type: vmess, uuid: 6162ce04-3c8d-475d-ab37-24d7f15f7988, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2x, server: 166.88.182.71, port: 47545, type: vmess, uuid: 69fa9439-395b-405a-a453-ed43f81b64e1, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1Y, server: 166.88.182.71, port: 47545, type: vmess, uuid: 4e508769-9775-408f-bf84-2a666befedaa, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2Z, server: 166.88.182.71, port: 47545, type: vmess, uuid: 2018f303-01c2-4936-b33d-25f9cc03ca03, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-2E, server: 166.88.182.71, port: 47545, type: vmess, uuid: 2fb08fb3-2fc7-4ea0-853d-01becc657427, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1J, server: 166.88.182.71, port: 47545, type: vmess, uuid: 7c12b1ca-102d-46a1-be01-3996f10ad4a1, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1S, server: 166.88.182.71, port: 47545, type: vmess, uuid: 5a10b798-3283-4a15-9413-03bd978cd188, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1E, server: 166.88.182.71, port: 47545, type: vmess, uuid: 3b5d5168-4b29-437f-aa74-500a6b0a0b4d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-1V, server: 166.88.182.71, port: 47545, type: vmess, uuid: 59778c2e-8511-40d3-8d9d-9c1a5bd2de19, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3H, server: 166.88.182.71, port: 47545, type: vmess, uuid: c63cc034-5697-4618-80fe-0fa87be7ba93, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 582|🇺🇸 美国-芝加哥-001-3I, server: 166.88.182.71, port: 47545, type: vmess, uuid: b9ed136f-9452-4241-bf48-d271fbcf0d17, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 975|🇺🇸_US_美国_5, server: 35.94.51.2, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇯🇵 23|180|>🇯🇵 JP|Ns|1013|TG@FProxies..., server: tls.94.node-for-bigairport.win, port: 443, type: vmess, uuid: ef5fca10-41bc-4623-87a3-1170a7b51827, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: tls.94.node-for-bigairport.win}}, udp: true}
+  - {name: 1 17 23|ChatGPT 🇯🇵 JP_311, server: tls.06.node-for-bigairport.win, port: 443, type: vmess, uuid: ef5fca10-41bc-4623-87a3-1170a7b51827, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: tls.06.node-for-bigairport.win, network: ws, ws-opts: {path: /, headers: {Host: tls.06.node-for-bigairport.win}}, udp: true}
+  - {name: 🇯🇵 23|180|>🇯🇵 JP|Ns|1013|TG@FProxies..._, server: tls.95.node-for-bigairport.win, port: 443, type: vmess, uuid: ef5fca10-41bc-4623-87a3-1170a7b51827, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: tls.95.node-for-bigairport.win}}, udp: true}
+  - {name: 🇺🇸 23|59|🇺🇸 www.85la.com 美国 120, server: 38.107.234.57, port: 80, type: vmess, uuid: 567f4be5-12ab-42e1-b8d9-db6fd1fdd31c, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /vmess/}, udp: true}
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - ✅ 手动选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - 🇯🇵 739|日本 高速 cdn 1
+      - 🇺🇸 739|美国 高速 cdn 1
+      - "🇯🇵 1110|日本 001 #4"
+      - 🇺🇸 美国New York  NY  United States 6
+      - 🇺🇸 美国_1219005
+      - 🇺🇸 917 918 920|0 13|🇺🇸 美国3|@HSSkyBoy
+      - 🇺🇸 美国 161
+      - 🇺🇸 美国Atlanta  GA  United States 17
+      - 🇺🇸 美国_1219071
+      - 🇺🇸 美国Seattle  WA  United States 3
+      - 🇺🇸 917 918 920|0 13|🇺🇸 美国|@HSSkyBoy
+      - "🇺🇸 975|🇺🇸_US_美国_1 #1"
+      - 🇭🇰 88|香港/维多利亚/CDN加速
+      - 🇺🇸 _US_美国
+      - 🇺🇸 975|🇺🇸_US_美国_10
+      - 🇭🇰 香港/维多利亚/CDN加速
+      - 🇺🇸 88|美国/落山鸡/CDN加速
+      - 🇺🇸 美国_1219041094
+      - 🇭🇰 88|香港 02/维多利亚/CDN加速
+      - 🇺🇸 VM-TCP-NA 美国-142.0.134.24245017
+      - "🇺🇸 23|91 97|美国_1217121 #1"
+      - 🇺🇸 23|91 97|美国_1217029
+      - 🇸🇬 739|新加坡 高速 cdn 1
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3J
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2N
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2O
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3K
+      - 🇺🇸 美国Los Angeles  CA  United States 10
+      - 🇺🇸 美国_1219041755
+      - 🇯🇵 [SS] 🇯🇵 SS-TCP-NA 🇯🇵 JP-149.22.87.241443
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2H
+      - 🇺🇸 美国Los Angeles  CA  United States 27
+      - 🇯🇵 日本_121904002
+      - 🇺🇸 美国Los Angeles  CA  United States 82
+      - 🇺🇸 美国Los Angeles  CA  United States 48
+      - 🇺🇸 美国 89 2
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3C
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2P
+      - 🇺🇸 美国Los Angeles  CA  United States 42
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1O
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1Q
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3E
+      - 🇺🇸 美国Los Angeles  CA  United States 98
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2R
+      - 🇺🇸 美国Los Angeles  CA  United States 84
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1N
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3F
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3M
+      - 🇰🇷 TG频道@mfbpn-0599-KR
+      - 🇰🇷 13 17 30 35 36|🇰🇷KR-43.203.122.162-0873 | 19....
+      - 🇨🇳 88|台湾/丈化/CDN加速
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2C
+      - 🇺🇸 美国_1219041731
+      - 🇺🇸 美国Los Angeles  CA  United States 129
+      - 🇭🇰 Hong Kong  Hong Kong
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3B
+      - 🇯🇵 88|日本/冻精/CDN加速
+      - 🇰🇷 88|韩国/纯穿/CDN加速
+      - 🇺🇸 美国 131
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2V
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2L
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2C
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1T
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1W
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1K
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2T
+      - 🇺🇸 23|97|美国_1217128
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2C
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1U
+      - 🇺🇸 23|91 97|美国_1217098
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1S
+      - 🇸🇬 SG-68.183.235.122-0467 | 14.647MB
+      - 🇸🇬 1414|>🇸🇬 SG|Ns|1115|TG@FProxies|
+      - 🇸🇬 SS-TCP-NA 🇸🇬 SG-68.183.227.2368080
+      - 🇸🇬 SG-128.199.172.224-1259
+      - 🇸🇬 13 17 30 35 36|🇸🇬SG-68.183.227.45-0428 | 14.6...
+      - 🇸🇬 13 17|🇸🇬SG-68.183.227.236-0431 | 15....
+      - 🇸🇬 13 17 30|🇸🇬SG-68.183.235.122-0443 | 15....
+      - 🇸🇬 13 17 30|🇸🇬SG-128.199.172.224-0449 | 15...
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1G
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1I
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1I
+      - 🇸🇬 22-1341-SG
+      - 🇺🇸 美国Los Angeles  CA  United States 63
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2E
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2K
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1E
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1R
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1F
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1M
+      - 🇺🇸 美国_1219041725
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2A
+      - 🇺🇸 美国 191
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1J
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1F
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1D
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1Y
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1W
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1V
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Y
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1U
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2A
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1N
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2G
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1L
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1H
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Q
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2G
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1O
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1L
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1H
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1R
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Z
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1Q
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1N
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1P
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2F
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1T
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1x
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1K
+      - 🇺🇸 美国 177
+      - 🇺🇸 美国_1219041664
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1D
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2B
+      - 🇺🇸 美国 188
+      - 🇺🇸 23|97|美国_1217113
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1J
+      - 1 3 13 17 30 30 37|🇭🇰 HK_283
+      - 🇭🇰 香港_121904184
+      - 17 30|🇭🇰HK_470
+      - 🇰🇷 [SS] 🇰🇷 SS-TCP-NA 🇰🇷 KR-3.36.126.174443 3
+      - 🇰🇷 TG频道@mfbpn-0974-KR
+      - 🇺🇸 美国 187 2
+      - 🇺🇸 美国 170
+      - 🇺🇸 美国 163 2
+      - 🇺🇸 美国 146
+      - 🇺🇸 美国 83
+      - 🇺🇸 美国 150
+      - 🇺🇸 23|97|美国_1217112
+      - 🇺🇸 美国 172
+      - 🇺🇸 23|91 97|美国_1217019
+      - "🇺🇸 23|97|美国_1217120 #1"
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2D
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2M
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1R
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3L
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3D
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1I
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2W
+      - 🇺🇸 美国 165 2
+      - 🇺🇸 美国 164
+      - "🇺🇸 926 931|美国_juzi8186_6 #1"
+      - "🇺🇸 926 931|美国_juzi8186_8 #1"
+      - Pool_🇸🇬 SG_160
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1K
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1U
+      - 🇯🇵 @LuxyNet💎❖🇯🇵❖JP❖1529
+      - 17 30|🇯🇵JP_484
+      - 🇭🇰 a香港线路214
+      - "🇺🇸 23|91 97|美国_1217060 #1"
+      - 🇺🇸 975|_BG_加利亚->🇸_US_美国
+      - 🇺🇸 美国_juzi8186_4
+      - 🇺🇸 23|97|美国_1217107
+      - 🇺🇸 23|97|美国_1217111
+      - 🇸🇬 23|80 91 97|新加坡_1217008
+      - 🇯🇵 1414|>🇯🇵 JP|Ns|1115|TG@FProxies| 14
+      - 🇺🇸 美国_1219041719
+      - 🇺🇸 美国Dallas  TX  United States 3
+      - 🇺🇸 美国Los Angeles  CA  United States 61
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 5
+      - 🇺🇸 美国Seattle  WA  United States 21
+      - 🇺🇸 美国_121904305
+      - 🇺🇸 美国Atlanta  GA  United States 21 2
+      - 🇺🇸 美国_1219041647
+      - 🇺🇸 美国_1219041656
+      - 🇺🇸 美国Newark  NJ  United States 2
+      - 🇺🇸 美国_1218085
+      - 🇺🇸 美国Ashburn  VA  United States 9
+      - 🇺🇸 26 28 112 116|美国_US_🇺🇸_1576
+      - 🇺🇸 美国_1219041062
+      - 🇺🇸 [SS] 🇺🇸 _美国 24
+      - 🇺🇸 美国Miami  FL  United States 22
+      - 🇺🇸 美国Dallas  TX  United States 22 2
+      - 🇺🇸 美国Dallas  TX  United States 24
+      - 🇺🇸 美国_1219045949
+      - 🇺🇸 美国_121904204
+      - 🇺🇸 美国_1219041711
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 7
+      - 🇺🇸 美国Dallas  TX  United States 14
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 6
+      - 🇺🇸 美国Miami  FL  United States 10
+      - 🇺🇸 美国New York  NY  United States 2
+      - 🇺🇸 美国Dallas  TX  United States 28
+      - 🇺🇸 美国Dallas  TX  United States 31 2
+      - 🇺🇸 美国Dallas  TX  United States 4 2
+      - 🇺🇸 美国Dallas  TX  United States 34 2
+      - 🇺🇸 美国Dallas  TX  United States 31
+      - 🇺🇸 美国Dallas  TX  United States 41
+      - 🇺🇸 美国Atlanta  GA  United States 31
+      - 🇺🇸 美国Atlanta  GA  United States 23
+      - 🇺🇸 美国Atlanta  GA  United States 63
+      - 🇺🇸 美国_1219041662
+      - 🇺🇸 美国_1219041807
+      - 🇺🇸 美国Atlanta  GA  United States 29
+      - 🇺🇸 美国Atlanta  GA  United States 51
+      - 🇺🇸 美国Atlanta  GA  United States 64 2
+      - 🇺🇸 美国Seattle  WA  United States 8
+      - 🇺🇸 美国Atlanta  GA  United States 52
+      - 🇺🇸 美国Atlanta  GA  United States 19
+      - 🇺🇸 美国Atlanta  GA  United States 42
+      - 🇺🇸 美国Atlanta  GA  United States 16
+      - 🇺🇸 美国Atlanta  GA  United States 60
+      - 🇺🇸 美国Atlanta  GA  United States 17 2
+      - 🇺🇸 美国Atlanta  GA  United States 46
+      - 🇺🇸 美国Atlanta  GA  United States 20 2
+      - 🇺🇸 美国Atlanta  GA  United States 14
+      - 🇺🇸 美国_1219045865
+      - 🇺🇸 美国Newark  NJ  United States 2 2
+      - 🇺🇸 美国Newark  NJ  United States
+      - 🇺🇸 美国_1219045857
+      - 🇺🇸 美国_1219045947
+      - 🇺🇸 美国Miami  FL  United States 34
+      - 🇺🇸 美国_1219041802
+      - 🇺🇸 美国_121904284
+      - 🇺🇸 美国Los Angeles  CA  United States 52
+      - 🇺🇸 美国_1219041781
+      - 🇺🇸 美国_1219041728
+      - 🇺🇸 美国Atlanta  GA  United States 48
+      - 🇺🇸 美国Ashburn  VA  United States 3 2
+      - 🇺🇸 美国_121904254
+      - 🇺🇸 [SS] 🇺🇸 _美国 27
+      - 🇺🇸 美国Miami  FL  United States
+      - 🇺🇸 美国_1219041751
+      - 🇺🇸 美国_1219041705
+      - 🇺🇸 美国Miami  FL  United States 12
+      - 🇺🇸 美国Dallas  TX  United States 30 2
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 3
+      - 🇺🇸 美国Miami  FL  United States 32
+      - 🇺🇸 美国Dallas  TX  United States 22
+      - 🇺🇸 美国Miami  FL  United States 11
+      - 🇺🇸 美国_1219045952
+      - 🇺🇸 美国Dallas  TX  United States 2
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 4
+      - 🇺🇸 美国Dallas  TX  United States 36
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 2
+      - 🇺🇸 美国Miami  FL  United States 6
+      - 🇺🇸 美国Dallas  TX  United States 6 2
+      - 🇺🇸 美国Miami  FL  United States 5
+      - 🇺🇸 美国Dallas  TX  United States 37
+      - 🇺🇸 美国Miami  FL  United States 21
+      - 🇺🇸 美国Denver  CO  United States 12 2
+      - 🇺🇸 美国Dallas  TX  United States 9
+      - 🇺🇸 美国Dallas  TX  United States 29
+      - 🇺🇸 美国Dallas  TX  United States 5 2
+      - 🇺🇸 美国Dallas  TX  United States 26
+      - 🇺🇸 美国Atlanta  GA  United States 28
+      - 🇺🇸 美国Atlanta  GA  United States 33 2
+      - 🇺🇸 美国_1219041723
+      - 🇺🇸 美国_1219041769
+      - 🇺🇸 美国_1219041803
+      - 🇺🇸 美国Atlanta  GA  United States 6 2
+      - 🇺🇸 美国Atlanta  GA  United States 28 2
+      - 🇺🇸 美国Atlanta  GA  United States 15 2
+      - 🇺🇸 美国Seattle  WA  United States 23
+      - 🇺🇸 美国_1219041627
+      - 🇺🇸 美国Atlanta  GA  United States 10
+      - 🇺🇸 美国Atlanta  GA  United States 12
+      - 🇺🇸 美国Atlanta  GA  United States 20
+      - 🇺🇸 美国Atlanta  GA  United States 23 2
+      - 🇺🇸 美国Atlanta  GA  United States 55
+      - 🇺🇸 美国Atlanta  GA  United States 61
+      - 🇺🇸 美国Atlanta  GA  United States 25
+      - 🇺🇸 美国_1219041612
+      - 🇺🇸 美国Atlanta  GA  United States 18
+      - 🇺🇸 美国United States 11
+      - 🇺🇸 美国_1219041783
+      - 🇺🇸 美国Newark  NJ  United States 4
+      - 🇺🇸 美国Miami  FL  United States 16
+      - 🇺🇸 美国_1219087
+      - 🇺🇸 美国Los Angeles  CA  United States 36
+      - 🇺🇸 美国Los Angeles  CA  United States 68 2
+      - 🇺🇸 美国Los Angeles  CA  United States 53
+      - 🇺🇸 美国Los Angeles  CA  United States 44
+      - 🇺🇸 美国Los Angeles  CA  United States 134
+      - 🇺🇸 美国New York  NY  United States 4
+      - 🇺🇸 美国_1219041620
+      - 🇺🇸 美国New York  NY  United States 3 2
+      - 🇺🇸 美国New York  NY  United States 12 2
+      - 🇺🇸 美国_1219041639
+      - 17 30|🇭🇰HK_469
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣
+      - 🇺🇸 美国Miami  FL  United States 24
+      - 🇺🇸 美国_1219041784
+      - 🇺🇸 美国_1219041131
+      - 🇺🇸 美国Miami  FL  United States 2
+      - 🇺🇸 美国Dallas  TX  United States 49
+      - 🇺🇸 美国Miami  FL  United States 21 2
+      - 🇺🇸 美国_1219045948
+      - 🇺🇸 美国_1219041652
+      - 🇺🇸 美国New York  NY  United States 21
+      - 🇺🇸 美国Santa Clara  CA  United States 75
+      - 🇺🇸 美国_1219045950
+      - 🇺🇸 _US_美国 33 2
+      - 🇺🇸 美国Los Angeles  CA  United States 92
+      - 🇺🇸 美国Los Angeles  CA  United States 6
+      - 🇺🇸 920|美国+华盛顿Cogent通信公司
+      - 🇺🇸 美国_121904213
+      - 🇺🇸 美国Seattle  WA  United States 28
+      - 🇺🇸 美国Atlanta  GA  United States 6
+      - 🇺🇸 美国Atlanta  GA  United States 40 2
+      - 🇺🇸 美国Atlanta  GA  United States 8
+      - 🇺🇸 美国Atlanta  GA  United States 37
+      - 🇺🇸 美国_1219041804
+      - 🇺🇸 美国Seattle  WA  United States 13
+      - 🇺🇸 美国_1219041780
+      - 🇺🇸 美国Seattle  WA  United States 8 2
+      - 🇺🇸 美国Atlanta  GA  United States 58 2
+      - 🇺🇸 SS-TCP-NA 美国-167.88.63.218119
+      - 🇺🇸 美国Atlanta  GA  United States 35
+      - 🇺🇸 美国_1219041680
+      - 🇺🇸 美国_1219041688
+      - 🇺🇸 美国_1219041136
+      - 🇺🇸 美国_1219041648
+      - 🇺🇸 美国Atlanta  GA  United States 25 2
+      - 🇺🇸 美国Seattle  WA  United States 17
+      - 🇺🇸 美国Seattle  WA  United States 15
+      - 🇺🇸 美国_1219041776
+      - 🇺🇸 美国Seattle  WA  United States 6
+      - 🇺🇸 美国_1219041704
+      - 🇺🇸 美国Atlanta  GA  United States 33
+      - 🇺🇸 美国Atlanta  GA  United States 51 2
+      - 🇺🇸 美国United States - Atlanta 🌎 SS-TCP-NA 4⃣
+      - 🇺🇸 美国_1219041121
+      - 🇺🇸 美国_1219041774
+      - 🇺🇸 美国United States 3
+      - 🇺🇸 美国United States 2
+      - 🇺🇸 美国United States
+      - 897|🇭🇰 TG:@JUZIBAIPIAO_131
+      - 🇺🇸 美国_1219041646
+      - 🇺🇸 美国United States 4 2
+      - 🇺🇸 美国United States 9
+      - 🇺🇸 美国Miami  FL  United States 13
+      - 🇺🇸 美国Miami  FL  United States 20
+      - 🇺🇸 美国_1219093
+      - 🇺🇸 美国_1219045951
+      - 🇺🇸 美国_1219089
+      - 🇺🇸 美国_1218080
+      - 🇺🇸 美国_1219073
+      - 🇺🇸 美国Los Angeles  CA  United States 108
+      - 🇺🇸 美国_1219041724
+      - 🇺🇸 SS-TCP-NA 美国-38.75.136.1085001
+      - 🇺🇸 美国_1219041789
+      - 🇺🇸 美国_1219041729
+      - 🇺🇸 2022.06.08_美国_2852
+      - 🇺🇸 美国Los Angeles  CA  United States 101
+      - 🇺🇸 美国Los Angeles  CA  United States 5
+      - 🇺🇸 SS-TCP-NA 美国-23.157.40.268009
+      - 🇺🇸 美国_1219041790
+      - 🇺🇸 美国New York  NY  United States 22
+      - 🇺🇸 美国_1219041140
+      - 🇺🇸 美国Denver  CO  United States 60
+      - 🇺🇸 美国_1219041710
+      - 🇺🇸 美国Atlanta  GA  United States 43
+      - 🇺🇸 美国Denver  CO  United States 44
+      - 🇺🇸 美国_1219041709
+      - 🇺🇸 美国Denver  CO  United States 63
+      - 🇺🇸 美国Denver  CO  United States 38 2
+      - 🇺🇸 美国Denver  CO  United States 55
+      - 🇺🇸 美国Denver  CO  United States 39
+      - 🇺🇸 美国_1219041609
+      - 🇺🇸 美国Denver  CO  United States 38
+      - 🇺🇸 美国Denver  CO  United States 30
+      - 🇺🇸 美国Miami  FL  United States 15
+      - 🇺🇸 美国_1219041125
+      - 🇺🇸 美国Denver  CO  United States 33 2
+      - 🇺🇸 美国Denver  CO  United States 20
+      - 🇺🇸 美国_1219041707
+      - 🇺🇸 SS-TCP-NA 美国-38.91.100.2112375
+      - 🇺🇸 SS-TCP-NA 美国-169.197.142.2165000
+      - 🇺🇸 美国Los Angeles  CA  United States 76
+      - 🇺🇸 美国Santa Clara  CA  United States 25
+      - 🇺🇸 美国Santa Clara  CA  United States 62
+      - 🇺🇸 美国_1219041686
+      - 🇺🇸 美国Denver  CO  United States 36
+      - 🇺🇸 美国_1219041696
+      - 🇺🇸 美国_1219041689
+      - 🇺🇸 美国_1219041674
+      - 🇺🇸 美国_1219061
+      - 🇺🇸 美国_1219085
+      - 🇺🇸 美国Los Angeles  CA  United States 116
+      - 🇺🇸 美国_1219041773
+      - 🇺🇸 2022.06.08_美国_2641
+      - 🇺🇸 美国Los Angeles  CA  United States 67
+      - 🇺🇸 美国Santa Clara  CA  United States 50 2
+      - 🇺🇸 美国Santa Clara  CA  United States 86
+      - 🇺🇸 美国Los Angeles  CA  United States 65
+      - 🇺🇸 美国Santa Clara  CA  United States 51
+      - 🇺🇸 美国Los Angeles  CA  United States 60
+      - 🇺🇸 美国_121904283
+      - 🇺🇸 美国Santa Clara  CA  United States 48
+      - 🇺🇸 美国_1219041761
+      - 🇺🇸 美国Santa Clara  CA  United States 4 2
+      - 🇺🇸 美国Denver  CO  United States 28
+      - 🇺🇸 美国Denver  CO  United States 20 2
+      - 🇺🇸 美国_1219041651
+      - 🇺🇸 美国_1219041767
+      - 🇺🇸 美国Santa Clara  CA  United States 20
+      - 🇺🇸 美国Santa Clara  CA  United States 43
+      - 🇺🇸 SS-TCP-NA 美国-23.157.40.875498
+      - 🇺🇸 美国_121904291
+      - 🇺🇸 美国Los Angeles  CA  United States 56
+      - 🇺🇸 美国Santa Clara  CA  United States 41
+      - 🇺🇸 美国_1219041797
+      - 🇺🇸 美国Santa Clara  CA  United States 50
+      - 🇺🇸 美国Denver  CO  United States 41
+      - 🇺🇸 美国Denver  CO  United States 25
+      - 🇺🇸 美国Denver  CO  United States 23
+      - 🇺🇸 美国Los Angeles  CA  United States 19
+      - 🇺🇸 美国Santa Clara  CA  United States 37
+      - 🇺🇸 SS-TCP-NA 美国-167.88.61.1118000
+      - 🇺🇸 美国Santa Clara  CA  United States 102
+      - 🇺🇸 美国Santa Clara  CA  United States 35
+      - 🇺🇸 美国Santa Clara  CA  United States 5
+      - 🇺🇸 美国Santa Clara  CA  United States 29
+      - 🇺🇸 美国Santa Clara  CA  United States 105
+      - 🇺🇸 美国Denver  CO  United States 61
+      - 🇺🇸 美国Denver  CO  United States 3
+      - 🇺🇸 美国Denver  CO  United States 15 2
+      - 🇺🇸 美国Denver  CO  United States 4
+      - 🇺🇸 SS-TCP-NA 美国-23.157.40.55001
+      - 🇺🇸 美国Santa Clara  CA  United States 3
+      - 🇺🇸 美国Los Angeles  CA  United States 8
+      - 🇺🇸 美国_1219080
+      - 🇺🇸 美国_1219041626
+      - 🇺🇸 美国_1219075
+      - 🇺🇸 美国Santa Clara  CA  United States 36
+      - 🇺🇸 美国Santa Clara  CA  United States 81
+      - 🇺🇸 美国Santa Clara  CA  United States 44
+      - 🇺🇸 美国Santa Clara  CA  United States 4
+      - 🇺🇸 美国_1219041806
+      - 🇺🇸 美国_1218062
+      - 🇺🇸 美国Santa Clara  CA  United States 46
+      - 🇺🇸 美国Ashburn  VA  United States 10
+      - 🇺🇸 _BG_保加利亚->🇺🇸_US_美国
+      - 🇺🇸 美国Santa Clara  CA  United States 24
+      - 🇺🇸 美国Atlanta  GA  United States 38
+      - 1 16 23 35|ChatGPT 🇸🇬 SG_464
+      - 🇸🇬 新加坡_1219002
+      - 🇺🇸 美国_1219041746
+      - 🇺🇸 美国Ashburn  VA  United States 13
+      - 🇺🇸 美国_1218076
+      - 🇺🇸 SS-TCP-NA 美国-69.50.95.2188080
+      - "🇺🇸 565|美国-芝加哥-001 #1"
+      - "🇺🇸 568|美国-芝加哥-001 #2"
+      - "🇺🇸 2408|美国-芝加哥-001 #8"
+      - "🇺🇸 2336|美国-芝加哥-001 #7"
+      - "🇺🇸 570|美国-芝加哥-001 #3"
+      - "🇭🇰 1418 1419|>🇭🇰 HK|Ms|0914|TG@FProxies| #5"
+      - 🇭🇰 a香港线路62
+      - "🇺🇸 571|美国-芝加哥-001 #4"
+      - 🇸🇬 新加坡Singapore - Singapore 🌏 SS-TCP-NA 4⃣
+      - 🇺🇸 _US_美国 2
+      - 🇭🇰 >香港|Ls|1013|TG@FProxies|
+      - 🇭🇰 a香港线路19
+      - 🇺🇸 _US_美国 3
+      - 🇺🇸 _US_美国 4
+      - 1 23|ChatGPT 🇸🇬 SG_463
+      - 36|🇭🇰HK_59 |10.06Mb
+      - 🇸🇬 [SS] 🇸🇬 SS-TCP-NA 🇸🇬 SG-103.36.91.238388 4
+      - 🇸🇬 新加坡 124
+      - 🇨🇳 923|中国_juzi8186_251
+      - 🇭🇰 香港98-1
+      - 🇭🇰 香港242-1
+      - 🇭🇰 香港88-1
+      - 🇭🇰 香港98-2
+      - 🇨🇳 台湾_121904009
+      - 🇭🇰 香港8-2
+      - 🇸🇬 新加坡_121904127
+      - "🇺🇸 23|97|美国_1217117 #1"
+      - 🇭🇰 香港201-2
+      - 🇭🇰 香港242-2
+      - 🇺🇸 23|91 97|美国_1217106
+      - 🇺🇸 23 23 23|97|美国_1217105
+      - 🇭🇰 香港_1219001
+      - "🇺🇸 23|91 97|美国_1217119 #1"
+      - 🇺🇸 23|97|美国_1217104
+      - 🇺🇸 23|97|美国_1217110
+      - 🇺🇸 23|97|美国_1217088
+      - 🇺🇸 23|97|美国_1217109
+      - 🇺🇸 23|91 97|美国_1217115
+      - "🇺🇸 23|97|美国_1217118 #1"
+      - 🇺🇸 23|97|美国_1217094
+      - "🇺🇸 23|97|美国_1217116 #1"
+      - 🇭🇰 香港61-2
+      - "🇺🇸 926 931|美国_juzi8186_4 #1"
+      - 🇭🇰 香港8-1
+      - 17 30|🇭🇰HK_468
+      - 🇭🇰 香港201-1
+      - 🇭🇰 香港61-1
+      - 🇭🇰 香港88-2
+      - 🇫🇷 4 5 6 17 23 23 23 30 36 51|法国(yudou66.com 玉豆免费节点)___
+      - 🇺🇸 _US_美国 5
+      - 🇫🇷 4 5 17 23 23 23 30 36 37 51|法国(yudou66.com 玉豆免费节点)_
+      - 🇯🇵 390|🇯🇵JP-57.181.42.233-5235 | 30.605MB
+      - 1 17 35 37|🇭🇰 HK_282
+      - 🇺🇸 美国 202
+      - 🇭🇰 a香港线路187
+      - 🇭🇰 香港52-1
+      - 🇯🇵 日本Tokyo  13  Japan
+      - 30|🇯🇵JP_1155 |28.71Mb
+      - 🇭🇰 香港52-2
+      - 🇺🇸 美国 116
+      - 🇭🇰 香港173-1
+      - 🇭🇰 香港173-2
+      - 🇺🇸 美国_1219047
+      - 🇺🇸 美国 204
+      - 🇸🇬 新加坡_1219006
+      - 🇺🇸 美国_由快嘴科技提供：kkzui.com154_2_1
+      - 🇰🇷 [SS] 🇰🇷 13|🇰🇷 韩国特殊|@ripaojiedian 28
+      - 🇭🇰 242|💰🇺🇸 US 2.58.87.221 ◈ ws12269 ◈ Aiyun (HK) Network / ORG-AIYUN-RIPE ◈ 52f36
+      - 🇺🇸 美国-芝加哥-001
+      - 🇸🇬 [97]🇸🇬SG-68.183.227.4-53063
+      - 🇨🇳 [115]🇹🇼TW-45.43.59.150-37453
+      - 🏳️‍🌈 521|[鸡场]-剩余流量：482.71 GB
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1F
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1L
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2x
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1Y
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2Z
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2E
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1J
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1S
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1E
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1V
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3H
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3I
+      - 🇺🇸 975|🇺🇸_US_美国_5
+      - 🇯🇵 23|180|>🇯🇵 JP|Ns|1013|TG@FProxies...
+      - 1 17 23|ChatGPT 🇯🇵 JP_311
+      - 🇯🇵 23|180|>🇯🇵 JP|Ns|1013|TG@FProxies..._
+      - 🇺🇸 23|59|🇺🇸 www.85la.com 美国 120
+  - name: ✅ 手动选择
+    type: select
+    proxies:
+      - 🇯🇵 739|日本 高速 cdn 1
+      - 🇺🇸 739|美国 高速 cdn 1
+      - "🇯🇵 1110|日本 001 #4"
+      - 🇺🇸 美国New York  NY  United States 6
+      - 🇺🇸 美国_1219005
+      - 🇺🇸 917 918 920|0 13|🇺🇸 美国3|@HSSkyBoy
+      - 🇺🇸 美国 161
+      - 🇺🇸 美国Atlanta  GA  United States 17
+      - 🇺🇸 美国_1219071
+      - 🇺🇸 美国Seattle  WA  United States 3
+      - 🇺🇸 917 918 920|0 13|🇺🇸 美国|@HSSkyBoy
+      - "🇺🇸 975|🇺🇸_US_美国_1 #1"
+      - 🇭🇰 88|香港/维多利亚/CDN加速
+      - 🇺🇸 _US_美国
+      - 🇺🇸 975|🇺🇸_US_美国_10
+      - 🇭🇰 香港/维多利亚/CDN加速
+      - 🇺🇸 88|美国/落山鸡/CDN加速
+      - 🇺🇸 美国_1219041094
+      - 🇭🇰 88|香港 02/维多利亚/CDN加速
+      - 🇺🇸 VM-TCP-NA 美国-142.0.134.24245017
+      - "🇺🇸 23|91 97|美国_1217121 #1"
+      - 🇺🇸 23|91 97|美国_1217029
+      - 🇸🇬 739|新加坡 高速 cdn 1
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3J
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2N
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2O
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3K
+      - 🇺🇸 美国Los Angeles  CA  United States 10
+      - 🇺🇸 美国_1219041755
+      - 🇯🇵 [SS] 🇯🇵 SS-TCP-NA 🇯🇵 JP-149.22.87.241443
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2H
+      - 🇺🇸 美国Los Angeles  CA  United States 27
+      - 🇯🇵 日本_121904002
+      - 🇺🇸 美国Los Angeles  CA  United States 82
+      - 🇺🇸 美国Los Angeles  CA  United States 48
+      - 🇺🇸 美国 89 2
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3C
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2P
+      - 🇺🇸 美国Los Angeles  CA  United States 42
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1O
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1Q
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3E
+      - 🇺🇸 美国Los Angeles  CA  United States 98
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2R
+      - 🇺🇸 美国Los Angeles  CA  United States 84
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1N
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3F
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3M
+      - 🇰🇷 TG频道@mfbpn-0599-KR
+      - 🇰🇷 13 17 30 35 36|🇰🇷KR-43.203.122.162-0873 | 19....
+      - 🇨🇳 88|台湾/丈化/CDN加速
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2C
+      - 🇺🇸 美国_1219041731
+      - 🇺🇸 美国Los Angeles  CA  United States 129
+      - 🇭🇰 Hong Kong  Hong Kong
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3B
+      - 🇯🇵 88|日本/冻精/CDN加速
+      - 🇰🇷 88|韩国/纯穿/CDN加速
+      - 🇺🇸 美国 131
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2V
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2L
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2C
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1T
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1W
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1K
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2T
+      - 🇺🇸 23|97|美国_1217128
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2C
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1U
+      - 🇺🇸 23|91 97|美国_1217098
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1S
+      - 🇸🇬 SG-68.183.235.122-0467 | 14.647MB
+      - 🇸🇬 1414|>🇸🇬 SG|Ns|1115|TG@FProxies|
+      - 🇸🇬 SS-TCP-NA 🇸🇬 SG-68.183.227.2368080
+      - 🇸🇬 SG-128.199.172.224-1259
+      - 🇸🇬 13 17 30 35 36|🇸🇬SG-68.183.227.45-0428 | 14.6...
+      - 🇸🇬 13 17|🇸🇬SG-68.183.227.236-0431 | 15....
+      - 🇸🇬 13 17 30|🇸🇬SG-68.183.235.122-0443 | 15....
+      - 🇸🇬 13 17 30|🇸🇬SG-128.199.172.224-0449 | 15...
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1G
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1I
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1I
+      - 🇸🇬 22-1341-SG
+      - 🇺🇸 美国Los Angeles  CA  United States 63
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2E
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2K
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1E
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1R
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1F
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1M
+      - 🇺🇸 美国_1219041725
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2A
+      - 🇺🇸 美国 191
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1J
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1F
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1D
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1Y
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1W
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1V
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Y
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1U
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2A
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1N
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2G
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1L
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1H
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Q
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-2G
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1O
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1L
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1H
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1R
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1Z
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1Q
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1N
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1P
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-2F
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1T
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1x
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1K
+      - 🇺🇸 美国 177
+      - 🇺🇸 美国_1219041664
+      - 🇸🇬 582|🇸🇬 新加坡NEW01优选-1D
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2B
+      - 🇺🇸 美国 188
+      - 🇺🇸 23|97|美国_1217113
+      - 🇸🇬 582|🇸🇬 新加坡NEW01-1J
+      - 1 3 13 17 30 30 37|🇭🇰 HK_283
+      - 🇭🇰 香港_121904184
+      - 17 30|🇭🇰HK_470
+      - 🇰🇷 [SS] 🇰🇷 SS-TCP-NA 🇰🇷 KR-3.36.126.174443 3
+      - 🇰🇷 TG频道@mfbpn-0974-KR
+      - 🇺🇸 美国 187 2
+      - 🇺🇸 美国 170
+      - 🇺🇸 美国 163 2
+      - 🇺🇸 美国 146
+      - 🇺🇸 美国 83
+      - 🇺🇸 美国 150
+      - 🇺🇸 23|97|美国_1217112
+      - 🇺🇸 美国 172
+      - 🇺🇸 23|91 97|美国_1217019
+      - "🇺🇸 23|97|美国_1217120 #1"
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2D
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2M
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1R
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3L
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3D
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1I
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2W
+      - 🇺🇸 美国 165 2
+      - 🇺🇸 美国 164
+      - "🇺🇸 926 931|美国_juzi8186_6 #1"
+      - "🇺🇸 926 931|美国_juzi8186_8 #1"
+      - Pool_🇸🇬 SG_160
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1K
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1U
+      - 🇯🇵 @LuxyNet💎❖🇯🇵❖JP❖1529
+      - 17 30|🇯🇵JP_484
+      - 🇭🇰 a香港线路214
+      - "🇺🇸 23|91 97|美国_1217060 #1"
+      - 🇺🇸 975|_BG_加利亚->🇸_US_美国
+      - 🇺🇸 美国_juzi8186_4
+      - 🇺🇸 23|97|美国_1217107
+      - 🇺🇸 23|97|美国_1217111
+      - 🇸🇬 23|80 91 97|新加坡_1217008
+      - 🇯🇵 1414|>🇯🇵 JP|Ns|1115|TG@FProxies| 14
+      - 🇺🇸 美国_1219041719
+      - 🇺🇸 美国Dallas  TX  United States 3
+      - 🇺🇸 美国Los Angeles  CA  United States 61
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 5
+      - 🇺🇸 美国Seattle  WA  United States 21
+      - 🇺🇸 美国_121904305
+      - 🇺🇸 美国Atlanta  GA  United States 21 2
+      - 🇺🇸 美国_1219041647
+      - 🇺🇸 美国_1219041656
+      - 🇺🇸 美国Newark  NJ  United States 2
+      - 🇺🇸 美国_1218085
+      - 🇺🇸 美国Ashburn  VA  United States 9
+      - 🇺🇸 26 28 112 116|美国_US_🇺🇸_1576
+      - 🇺🇸 美国_1219041062
+      - 🇺🇸 [SS] 🇺🇸 _美国 24
+      - 🇺🇸 美国Miami  FL  United States 22
+      - 🇺🇸 美国Dallas  TX  United States 22 2
+      - 🇺🇸 美国Dallas  TX  United States 24
+      - 🇺🇸 美国_1219045949
+      - 🇺🇸 美国_121904204
+      - 🇺🇸 美国_1219041711
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 7
+      - 🇺🇸 美国Dallas  TX  United States 14
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 6
+      - 🇺🇸 美国Miami  FL  United States 10
+      - 🇺🇸 美国New York  NY  United States 2
+      - 🇺🇸 美国Dallas  TX  United States 28
+      - 🇺🇸 美国Dallas  TX  United States 31 2
+      - 🇺🇸 美国Dallas  TX  United States 4 2
+      - 🇺🇸 美国Dallas  TX  United States 34 2
+      - 🇺🇸 美国Dallas  TX  United States 31
+      - 🇺🇸 美国Dallas  TX  United States 41
+      - 🇺🇸 美国Atlanta  GA  United States 31
+      - 🇺🇸 美国Atlanta  GA  United States 23
+      - 🇺🇸 美国Atlanta  GA  United States 63
+      - 🇺🇸 美国_1219041662
+      - 🇺🇸 美国_1219041807
+      - 🇺🇸 美国Atlanta  GA  United States 29
+      - 🇺🇸 美国Atlanta  GA  United States 51
+      - 🇺🇸 美国Atlanta  GA  United States 64 2
+      - 🇺🇸 美国Seattle  WA  United States 8
+      - 🇺🇸 美国Atlanta  GA  United States 52
+      - 🇺🇸 美国Atlanta  GA  United States 19
+      - 🇺🇸 美国Atlanta  GA  United States 42
+      - 🇺🇸 美国Atlanta  GA  United States 16
+      - 🇺🇸 美国Atlanta  GA  United States 60
+      - 🇺🇸 美国Atlanta  GA  United States 17 2
+      - 🇺🇸 美国Atlanta  GA  United States 46
+      - 🇺🇸 美国Atlanta  GA  United States 20 2
+      - 🇺🇸 美国Atlanta  GA  United States 14
+      - 🇺🇸 美国_1219045865
+      - 🇺🇸 美国Newark  NJ  United States 2 2
+      - 🇺🇸 美国Newark  NJ  United States
+      - 🇺🇸 美国_1219045857
+      - 🇺🇸 美国_1219045947
+      - 🇺🇸 美国Miami  FL  United States 34
+      - 🇺🇸 美国_1219041802
+      - 🇺🇸 美国_121904284
+      - 🇺🇸 美国Los Angeles  CA  United States 52
+      - 🇺🇸 美国_1219041781
+      - 🇺🇸 美国_1219041728
+      - 🇺🇸 美国Atlanta  GA  United States 48
+      - 🇺🇸 美国Ashburn  VA  United States 3 2
+      - 🇺🇸 美国_121904254
+      - 🇺🇸 [SS] 🇺🇸 _美国 27
+      - 🇺🇸 美国Miami  FL  United States
+      - 🇺🇸 美国_1219041751
+      - 🇺🇸 美国_1219041705
+      - 🇺🇸 美国Miami  FL  United States 12
+      - 🇺🇸 美国Dallas  TX  United States 30 2
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 3
+      - 🇺🇸 美国Miami  FL  United States 32
+      - 🇺🇸 美国Dallas  TX  United States 22
+      - 🇺🇸 美国Miami  FL  United States 11
+      - 🇺🇸 美国_1219045952
+      - 🇺🇸 美国Dallas  TX  United States 2
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 4
+      - 🇺🇸 美国Dallas  TX  United States 36
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣ 2
+      - 🇺🇸 美国Miami  FL  United States 6
+      - 🇺🇸 美国Dallas  TX  United States 6 2
+      - 🇺🇸 美国Miami  FL  United States 5
+      - 🇺🇸 美国Dallas  TX  United States 37
+      - 🇺🇸 美国Miami  FL  United States 21
+      - 🇺🇸 美国Denver  CO  United States 12 2
+      - 🇺🇸 美国Dallas  TX  United States 9
+      - 🇺🇸 美国Dallas  TX  United States 29
+      - 🇺🇸 美国Dallas  TX  United States 5 2
+      - 🇺🇸 美国Dallas  TX  United States 26
+      - 🇺🇸 美国Atlanta  GA  United States 28
+      - 🇺🇸 美国Atlanta  GA  United States 33 2
+      - 🇺🇸 美国_1219041723
+      - 🇺🇸 美国_1219041769
+      - 🇺🇸 美国_1219041803
+      - 🇺🇸 美国Atlanta  GA  United States 6 2
+      - 🇺🇸 美国Atlanta  GA  United States 28 2
+      - 🇺🇸 美国Atlanta  GA  United States 15 2
+      - 🇺🇸 美国Seattle  WA  United States 23
+      - 🇺🇸 美国_1219041627
+      - 🇺🇸 美国Atlanta  GA  United States 10
+      - 🇺🇸 美国Atlanta  GA  United States 12
+      - 🇺🇸 美国Atlanta  GA  United States 20
+      - 🇺🇸 美国Atlanta  GA  United States 23 2
+      - 🇺🇸 美国Atlanta  GA  United States 55
+      - 🇺🇸 美国Atlanta  GA  United States 61
+      - 🇺🇸 美国Atlanta  GA  United States 25
+      - 🇺🇸 美国_1219041612
+      - 🇺🇸 美国Atlanta  GA  United States 18
+      - 🇺🇸 美国United States 11
+      - 🇺🇸 美国_1219041783
+      - 🇺🇸 美国Newark  NJ  United States 4
+      - 🇺🇸 美国Miami  FL  United States 16
+      - 🇺🇸 美国_1219087
+      - 🇺🇸 美国Los Angeles  CA  United States 36
+      - 🇺🇸 美国Los Angeles  CA  United States 68 2
+      - 🇺🇸 美国Los Angeles  CA  United States 53
+      - 🇺🇸 美国Los Angeles  CA  United States 44
+      - 🇺🇸 美国Los Angeles  CA  United States 134
+      - 🇺🇸 美国New York  NY  United States 4
+      - 🇺🇸 美国_1219041620
+      - 🇺🇸 美国New York  NY  United States 3 2
+      - 🇺🇸 美国New York  NY  United States 12 2
+      - 🇺🇸 美国_1219041639
+      - 17 30|🇭🇰HK_469
+      - 🇺🇸 美国United States - Dallas 🌎 SS-TCP-NA 4⃣
+      - 🇺🇸 美国Miami  FL  United States 24
+      - 🇺🇸 美国_1219041784
+      - 🇺🇸 美国_1219041131
+      - 🇺🇸 美国Miami  FL  United States 2
+      - 🇺🇸 美国Dallas  TX  United States 49
+      - 🇺🇸 美国Miami  FL  United States 21 2
+      - 🇺🇸 美国_1219045948
+      - 🇺🇸 美国_1219041652
+      - 🇺🇸 美国New York  NY  United States 21
+      - 🇺🇸 美国Santa Clara  CA  United States 75
+      - 🇺🇸 美国_1219045950
+      - 🇺🇸 _US_美国 33 2
+      - 🇺🇸 美国Los Angeles  CA  United States 92
+      - 🇺🇸 美国Los Angeles  CA  United States 6
+      - 🇺🇸 920|美国+华盛顿Cogent通信公司
+      - 🇺🇸 美国_121904213
+      - 🇺🇸 美国Seattle  WA  United States 28
+      - 🇺🇸 美国Atlanta  GA  United States 6
+      - 🇺🇸 美国Atlanta  GA  United States 40 2
+      - 🇺🇸 美国Atlanta  GA  United States 8
+      - 🇺🇸 美国Atlanta  GA  United States 37
+      - 🇺🇸 美国_1219041804
+      - 🇺🇸 美国Seattle  WA  United States 13
+      - 🇺🇸 美国_1219041780
+      - 🇺🇸 美国Seattle  WA  United States 8 2
+      - 🇺🇸 美国Atlanta  GA  United States 58 2
+      - 🇺🇸 SS-TCP-NA 美国-167.88.63.218119
+      - 🇺🇸 美国Atlanta  GA  United States 35
+      - 🇺🇸 美国_1219041680
+      - 🇺🇸 美国_1219041688
+      - 🇺🇸 美国_1219041136
+      - 🇺🇸 美国_1219041648
+      - 🇺🇸 美国Atlanta  GA  United States 25 2
+      - 🇺🇸 美国Seattle  WA  United States 17
+      - 🇺🇸 美国Seattle  WA  United States 15
+      - 🇺🇸 美国_1219041776
+      - 🇺🇸 美国Seattle  WA  United States 6
+      - 🇺🇸 美国_1219041704
+      - 🇺🇸 美国Atlanta  GA  United States 33
+      - 🇺🇸 美国Atlanta  GA  United States 51 2
+      - 🇺🇸 美国United States - Atlanta 🌎 SS-TCP-NA 4⃣
+      - 🇺🇸 美国_1219041121
+      - 🇺🇸 美国_1219041774
+      - 🇺🇸 美国United States 3
+      - 🇺🇸 美国United States 2
+      - 🇺🇸 美国United States
+      - 897|🇭🇰 TG:@JUZIBAIPIAO_131
+      - 🇺🇸 美国_1219041646
+      - 🇺🇸 美国United States 4 2
+      - 🇺🇸 美国United States 9
+      - 🇺🇸 美国Miami  FL  United States 13
+      - 🇺🇸 美国Miami  FL  United States 20
+      - 🇺🇸 美国_1219093
+      - 🇺🇸 美国_1219045951
+      - 🇺🇸 美国_1219089
+      - 🇺🇸 美国_1218080
+      - 🇺🇸 美国_1219073
+      - 🇺🇸 美国Los Angeles  CA  United States 108
+      - 🇺🇸 美国_1219041724
+      - 🇺🇸 SS-TCP-NA 美国-38.75.136.1085001
+      - 🇺🇸 美国_1219041789
+      - 🇺🇸 美国_1219041729
+      - 🇺🇸 2022.06.08_美国_2852
+      - 🇺🇸 美国Los Angeles  CA  United States 101
+      - 🇺🇸 美国Los Angeles  CA  United States 5
+      - 🇺🇸 SS-TCP-NA 美国-23.157.40.268009
+      - 🇺🇸 美国_1219041790
+      - 🇺🇸 美国New York  NY  United States 22
+      - 🇺🇸 美国_1219041140
+      - 🇺🇸 美国Denver  CO  United States 60
+      - 🇺🇸 美国_1219041710
+      - 🇺🇸 美国Atlanta  GA  United States 43
+      - 🇺🇸 美国Denver  CO  United States 44
+      - 🇺🇸 美国_1219041709
+      - 🇺🇸 美国Denver  CO  United States 63
+      - 🇺🇸 美国Denver  CO  United States 38 2
+      - 🇺🇸 美国Denver  CO  United States 55
+      - 🇺🇸 美国Denver  CO  United States 39
+      - 🇺🇸 美国_1219041609
+      - 🇺🇸 美国Denver  CO  United States 38
+      - 🇺🇸 美国Denver  CO  United States 30
+      - 🇺🇸 美国Miami  FL  United States 15
+      - 🇺🇸 美国_1219041125
+      - 🇺🇸 美国Denver  CO  United States 33 2
+      - 🇺🇸 美国Denver  CO  United States 20
+      - 🇺🇸 美国_1219041707
+      - 🇺🇸 SS-TCP-NA 美国-38.91.100.2112375
+      - 🇺🇸 SS-TCP-NA 美国-169.197.142.2165000
+      - 🇺🇸 美国Los Angeles  CA  United States 76
+      - 🇺🇸 美国Santa Clara  CA  United States 25
+      - 🇺🇸 美国Santa Clara  CA  United States 62
+      - 🇺🇸 美国_1219041686
+      - 🇺🇸 美国Denver  CO  United States 36
+      - 🇺🇸 美国_1219041696
+      - 🇺🇸 美国_1219041689
+      - 🇺🇸 美国_1219041674
+      - 🇺🇸 美国_1219061
+      - 🇺🇸 美国_1219085
+      - 🇺🇸 美国Los Angeles  CA  United States 116
+      - 🇺🇸 美国_1219041773
+      - 🇺🇸 2022.06.08_美国_2641
+      - 🇺🇸 美国Los Angeles  CA  United States 67
+      - 🇺🇸 美国Santa Clara  CA  United States 50 2
+      - 🇺🇸 美国Santa Clara  CA  United States 86
+      - 🇺🇸 美国Los Angeles  CA  United States 65
+      - 🇺🇸 美国Santa Clara  CA  United States 51
+      - 🇺🇸 美国Los Angeles  CA  United States 60
+      - 🇺🇸 美国_121904283
+      - 🇺🇸 美国Santa Clara  CA  United States 48
+      - 🇺🇸 美国_1219041761
+      - 🇺🇸 美国Santa Clara  CA  United States 4 2
+      - 🇺🇸 美国Denver  CO  United States 28
+      - 🇺🇸 美国Denver  CO  United States 20 2
+      - 🇺🇸 美国_1219041651
+      - 🇺🇸 美国_1219041767
+      - 🇺🇸 美国Santa Clara  CA  United States 20
+      - 🇺🇸 美国Santa Clara  CA  United States 43
+      - 🇺🇸 SS-TCP-NA 美国-23.157.40.875498
+      - 🇺🇸 美国_121904291
+      - 🇺🇸 美国Los Angeles  CA  United States 56
+      - 🇺🇸 美国Santa Clara  CA  United States 41
+      - 🇺🇸 美国_1219041797
+      - 🇺🇸 美国Santa Clara  CA  United States 50
+      - 🇺🇸 美国Denver  CO  United States 41
+      - 🇺🇸 美国Denver  CO  United States 25
+      - 🇺🇸 美国Denver  CO  United States 23
+      - 🇺🇸 美国Los Angeles  CA  United States 19
+      - 🇺🇸 美国Santa Clara  CA  United States 37
+      - 🇺🇸 SS-TCP-NA 美国-167.88.61.1118000
+      - 🇺🇸 美国Santa Clara  CA  United States 102
+      - 🇺🇸 美国Santa Clara  CA  United States 35
+      - 🇺🇸 美国Santa Clara  CA  United States 5
+      - 🇺🇸 美国Santa Clara  CA  United States 29
+      - 🇺🇸 美国Santa Clara  CA  United States 105
+      - 🇺🇸 美国Denver  CO  United States 61
+      - 🇺🇸 美国Denver  CO  United States 3
+      - 🇺🇸 美国Denver  CO  United States 15 2
+      - 🇺🇸 美国Denver  CO  United States 4
+      - 🇺🇸 SS-TCP-NA 美国-23.157.40.55001
+      - 🇺🇸 美国Santa Clara  CA  United States 3
+      - 🇺🇸 美国Los Angeles  CA  United States 8
+      - 🇺🇸 美国_1219080
+      - 🇺🇸 美国_1219041626
+      - 🇺🇸 美国_1219075
+      - 🇺🇸 美国Santa Clara  CA  United States 36
+      - 🇺🇸 美国Santa Clara  CA  United States 81
+      - 🇺🇸 美国Santa Clara  CA  United States 44
+      - 🇺🇸 美国Santa Clara  CA  United States 4
+      - 🇺🇸 美国_1219041806
+      - 🇺🇸 美国_1218062
+      - 🇺🇸 美国Santa Clara  CA  United States 46
+      - 🇺🇸 美国Ashburn  VA  United States 10
+      - 🇺🇸 _BG_保加利亚->🇺🇸_US_美国
+      - 🇺🇸 美国Santa Clara  CA  United States 24
+      - 🇺🇸 美国Atlanta  GA  United States 38
+      - 1 16 23 35|ChatGPT 🇸🇬 SG_464
+      - 🇸🇬 新加坡_1219002
+      - 🇺🇸 美国_1219041746
+      - 🇺🇸 美国Ashburn  VA  United States 13
+      - 🇺🇸 美国_1218076
+      - 🇺🇸 SS-TCP-NA 美国-69.50.95.2188080
+      - "🇺🇸 565|美国-芝加哥-001 #1"
+      - "🇺🇸 568|美国-芝加哥-001 #2"
+      - "🇺🇸 2408|美国-芝加哥-001 #8"
+      - "🇺🇸 2336|美国-芝加哥-001 #7"
+      - "🇺🇸 570|美国-芝加哥-001 #3"
+      - "🇭🇰 1418 1419|>🇭🇰 HK|Ms|0914|TG@FProxies| #5"
+      - 🇭🇰 a香港线路62
+      - "🇺🇸 571|美国-芝加哥-001 #4"
+      - 🇸🇬 新加坡Singapore - Singapore 🌏 SS-TCP-NA 4⃣
+      - 🇺🇸 _US_美国 2
+      - 🇭🇰 >香港|Ls|1013|TG@FProxies|
+      - 🇭🇰 a香港线路19
+      - 🇺🇸 _US_美国 3
+      - 🇺🇸 _US_美国 4
+      - 1 23|ChatGPT 🇸🇬 SG_463
+      - 36|🇭🇰HK_59 |10.06Mb
+      - 🇸🇬 [SS] 🇸🇬 SS-TCP-NA 🇸🇬 SG-103.36.91.238388 4
+      - 🇸🇬 新加坡 124
+      - 🇨🇳 923|中国_juzi8186_251
+      - 🇭🇰 香港98-1
+      - 🇭🇰 香港242-1
+      - 🇭🇰 香港88-1
+      - 🇭🇰 香港98-2
+      - 🇨🇳 台湾_121904009
+      - 🇭🇰 香港8-2
+      - 🇸🇬 新加坡_121904127
+      - "🇺🇸 23|97|美国_1217117 #1"
+      - 🇭🇰 香港201-2
+      - 🇭🇰 香港242-2
+      - 🇺🇸 23|91 97|美国_1217106
+      - 🇺🇸 23 23 23|97|美国_1217105
+      - 🇭🇰 香港_1219001
+      - "🇺🇸 23|91 97|美国_1217119 #1"
+      - 🇺🇸 23|97|美国_1217104
+      - 🇺🇸 23|97|美国_1217110
+      - 🇺🇸 23|97|美国_1217088
+      - 🇺🇸 23|97|美国_1217109
+      - 🇺🇸 23|91 97|美国_1217115
+      - "🇺🇸 23|97|美国_1217118 #1"
+      - 🇺🇸 23|97|美国_1217094
+      - "🇺🇸 23|97|美国_1217116 #1"
+      - 🇭🇰 香港61-2
+      - "🇺🇸 926 931|美国_juzi8186_4 #1"
+      - 🇭🇰 香港8-1
+      - 17 30|🇭🇰HK_468
+      - 🇭🇰 香港201-1
+      - 🇭🇰 香港61-1
+      - 🇭🇰 香港88-2
+      - 🇫🇷 4 5 6 17 23 23 23 30 36 51|法国(yudou66.com 玉豆免费节点)___
+      - 🇺🇸 _US_美国 5
+      - 🇫🇷 4 5 17 23 23 23 30 36 37 51|法国(yudou66.com 玉豆免费节点)_
+      - 🇯🇵 390|🇯🇵JP-57.181.42.233-5235 | 30.605MB
+      - 1 17 35 37|🇭🇰 HK_282
+      - 🇺🇸 美国 202
+      - 🇭🇰 a香港线路187
+      - 🇭🇰 香港52-1
+      - 🇯🇵 日本Tokyo  13  Japan
+      - 30|🇯🇵JP_1155 |28.71Mb
+      - 🇭🇰 香港52-2
+      - 🇺🇸 美国 116
+      - 🇭🇰 香港173-1
+      - 🇭🇰 香港173-2
+      - 🇺🇸 美国_1219047
+      - 🇺🇸 美国 204
+      - 🇸🇬 新加坡_1219006
+      - 🇺🇸 美国_由快嘴科技提供：kkzui.com154_2_1
+      - 🇰🇷 [SS] 🇰🇷 13|🇰🇷 韩国特殊|@ripaojiedian 28
+      - 🇭🇰 242|💰🇺🇸 US 2.58.87.221 ◈ ws12269 ◈ Aiyun (HK) Network / ORG-AIYUN-RIPE ◈ 52f36
+      - 🇺🇸 美国-芝加哥-001
+      - 🇸🇬 [97]🇸🇬SG-68.183.227.4-53063
+      - 🇨🇳 [115]🇹🇼TW-45.43.59.150-37453
+      - 🏳️‍🌈 521|[鸡场]-剩余流量：482.71 GB
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1F
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1L
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2x
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1Y
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2Z
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-2E
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1J
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1S
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1E
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-1V
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3H
+      - 🇺🇸 582|🇺🇸 美国-芝加哥-001-3I
+      - 🇺🇸 975|🇺🇸_US_美国_5
+      - 🇯🇵 23|180|>🇯🇵 JP|Ns|1013|TG@FProxies...
+      - 1 17 23|ChatGPT 🇯🇵 JP_311
+      - 🇯🇵 23|180|>🇯🇵 JP|Ns|1013|TG@FProxies..._
+      - 🇺🇸 23|59|🇺🇸 www.85la.com 美国 120
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🚫 拒接访问
+    type: select
+    proxies:
+      - REJECT
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+  - name: 🌍 国外加速
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 📲 电报信息
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+  - name: Ⓜ️ 微软服务
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+  - name: 🛑 全球拦截
+    type: select
+    proxies:
+      - 🚫 拒接访问
+      - 🎯 全球直连
+rules:
+  - DOMAIN-SUFFIX,googleapis.cn,🌍 国外加速
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🎯 全球直连
+  - DOMAIN-SUFFIX,xn--ngstr-cn-8za9o.com,🎯 全球直连
+  - DOMAIN-KEYWORD,kgithub,🎯 全球直连
+  - DOMAIN-KEYWORD,fastgit,🎯 全球直连
+  - DOMAIN-KEYWORD,ghproxy,🎯 全球直连
+  - DOMAIN-KEYWORD,gitmirror,🎯 全球直连
+  - DOMAIN-SUFFIX,gitclone.com,🎯 全球直连
+  - DOMAIN-SUFFIX,gh.api.99988866.xyz,🎯 全球直连
+  - DOMAIN-SUFFIX,weserv.nl,🎯 全球直连
+  - DOMAIN-SUFFIX,wsrv.nl,🎯 全球直连
+  - PROCESS-NAME,v2ray,🎯 全球直连
+  - PROCESS-NAME,xray,🎯 全球直连
+  - PROCESS-NAME,naive,🎯 全球直连
+  - PROCESS-NAME,trojan,🎯 全球直连
+  - PROCESS-NAME,trojan-go,🎯 全球直连
+  - PROCESS-NAME,ss-local,🎯 全球直连
+  - PROCESS-NAME,privoxy,🎯 全球直连
+  - PROCESS-NAME,leaf,🎯 全球直连
+  - PROCESS-NAME,v2ray.exe,🎯 全球直连
+  - PROCESS-NAME,xray.exe,🎯 全球直连
+  - PROCESS-NAME,naive.exe,🎯 全球直连
+  - PROCESS-NAME,trojan.exe,🎯 全球直连
+  - PROCESS-NAME,trojan-go.exe,🎯 全球直连
+  - PROCESS-NAME,ss-local.exe,🎯 全球直连
+  - PROCESS-NAME,privoxy.exe,🎯 全球直连
+  - PROCESS-NAME,leaf.exe,🎯 全球直连
+  - PROCESS-NAME,Surge,🎯 全球直连
+  - PROCESS-NAME,Surge 2,🎯 全球直连
+  - PROCESS-NAME,Surge 3,🎯 全球直连
+  - PROCESS-NAME,Surge 4,🎯 全球直连
+  - PROCESS-NAME,Surge%202,🎯 全球直连
+  - PROCESS-NAME,Surge%203,🎯 全球直连
+  - PROCESS-NAME,Surge%204,🎯 全球直连
+  - PROCESS-NAME,Thunder,🎯 全球直连
+  - PROCESS-NAME,DownloadService,🎯 全球直连
+  - PROCESS-NAME,qBittorrent,🎯 全球直连
+  - PROCESS-NAME,Transmission,🎯 全球直连
+  - PROCESS-NAME,fdm,🎯 全球直连
+  - PROCESS-NAME,aria2c,🎯 全球直连
+  - PROCESS-NAME,Folx,🎯 全球直连
+  - PROCESS-NAME,NetTransport,🎯 全球直连
+  - PROCESS-NAME,uTorrent,🎯 全球直连
+  - PROCESS-NAME,WebTorrent,🎯 全球直连
+  - PROCESS-NAME,aria2c.exe,🎯 全球直连
+  - PROCESS-NAME,BitComet.exe,🎯 全球直连
+  - PROCESS-NAME,fdm.exe,🎯 全球直连
+  - PROCESS-NAME,NetTransport.exe,🎯 全球直连
+  - PROCESS-NAME,qbittorrent.exe,🎯 全球直连
+  - PROCESS-NAME,Thunder.exe,🎯 全球直连
+  - PROCESS-NAME,ThunderVIP.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-daemon.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-qt.exe,🎯 全球直连
+  - PROCESS-NAME,uTorrent.exe,🎯 全球直连
+  - PROCESS-NAME,WebTorrent.exe,🎯 全球直连
+  - DOMAIN,steamstore-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,steamcdn-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,api.steampowered.com,🎯 全球直连
+  - DOMAIN,store.steampowered.com,🎯 全球直连
+  - DOMAIN,clash.razord.top,🎯 全球直连
+  - DOMAIN,yacd.haishan.me,🎯 全球直连
+  - DOMAIN,www.biqugeu.net,🌍 国外加速
+  - DOMAIN,www.cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,diyibanzhu,🌍 国外加速
+  - DOMAIN-SUFFIX,cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,cunhua,🌍 国外加速
+  - RULE-SET,自定义广告白名单,🎯 全球直连
+  - RULE-SET,自定义广告拦截,🛑 全球拦截
+  - RULE-SET,adblock,🛑 全球拦截
+  - IP-CIDR,0.0.0.0/32,🛑 全球拦截
+  - RULE-SET,MetaCubeX-cn-domain,🎯 全球直连
+  - GEOIP,private,🎯 全球直连,no-resolve
+  - GEOIP,JP,🌍 国外加速
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,ChinaCompanyIp,🎯 全球直连
+  - RULE-SET,ChinaDomain,🎯 全球直连
+  - RULE-SET,ChinaMedia,🎯 全球直连
+  - RULE-SET,ChinaIp,🎯 全球直连
+  - RULE-SET,LocalAreaNetwork,🎯 全球直连
+  - DOMAIN-SUFFIX,cn,🎯 全球直连
+  - DOMAIN-KEYWORD,-cn,🎯 全球直连
+  - RULE-SET,region,🌍 国外加速
+  - RULE-SET,direct,🎯 全球直连
+  - RULE-SET,direct2,🎯 全球直连
+  - RULE-SET,ProxyGFWlist,🌍 国外加速
+  - RULE-SET,telegramcidr,📲 电报信息
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,proxy,🌍 国外加速
+  - MATCH,🐟 漏网之鱼
