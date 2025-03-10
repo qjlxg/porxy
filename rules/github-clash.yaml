@@ -1,0 +1,1840 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver: [223.5.5.5, 119.29.29.29]
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  nameserver: [https://853.66a.net:443/dns-query, https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+  fallback: [https://doh.dns.sb/dns-query, https://dns.cloudflare.com/dns-query, https://dns.twnic.tw/dns-query, tls://8.8.4.4:853]
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    geosite:
+      - gfw
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - +.google.com
+      - +.facebook.com
+      - +.youtube.com
+  nameserver-policy:
+    geosite:cn,private,apple:
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    www.baidu.com,+.google.cn: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:自定义广告白名单: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:adblock,自定义广告拦截: rcode://success
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+rule-providers:
+  adblock:
+    type: http
+    behavior: classical
+    path: ./rule_providers/adblock.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/adblock.yml
+    interval: 21600
+    format: yaml
+  proxy:
+    type: http
+    behavior: classical
+    path: ./rule_providers/proxy.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/proxy.yml
+    interval: 86400
+    format: yaml
+  direct:
+    type: http
+    behavior: classical
+    path: ./rule_providers/direct.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/direct.yml
+    interval: 86400
+    format: yaml
+  region:
+    type: http
+    behavior: classical
+    path: ./rule_providers/region.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/region.yml
+    interval: 86400
+    format: yaml
+  direct2:
+    behavior: domain
+    type: http
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    interval: 86400
+    path: ./ruleset/direct2.yaml
+    format: yaml
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+    format: yaml
+  ProxyGFWlist:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyGFWlist.yaml
+    path: ./ruleset/ProxyGFWlist.yaml
+    interval: 86400
+    format: yaml
+  ChinaCompanyIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaCompanyIp.yaml
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+    format: yaml
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaDomain.yaml
+    path: ./ruleset/ChinaDomain.yaml
+    interval: 86400
+    format: yaml
+  ChinaIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaIp.yaml
+    path: ./ruleset/ChinaIp.yaml
+    interval: 86400
+    format: yaml
+  ChinaMedia:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaMedia.yaml
+    path: ./ruleset/ChinaMedia.yaml
+    interval: 86400
+    format: yaml
+  LocalAreaNetwork:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml
+    path: ./ruleset/LocalAreaNetwork.yaml
+    interval: 86400
+    format: yaml
+  自定义广告拦截:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com//HDYOU/ClashADRule/main/self_payload_ad.yml
+    path: ./ruleset/自定义广告拦截.yaml
+    interval: 86400
+    format: yaml
+  自定义广告白名单:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/HDYOU/ClashADRule/main/self_payload_whitelist.yml
+    path: ./ruleset/自定义广告白名单.yaml
+    interval: 86400
+    format: yaml
+  MetaCubeX-cn-domain:
+    behavior: domain
+    interval: 86400
+    path: ./ruleset/cn_domain.yaml
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/cn_domain.yaml
+proxies:
+  - {name: 🇺🇸 美国 CloudFlare节点, server: 104.21.13.125, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: "🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点", server: 172.67.132.209, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 VM-TCP-NA 美国-15.204.86.120:35696, server: 15.204.86.120, port: 35696, type: vmess, uuid: cad0504a-a9dc-4d29-8844-b11b69f14a8d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-107.151.182.253:8080, server: 107.151.182.253, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #10", server: workers.dev, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hagh77.ir, network: ws, ws-opts: {path: /sgfqkqmltcy.site/rbqqvws, headers: {Host: hagh77.ir}}, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-79.110.53.169:8080, server: 79.110.53.169, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇺🇸 351|美国 CloudFlare节点-7, server: 104.21.13.125, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.232.171.192:1866, server: 172.232.171.192, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.233.128.126:1866, server: 172.233.128.126, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 2, server: sgfqkqmltcy.site, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: sgfqkqmltcy.site, network: ws, ws-opts: {path: /rbqqvws, headers: {Host: sgfqkqmltcy.site}}, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-23.251.121.242:8080, server: 23.251.121.242, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: "🇺🇸 0 3 79 243 398|TG:@hkaa0|美国_38\r", server: 212.102.47.131, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: "🇺🇸 147|pawdroid-美国 CloudFlare节点-worker-general #14", server: codepen.io, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: v2ray-sub.xow.cc, network: ws, ws-opts: {path: /sgfqkqmltcy.site/rbqqvws, headers: {Host: v2ray-sub.xow.cc}}, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-34.214.175.186:443, server: 34.214.175.186, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-107.155.57.51:8080, server: 107.155.57.51, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: "🇺🇸 75 76|117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #54", server: 172.67.179.199, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-104.207.155.64:1633, server: 104.207.155.64, port: 1633, type: ss, cipher: chacha20-ietf-poly1305, password: o_A7inN1yqeWtOTL, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-184.170.241.194:443, server: 184.170.241.194, port: 443, type: ss, cipher: aes-128-cfb, password: shadowsocks, udp: true}
+  - {name: "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #7", server: auth0.openai.com, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: fastclubcloud.alpha-panel.ir, network: ws, ws-opts: {path: /sgfqkqmltcy.site/rbqqvws, headers: {Host: fastclubcloud.alpha-panel.ir}}, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States, server: 172.233.128.126, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #11", server: workers.dev, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hagh77.ir, network: ws, ws-opts: {path: /afrhms16v.bestxray.buzz/linkws, headers: {Host: hagh77.ir}}, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-138.199.42.68:8080, server: 138.199.42.68, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 36 45 76 104 116 123 154|0|🇭🇰2 |  5.6MB/s, server: hknbyivfffj.site, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hknbyivfffj.site, network: ws, ws-opts: {path: /rbqqvws, headers: {Host: hknbyivfffj.site}}, udp: true}
+  - {name: "🇺🇸 164|🇺🇸 美国 CloudFlare节点 #21", server: s1.cn-db.top, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.132.97, headers: {Host: 100-139-204-73.s1.cn-db.top}}, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.232.171.192:1866 2, server: 172.232.171.192, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 351 356|美国 CloudFlare节点_11-07, server: s1.cn-db.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.19.155.231, headers: {Host: 100-230-189-184.s1.cn-db.top}}, udp: true}
+  - {name: "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #8", server: workers.dev, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: fastclubcloud.alpha-panel.ir, network: ws, ws-opts: {path: /afrhms16v.bestxray.buzz/linkws, headers: {Host: fastclubcloud.alpha-panel.ir}}, udp: true}
+  - {name: 🇺🇸 536|🇺🇸 美国 CloudFlare节点 4, server: s1.db-link01.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.32.189, headers: {Host: 100-191-129-167.s1.db-link01.top}}, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-104.192.226.106:989, server: 104.192.226.106, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-194.5.215.59:8080, server: 194.5.215.59, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: "🇺🇸 0 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #5", server: 51.81.33.5, port: 48231, type: ss, cipher: chacha20-ietf-poly1305, password: bebcb2d8bb1d7db7, udp: true}
+  - {name: 🇺🇸 259 260 522 614|VMESS-美国-NF解锁自制剧-ChatGPT-TikTo..., server: afrhms16v.bestxray.buzz, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 VM-TCP-NA 美国-15.204.248.92:30562, server: 15.204.248.92, port: 30562, type: vmess, uuid: 82466715-6a58-4046-a363-a0d18e5b2ab4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: TABRIZ.NET, udp: true}
+  - {name: 🇺🇸 VM-TCP-NA 美国-15.204.249.0:48160, server: 15.204.249.0, port: 48160, type: vmess, uuid: 5b113c12-4dd4-4bb5-9c01-cff092b559e3, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 34|pawdroid-美国 CloudFlare节点-worker-general #1", server: codepen.io, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: admin.kasrax.ir, network: ws, ws-opts: {path: /sgfqkqmltcy.site/rbqqvws, headers: {Host: admin.kasrax.ir}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-78, server: 107.148.207.249, port: 48712, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 64, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-45.55.2.232:14293, server: 45.55.2.232, port: 14293, type: ss, cipher: aes-256-cfb, password: 2170f8, udp: true}
+  - {name: "🇺🇸 2 5 7 14 16 45 59 75 76 83 87 104 106 116 117 120 123 154|美国 加利福尼亚州洛杉矶PetaExpress #1", server: 107.148.207.249, port: 48712, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 64, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States, server: h110vpnus.outlinekeys.net, port: 9483, type: ss, cipher: chacha20-ietf-poly1305, password: T5g4WcF8EfPS0GwkjNYgX6, udp: true}
+  - {name: "🇺🇸 0 117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #66", server: 172.67.179.199, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：1938.65 GB, server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: us02s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #5", server: laravel.com, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: creativeservices.netflix.com.wukong.asolole.biz.id, network: ws, ws-opts: {path: /afrhms16v.bestxray.buzz/linkws, headers: {Host: creativeservices.netflix.com.wukong.asolole.biz.id}}, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.233.128.126:1866 2, server: 172.233.128.126, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: "🇺🇸 34|pawdroid-美国 CloudFlare节点-worker-general #2", server: laravel.com, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: admin.kasrax.ir, network: ws, ws-opts: {path: /afrhms16v.bestxray.buzz/linkws, headers: {Host: admin.kasrax.ir}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-62, server: 107.148.207.249, port: 48712, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 1602|美国 137 #4", server: 20.78.127.141, port: 550, type: vmess, uuid: 9e11e992-c3a4-45fb-bb67-5f4f42fcd551, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 0 79 82 117 243 364 366 422 425 442 602 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #1", server: 104.207.155.64, port: 1633, type: ss, cipher: chacha20-ietf-poly1305, password: o_A7inN1yqeWtOTL, udp: true}
+  - {name: "🇯🇵 0 3 201 297 301 307 356 459 547 549 555 556 566 568 576 577 579 580|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14... #13", server: 20.78.127.141, port: 550, type: vmess, uuid: 9e11e992-c3a4-45fb-bb67-5f4f42fcd551, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 351|美国 CloudFlare节点-5, server: s2.db-link01.top, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.21.133.12, headers: {Host: 100-130-136-50.s2.db-link01.top}}, udp: true}
+  - {name: "🇺🇸 187 356 376 377|美国【机场推荐：https://socks.news】25 #1", server: www.speedtest.net, port: 443, type: vmess, uuid: f5790c40-fb3e-11ef-b433-205c6d5f5d78, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: www.speedtest.net, network: ws, ws-opts: {path: /vtn6esxz#id-@AB_841, headers: {Host: us-21.hihu.net}}, udp: true}
+  - {name: 🇺🇸 VM-TCP-NA 美国-107.148.207.249:48712, server: 107.148.207.249, port: 48712, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 64, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-173.244.56.9:443, server: 173.244.56.9, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 45|Relay_🇺🇸US-🇭🇰HK_235 |32.07Mb, server: 172.67.135.62, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /rbqqvws, headers: {Host: hknbyivfffj.site}}, udp: true}
+  - {name: 🇺🇸 0 79 82 117 243 364 366 422 425 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y..., server: 172.232.171.192, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-51, server: uswuxian.pai50288.uk, port: 8443, type: vmess, uuid: c313606f-98c2-4d7b-ba74-48b94f61b11d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: uswuxian.pai50288.uk}}, udp: true}
+  - {name: 🇺🇸 45 76 160|美国【机场推荐：https://socks.news】25, server: www.speedtest.net, port: 443, type: vmess, uuid: f5790c40-fb3e-11ef-b433-205c6d5f5d78, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /vtn6esxz#id-@AB_841, headers: {Host: us-21.hihu.net}}, udp: true}
+  - {name: "🇺🇸 0 79 82 117 243 364 366 422 425 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #2", server: 172.233.128.126, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: "🇺🇸 69|autoproxy-🇺🇸_US_美国-worker-general #4", server: workers.dev, port: 443, type: vmess, uuid: bc864078-dcf3-4bf4-8dbf-ca9f200b56be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: farid.1.berozha.ir, network: ws, ws-opts: {path: /gwdef.sbs/linkws, headers: {Host: farid.1.berozha.ir}}, udp: true}
+  - {name: 🇸🇬 SG  Singapore @mfbpn, server: 43.207.153.78, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇺🇸 147|autoproxy-🇺🇸_US_美国-worker-general #7", server: codepen.io, port: 443, type: vmess, uuid: bc864078-dcf3-4bf4-8dbf-ca9f200b56be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: v2ray-sub.xow.cc, network: ws, ws-opts: {path: /gwdef.sbs/linkws, headers: {Host: v2ray-sub.xow.cc}}, udp: true}
+  - {name: 🇺🇸 2 5 7 14 16 45 59 76 83 104 106 116 117 123 154|美国 加利福尼亚州圣何塞PEG TECH, server: 142.4.104.33, port: 52143, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 64, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14..., server: 20.78.127.141, port: 550, type: vmess, uuid: 9e11e992-c3a4-45fb-bb67-5f4f42fcd551, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 0 3 79 82 117 243 364 366 422 425 442 602|🇯🇵JP-149.22.87.204-3311 | 31.1..., server: 149.22.87.204, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇯🇵 5 7 14 45 59 76 106 123|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.141:550, server: 20.78.127.141, port: 550, type: vmess, uuid: 9e11e992-c3a4-45fb-bb67-5f4f42fcd551, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 106|🇯🇵JP_699, server: 172.105.199.111, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇰🇷 364|🇰🇷 KR 3, server: 52.78.167.205, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇺🇸 64|autoproxy-🇺🇸_US_美国-worker-general #3", server: cdnjs.com, port: 443, type: vmess, uuid: bc864078-dcf3-4bf4-8dbf-ca9f200b56be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: creativeservices.netflix.com.wukong.asolole.biz.id, network: ws, ws-opts: {path: /gwdef.sbs/linkws, headers: {Host: creativeservices.netflix.com.wukong.asolole.biz.id}}, udp: true}
+  - {name: "🇯🇵 0 3 79 82 117 243 364 366 422 425 442 506|🇯🇵 日本4 #1", server: 149.22.87.240, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇸🇬 130|VIP-SG  Singapore, server: 43.207.153.78, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 0 3 79 82 117 364 366 422 425 442 602|🇸🇬SG-128.199.172.224-3377 | 29..., server: 128.199.172.224, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇺🇸 美国St Louis  MO  United States, server: 217.77.3.0, port: 17629, type: ss, cipher: chacha20-ietf-poly1305, password: 2a6f2ef1896264f9, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 2, server: 38.121.43.97, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇸🇬 0 79|🇸🇬SG-68.183.235.122-3919 | 15...., server: 68.183.235.122, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 0 3 79 82 364 366 425 602|🇸🇬SG-68.183.227.4-3315 | 29.83..., server: 68.183.227.4, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 120|🇯🇵@AZARBAYJAB1, server: 156.238.18.68, port: 8443, type: vmess, uuid: c313606f-98c2-4d7b-ba74-48b94f61b11d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: uswuxian.pai50288.uk, network: ws, ws-opts: {path: "?maps.app.goo.gl/K3hM5xrwZV7bQVBa7?ed=2560", headers: {Host: uswuxian.pai50288.uk}}, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States, server: 139.64.165.101, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-137.175.113.215:8388, server: 137.175.113.215, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: "@myVPN98 عضو شو", server: series-a1.samanehha.co, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: W74XFALLLuw6m5IA, udp: true}
+  - {name: 🇺🇸 293 356|美国 CloudFlare节点_32-03, server: s1.db-link02.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.79.231, headers: {Host: 100-113-212-3.s1.db-link02.top}}, udp: true}
+  - {name: "🇺🇸 6 259 260 398|TG:@hkaa0|美国_88 #1", server: obdii.cfd, port: 443, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 7 14 16 59 104 106|🇸🇬 SG_1004, server: 68.183.235.122, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_38..., server: 54.169.183.172, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: 70166ce6-326f-4b67-a296-a3253d8090fb, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_63..., server: 54.179.211.228, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-194.116.173.21:9038, server: 194.116.173.21, port: 9038, type: ss, cipher: aes-256-cfb, password: gYCYXfkUQEs2TaJQ, udp: true}
+  - {name: 253|❓_🇸🇬_💼_github.com/Ruk1ng001_34..., server: 13.215.141.135, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_64..., server: 54.254.138.40, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇸🇬 805 3537 3570 3575 3576 3577 3593|Singapore_Singapore_ss_1191 #1", server: 18.140.61.7, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 253|❓_🇸🇬_💼_github.com/Ruk1ng001_63..., server: 13.215.178.168, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇸🇬 661|SG_Singapore_Amazon Technologi... #1", server: 13.212.52.106, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 0 4 253 639|Singapore_Singapore_ss_1132, server: 54.179.23.249, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_32..., server: 47.129.54.127, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 1|新加坡1 |  5.5MB/s, server: 54.179.23.249, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇸🇬 253 661|SG_Singapore_Amazon.com  Inc._... #4", server: 54.169.64.98, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_37..., server: 54.255.138.185, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 789 1226 1323 1362 1603 3492 3505 3570 3571 3591|🇺🇸 _US_美国 22, server: hms082.gwdef.sbs, port: 443, type: vmess, uuid: bc864078-dcf3-4bf4-8dbf-ca9f200b56be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: gwdef.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: gwdef.sbs}}, udp: true}
+  - {name: 🇺🇸 美国Seattle  WA  United States, server: 89.117.20.222, port: 11109, type: ss, cipher: chacha20-ietf-poly1305, password: da4fe8203c183353, udp: true}
+  - {name: "🇸🇬 0 4 117 259 422 442 661|SG_Singapore_Amazon Technologi... #2", server: 54.255.213.95, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 789 1226 1323 1362 1603 3492 3505 3571 3591|🇺🇸 _US_美国 22, server: hms082.gwdef.sbs, port: 443, type: vmess, uuid: bc864078-dcf3-4bf4-8dbf-ca9f200b56be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: gwdef.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: gwdef.sbs}}, udp: true}
+  - {name: 🇺🇸 3 79 356|美国%2B华盛顿(Amazon)公司数据中心, server: 35.176.197.229, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: W74XFALLLuw6m5IA, udp: true}
+  - {name: "🇺🇸 147|mfuu-🇺🇸 美国 CloudFlare节点-worker-general #155", server: chat.openai.com, port: 443, type: vmess, uuid: 3f638f34-8dba-4186-bc43-2716a7ddd4be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: v2ray-sub.xow.cc, network: ws, ws-opts: {path: /az05.beyondy.cfd/link, headers: {Host: v2ray-sub.xow.cc}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 3, server: 38.121.43.97, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 7 10 14 31 59 91 104 111|🇸🇬SG_92 |45.46Mb, server: 18.140.61.7, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇯🇵 12|日本特殊|@ripaojiedian, server: 18.140.61.7, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇸🇬 75|?? Singapore 4 - 直连", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: sg04s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: 🏳️‍🌈 75|剩余流量：1952.14 GB, server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: sg01s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: 🇯🇵 1 7 11 14 16 17 18 45 59 76 86 106 111 118 120 123|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.60:1069, server: 152.69.197.60, port: 1069, type: vmess, uuid: ac8e26fe-8150-4b60-ae64-82fc77eba2cf, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 3498 3570 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6..., server: 152.69.197.60, port: 1069, type: vmess, uuid: ac8e26fe-8150-4b60-ae64-82fc77eba2cf, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 4, server: 38.121.43.97, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: "🇸🇬 ?? Singapore 4 - 直连", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: sg04s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: "🇸🇬 ?? Singapore 1 - 直连", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: sg01s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 5, server: 38.121.43.97, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 5 14 16 18 106|🇸🇬 SG_1006, server: 68.183.227.45, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇺🇸 _US_美国_4, server: series-a2.samanehha.co, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: mps3FwmDjLrWaOVg, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 6, server: 38.121.43.97, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国St Louis  MO  United States 2, server: 212.56.42.207, port: 10051, type: ss, cipher: chacha20-ietf-poly1305, password: 8a6065401de564ac, udp: true}
+  - {name: "🇺🇸 147|pawdroid-美国 CloudFlare节点-worker-general #13", server: cdnjs.com, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: v2ray-sub.xow.cc, network: ws, ws-opts: {path: /afrhms16v.bestxray.buzz/linkws, headers: {Host: v2ray-sub.xow.cc}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 7, server: 38.121.43.97, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: "🇺🇸 65|美国-纽约-F3-001 #1", server: 207.90.237.96, port: 23008, type: vmess, uuid: 579e23a7-ecf9-47b9-b3bc-8c1c266d4a39, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：992.02 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: 70166ce6-326f-4b67-a296-a3253d8090fb, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇸🇬 135|SG_Singapore_Amazon.com  Inc._OpenAI_Claude4, server: 54.169.64.98, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 2, server: 139.64.165.101, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇸🇬 135|SG_Singapore_Amazon Technologies Inc._OpenAI_Claude2, server: 13.212.52.106, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 3, server: 139.64.165.101, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 3, server: 104.16.155.10, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.18.42.172, headers: {Host: 100-38-62-25.s5.db-link02.top}}, udp: true}
+  - {name: "🇭🇰 75|?? 香港4 - 直連", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk04s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 4, server: 139.64.165.101, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: "🇭🇰 ?? 香港1 - 直連", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk01s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: "🇸🇬 0 201 297 301 307 564 566 568 576 580 581 582 584 590|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137... #12", server: 154.26.137.42, port: 44104, type: vmess, uuid: e9933a4c-e56e-458c-bcf4-9cb3875bba55, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 中国-香港, server: 45.144.174.12, port: 20004, type: vmess, uuid: 70166ce6-326f-4b67-a296-a3253d8090fb, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 247 356 376 377|美国【机场推荐：https://socks.news】32 #1", server: series-a2-me.varzesh360.co, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: Bog0ELmMM9DSxDdQ, udp: true}
+  - {name: "🇭🇰 ?? 香港4 - 直連", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk04s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 8, server: 38.121.43.97, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国-纽约-001, server: 207.90.238.136, port: 20008, type: vmess, uuid: 70166ce6-326f-4b67-a296-a3253d8090fb, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇸🇬 7 14 16 18 59 91 104 135|SG_Singapore_Amazon Technologies Inc._OpenAI_Claude3, server: 54.255.213.95, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 210 356|美国 CloudFlare节点_13-07, server: s1.db-link01.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.55.203, headers: {Host: 100-79-28-26.s1.db-link01.top}}, udp: true}
+  - {name: "🇭🇰 ?? 香港3 - 直連", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk03s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 9, server: 38.121.43.97, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 10, server: 38.121.43.97, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore, server: 64.176.85.73, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: "🇺🇸 1602|美国 065 #4", server: 104.19.48.236, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.71.198, headers: {Host: 100-41-36-35.s2.db-link01.top}}, udp: true}
+  - {name: 104|Relay_JP-🇯🇵JP_1091 |29.09Mb, server: us1.opensocks.site, port: 8388, type: ss, cipher: chacha20-ietf-poly1305, password: OTQzNTk1, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232..., server: 62.146.232.157, port: 52856, type: vmess, uuid: ed54e388-bfc5-4b36-ae4d-8b3cd460d3d4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇫🇷 259 607|9|法国(yudou66.com 玉豆免费节点), server: beyonddsz.cfd, port: 443, type: vmess, uuid: 9b456c2a-f2c1-45e1-87a9-b7628b04bb24, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: beyonddsz.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 11, server: 38.121.43.97, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 356 536|🇺🇸 美国 CloudFlare, server: 104.16.155.10, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.249.215, headers: {Host: 100-103-58-39.s1.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 4, server: s1.db-link02.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.20.8.162, headers: {Host: 100-6-81-226.s1.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 5, server: s1.cn-db.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.9.180, headers: {Host: 100-185-39-111.s1.cn-db.top}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-158, server: s1.db-link02.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-213-61-102.s1.db-link02.top, network: ws, ws-opts: {path: /dabai.in104.21.151.202, headers: {Host: 100-213-61-102.s1.db-link02.top}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1", server: 189jw-g01.jp06-7c5a-vm0.entry.fr0307a.art, port: 28783, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1", server: 88dn0-g01.jp03-7d22-vm0.entry.fr0307a.art, port: 21581, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1", server: a57r2-g01.jp05-6786-vm0.entry.fr0307a.art, port: 46482, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1", server: uzl8g-g01.jp07-1f28-vm0.entry.fr0307a.art, port: 28783, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1 2", server: 6vsau-g01.jp05-6786-vm0.entry.fr0307a.art, port: 46482, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1", server: 72l2e-g01.jp02-9a99-vm0.entry.fr0307a.art, port: 11773, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 6, server: s1.cn-db.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.27.73, headers: {Host: 100-150-51-99.s1.cn-db.top}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1", server: x8vqu-g01.jp01-0986-vm0.entry.fr0307a.art, port: 21581, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_9-07, server: s1.cn-db.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.19.138.212, headers: {Host: 100-171-52-115.s1.cn-db.top}}, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_37, server: s1.db-link02.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.75.187, headers: {Host: 100-44-70-80.s1.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_4-07, server: s1.db-link02.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.21.151.202, headers: {Host: 100-213-61-102.s1.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 5, server: 139.64.165.101, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇸🇬 0 243|Singapore-Singapore|✭nginx_320, server: 64.176.85.73, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 6, server: 139.64.165.101, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 12, server: 38.121.43.97, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 13, server: 38.121.43.97, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1", server: 7a7cu-g01.jp04-3771-vm0.entry.fr0307a.art, port: 444, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 14, server: 38.121.43.97, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1 2", server: fmvnm-g01.jp04-3771-vm0.entry.fr0307a.art, port: 444, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴, server: tsadfhyifgk.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 15, server: 38.121.43.97, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: "🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232... #1", server: 62.146.232.153, port: 53144, type: vmess, uuid: 13e13a3e-e981-4eea-a9fc-13e50628fd9b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 65|日本, server: 1-osaka-p.aboutanime.eu.org, port: 23451, type: vmess, uuid: 561becc9-1239-435a-8531-2892e21ea99e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: 1-osaka-p.aboutanime.eu.org}}, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 7, server: 104.17.221.248, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-174-237-7.s3.db-link01.top, network: ws, ws-opts: {path: /dabai.in172.64.15.161, headers: {Host: 100-174-237-7.s3.db-link01.top}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 16, server: 38.121.43.97, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: "🇺🇸 82|mfuu-🇺🇸 美国 CloudFlare节点-worker-general #118", server: chat.openai.com, port: 443, type: vmess, uuid: 3f638f34-8dba-4186-bc43-2716a7ddd4be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hagh77.ir, network: ws, ws-opts: {path: /az05.beyondy.cfd/link, headers: {Host: hagh77.ir}}, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233..., server: 62.146.233.53, port: 50678, type: vmess, uuid: 5d1ec6e7-fd58-4e85-91c5-6335a86d2775, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 17, server: 38.121.43.97, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 18, server: 38.121.43.97, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴 2, server: tsadfhyifgk.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 7, server: 139.64.165.101, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: "🇺🇸 54 203 249 250 281|🇺🇸 美国 CloudFlare节点 #64", server: 104.19.48.236, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.20.27.115, headers: {Host: 100-209-47-141.s2.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 美国Miami  FL  United States, server: 67.220.74.202, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: "🇰🇷 [1808.ga]韩国>加拿大 多伦多", server: si.1808.site, port: 30002, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 19, server: 38.121.43.97, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: "🇺🇸 4 54 203 249 250 281|🇺🇸 美国 CloudFlare节点 #70", server: 104.16.68.38, port: 2082, type: vmess, uuid: 6c168fcc-2231-4f3b-8c1e-f6391692df4a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /hms02.fxiaomi.sbs/link, headers: {Host: 38hhuiet-glitter-ee01.lijeyet360.workers.dev}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-30, server: s2.db-link02.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.21.83.57, headers: {Host: 100-4-20-123.s2.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 20, server: 38.121.43.97, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇸🇬 7 14 45 59 76 104 106 120 123|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.247:57143, server: 154.26.129.247, port: 57143, type: vmess, uuid: 28efbf36-079a-4c98-8470-d13458db6ee6, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 21, server: 38.121.43.97, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 7 45 59 75 76 83 106|🇰🇷KR_708, server: 146.56.112.110, port: 8888, type: vmess, uuid: e7c302f3-90d6-42dd-9d7d-94a3683a3707, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-25, server: s2.db-link01.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-110-189-146.s2.db-link01.top, network: ws, ws-opts: {path: /dabai.in104.21.112.58, headers: {Host: 100-110-189-146.s2.db-link01.top}}, udp: true}
+  - {name: 5 7 14 16 18 59 106|🇸🇬 SG_1005, server: 128.199.172.224, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇺🇸 美国United States, server: 51.81.33.5, port: 48231, type: ss, cipher: chacha20-ietf-poly1305, password: bebcb2d8bb1d7db7, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_27-03, server: s4.cn-db.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.124.184, headers: {Host: 100-106-60-74.s4.cn-db.top}}, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴, server: tsadfhyifgk.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-41, server: s5.db-link01.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-62-189-118.s5.db-link01.top, network: ws, ws-opts: {path: /dabai.in104.24.204.143, headers: {Host: 100-62-189-118.s5.db-link01.top}}, udp: true}
+  - {name: "🇰🇷 75 76 88 104 116 120|🇰🇷 KR>加拿大 多伦多 #1", server: si.1808.site, port: 30002, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 22, server: 38.121.43.97, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴, server: recvhwashhry.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 16 104 106|🇭🇰 HK_656, server: 103.149.183.10, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23..., server: 109.123.232.74, port: 59032, type: vmess, uuid: 96ab7e1f-bf0d-45cd-8ebc-c8be2f8d43cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴, server: pppasdfjetyj.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_8-03, server: 104.19.48.236, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.71.198, headers: {Host: 100-41-36-35.s2.db-link01.top}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 23, server: 38.121.43.97, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 24, server: 38.121.43.97, port: 2376, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴, server: tsadfhyifgk.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-16, server: 23.162.200.91, port: 20182, type: vmess, uuid: cc9b66b7-1de7-4aa9-9642-575a8ae3ff19, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 Singapore, server: sgp.fastsoonlink.com, port: 40005, type: ss, cipher: chacha20-ietf-poly1305, password: 3FB23A19-9424-40C7-9139-3540228283FA, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-137.175.97.159:8388, server: 137.175.97.159, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 8, server: s1.cn-db.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.19.155.231, headers: {Host: 100-230-189-184.s1.cn-db.top}}, udp: true}
+  - {name: 🇭🇰 香港Hong Kong, server: hon5.vpntype.dev, port: 8388, type: ss, cipher: aes-256-gcm, password: Txw8QgzXzg2PwvcF, udp: true}
+  - {name: "🇺🇸 117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #65", server: 104.21.94.168, port: 443, type: vmess, uuid: 62aa5f80-0328-4004-a375-7f5a59df4022, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: hms19.best-tizi.top}}, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴 2, server: tsadfhyifgk.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴, server: tsadfhyifgk.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇨🇳 76|188|台湾_010309115 M45, server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: 🇨🇳 TW-185.189.160.98-0466 | 6.018MB, server: 185.189.160.98, port: 64759, type: ss, cipher: aes-256-cfb, password: qwerREWQ@@, udp: true}
+  - {name: 🇨🇳 3492|台湾_010309115 M45, server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: 🇭🇰 香港Hong Kong 2, server: hon5.vpntype.dev, port: 8388, type: ss, cipher: aes-256-gcm, password: iS7RsVIfpdnHOxW9, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴 2, server: tsadfhyifgk.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 7 14 45 59 76 104 106 123|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.156:33281, server: 62.146.232.156, port: 33281, type: vmess, uuid: 24eda0ea-acf0-4538-a001-f746a480237a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 356|美国+Amazon+EC2服务器_1_1-02, server: 3.28.107.6, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: u17T3BvpYaaiuW2c, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴, server: nsdfryucvvr.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 243 356|美国%2B, server: 40.172.178.194, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: u17T3BvpYaaiuW2c, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴 2, server: nsdfryucvvr.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 25, server: 38.121.43.97, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1..., server: 62.146.232.156, port: 33281, type: vmess, uuid: 24eda0ea-acf0-4538-a001-f746a480237a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-157, server: s1.db-link02.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-103-58-39.s1.db-link02.top, network: ws, ws-opts: {path: /dabai.in104.25.249.215, headers: {Host: 100-103-58-39.s1.db-link02.top}}, udp: true}
+  - {name: 🇭🇰 中国-香港 2, server: 45.144.174.12, port: 20004, type: vmess, uuid: fceff025-b4ea-4fd2-9093-151b3bd503cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：79 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: 7d3dea75-4636-4de5-bf3b-47ccc3411434, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴, server: pppasdfjetyj.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-69, server: s1.db-link01.top, port: 80, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-97-115-235.s1.db-link01.top, network: ws, ws-opts: {path: /dabai.in104.24.32.204, headers: {Host: 100-97-115-235.s1.db-link01.top}}, udp: true}
+  - {name: "🇸🇬 0 3 201 297 301 307 564 566 568 576 580 581 582 584 590|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23... #12", server: 109.123.232.74, port: 59032, type: vmess, uuid: 96ab7e1f-bf0d-45cd-8ebc-c8be2f8d43cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：88.93 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: 219e2f40-759b-4e00-9d4b-4bd588e5b84e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇭🇰 中国-香港 3, server: 45.144.174.12, port: 20004, type: vmess, uuid: 219e2f40-759b-4e00-9d4b-4bd588e5b84e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 45 75 76 83|美国 CloudFlare节点 #8", server: 104.16.155.10, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.175.137, headers: {Host: 100-102-247-92.s1.db-link02.top}}, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 9, server: s4.db-link01.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.5.70, headers: {Host: 100-44-229-26.s4.db-link01.top}}, udp: true}
+  - {name: 🇭🇰 中国-香港 4, server: 45.144.174.12, port: 20004, type: vmess, uuid: 7d3dea75-4636-4de5-bf3b-47ccc3411434, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-93, server: 152.70.57.182, port: 443, type: vmess, uuid: e537f2f5-2a0c-4f59-92c9-832ca6433bf3, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: irvideo.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: irvideo.cfd}}, udp: true}
+  - {name: 🇸🇬 0 3 79 82 117 364 366 422 425 442 602|🇸🇬SG-68.183.227.236-3228 | 29...., server: 68.183.227.236, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴 2, server: pppasdfjetyj.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 26, server: 38.121.43.97, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇯🇵 日本Japan, server: 156.231.104.17, port: 18007, type: ss, cipher: aes-256-gcm, password: 1H5KX5QZBUOWP2P4, udp: true}
+  - {name: "🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点 2", server: s1.db-link01.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-151-164-47.s1.db-link01.top, network: ws, ws-opts: {path: /dabai.in172.67.2.142, headers: {Host: 100-151-164-47.s1.db-link01.top}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴, server: pppasdfjetyj.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 27, server: 38.121.43.97, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_17-06, server: s2.cn-db.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.18.128.173, headers: {Host: 100-28-190-253.s2.cn-db.top}}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴, server: recvhwashhry.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 117 210 290 297 301 302 355 364 421 422 431 432 435 440 441 442 459 462 463 464 652|美国_0310093, server: 172.67.172.168, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: us03s.5d8ecf82.cfd}}, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001 2, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: d1037421-3977-4cae-8462-0c7d22745e84, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🇺🇸 美国-纽约-001 2, server: 207.90.238.136, port: 20008, type: vmess, uuid: d1037421-3977-4cae-8462-0c7d22745e84, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴 2, server: pppasdfjetyj.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001 3, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: 219e2f40-759b-4e00-9d4b-4bd588e5b84e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001 4, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: fceff025-b4ea-4fd2-9093-151b3bd503cd, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：74.61 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: fceff025-b4ea-4fd2-9093-151b3bd503cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001 5, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: 7d3dea75-4636-4de5-bf3b-47ccc3411434, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🇺🇸 美国-纽约-001 3, server: 207.90.238.136, port: 20008, type: vmess, uuid: 7d3dea75-4636-4de5-bf3b-47ccc3411434, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国-纽约-001 4, server: 207.90.238.136, port: 20008, type: vmess, uuid: 219e2f40-759b-4e00-9d4b-4bd588e5b84e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇸🇬 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233.53:50678, server: 62.146.233.53, port: 50678, type: vmess, uuid: 5d1ec6e7-fd58-4e85-91c5-6335a86d2775, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴, server: pppasdfjetyj.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 45 76 77 104 107|🇺🇸 美国-拉斯维加斯-001, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: 281927a3-e031-4154-988d-71dc4e37b957, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: biazh.mmzhk.website, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴, server: pppasdfjetyj.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 28, server: 38.121.43.97, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: "🇸🇬 7 14 45 59 76 106 123|🇸🇬[openproxylist.com] vmess-SG #1", server: 62.146.232.157, port: 52856, type: vmess, uuid: ed54e388-bfc5-4b36-ae4d-8b3cd460d3d4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "4 253|❓_🇨🇳:🇭🇰_💼_github.com/Ruk1ng001... #2", server: 103.149.182.61, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴, server: pppasdfjetyj.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137.42:44104, server: 154.26.137.42, port: 44104, type: vmess, uuid: e9933a4c-e56e-458c-bcf4-9cb3875bba55, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴, server: recvhwashhry.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: "🇺🇸 75 76 83|美国 CloudFlare节点 #16", server: s4.db-link02.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.238.226, headers: {Host: 100-217-184-172.s4.db-link02.top}}, udp: true}
+  - {name: 🇭🇰 中国-香港 5, server: 45.144.174.12, port: 20004, type: vmess, uuid: d1037421-3977-4cae-8462-0c7d22745e84, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴 2, server: pppasdfjetyj.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：48.08 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: d1037421-3977-4cae-8462-0c7d22745e84, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 7 14 59 106|🇯🇵JP_698, server: 103.35.189.42, port: 8388, type: ss, cipher: chacha20-ietf-poly1305, password: NGYzZTg5, udp: true}
+  - {name: 🇺🇸 美国 CloudFlare节点 10, server: s4.cn-db.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-59-178-247.s4.cn-db.top, network: ws, ws-opts: {path: /dabai.in104.19.101.110, headers: {Host: 100-59-178-247.s4.cn-db.top}}, udp: true}
+  - {name: 🇺🇸 美国-纽约-001 5, server: 207.90.238.136, port: 20008, type: vmess, uuid: fceff025-b4ea-4fd2-9093-151b3bd503cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 29, server: 38.121.43.97, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 117 210 248 290 355 364 421 422 431 432 435 440 441 442 457 459 652|美国_0310094, server: 172.67.42.232, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: us03s.5d8ecf82.cfd}}, udp: true}
+  - {name: "🇺🇸 45 76 83|美国 CloudFlare节点 #35", server: 104.16.155.10, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.249.215, headers: {Host: 100-103-58-39.s1.db-link02.top}}, udp: true}
+  - {name: 🇸🇬 1602 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2..., server: 154.26.129.247, port: 57143, type: vmess, uuid: 28efbf36-079a-4c98-8470-d13458db6ee6, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴, server: tsadfhyifgk.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 8, server: 69.50.95.86, port: 5499, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇸🇬 602|🇸🇬SG-107.148.37.70-3896 | 13.8..., server: 107.148.37.70, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 9, server: 69.50.95.86, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 0 3 356|美国%2B华盛顿Cogent通信公司_2_2_2, server: 38.68.134.23, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国United States 2, server: 204.136.10.115, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 10, server: 69.50.95.86, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States, server: 38.68.134.23, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 11, server: 69.50.95.86, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 12, server: 139.64.165.123, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 13, server: 69.50.95.86, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 14, server: 69.50.95.86, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 15, server: 69.50.95.86, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 16, server: 69.50.95.86, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 17, server: 69.50.95.86, port: 9090, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 2, server: 38.114.122.252, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States, server: 38.86.135.239, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 2, server: 23.154.136.132, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: "🇺🇸 33 391|美国10 tg@freebaipiao #1", server: 38.68.134.190, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 3, server: 38.68.134.23, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Chicago  IL  United States, server: 38.114.121.249, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 18, server: 69.50.95.86, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 19, server: 69.50.95.86, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 20, server: 69.50.95.86, port: 5001, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 21, server: 69.50.95.86, port: 8000, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 22, server: 69.50.95.245, port: 445, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 23, server: 139.64.165.123, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 3, server: 23.154.136.132, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 4, server: 23.154.136.132, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 5, server: 23.154.136.132, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 6, server: 23.154.136.132, port: 5499, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 24, server: 69.50.95.86, port: 2376, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 25, server: 69.50.95.245, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 26, server: 69.50.95.86, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States, server: 142.202.48.105, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Reston  VA  United States, server: 69.50.93.80, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 6 #1", server: 69.50.93.47, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 12 #1", server: 69.50.93.47, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 7, server: 23.154.136.132, port: 8888, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 27, server: 69.50.95.86, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 28, server: 69.50.95.86, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 29, server: 69.50.95.86, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 1|美国2 |  3.6MB/s, server: 3.38.97.249, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 8, server: 23.154.136.132, port: 9090, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 9, server: 23.154.136.132, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 10, server: 23.154.136.132, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States, server: 142.202.49.111, port: 5000, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: "🇺🇸 33 391|美国11 tg@freebaipiao #1", server: 38.68.134.190, port: 2376, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: "🇺🇸 33 391|美国09 tg@freebaipiao #1", server: 38.68.134.190, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Denver  CO  United States 30, server: 69.50.95.86, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: "🇺🇸 45 75 76 83|美国 CloudFlare节点 #14", server: s1.db-link02.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.249.215, headers: {Host: 100-103-58-39.s1.db-link02.top}}, udp: true}
+  - {name: "🇭🇰 0 4 117 259 422 442|🇭🇰HK-103.149.182.191-6063 #2", server: 103.149.182.191, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴 2, server: pppasdfjetyj.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 30, server: 38.83.114.105, port: 5498, type: ss, cipher: aes-256-gcm, password: lGqs95QkFHo2NV, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 31, server: 38.121.43.97, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 11, server: 23.154.136.132, port: 5600, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 12, server: 38.107.226.250, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 2, server: 142.202.49.122, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 3, server: 142.202.49.122, port: 5500, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 🇺🇸 美国Reston  VA  United States 2, server: 69.50.93.80, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 13, server: 23.154.136.132, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 4, server: 142.202.49.122, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇺🇸 美国Reston  VA  United States 3, server: 69.50.93.47, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 5, server: 142.202.49.122, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 6, server: 142.202.49.122, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 🇺🇸 美国Reston  VA  United States 4, server: 69.50.93.47, port: 5003, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States 2, server: 142.202.48.105, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 14, server: 23.154.136.132, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 2, server: 162.251.63.124, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1..., server: 62.146.233.112, port: 36712, type: vmess, uuid: 9266df42-0830-48c2-8509-4c57b30fe29d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Ashburn  VA  United States 7, server: 142.202.49.122, port: 9102, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 11 #1", server: 69.50.93.47, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Chicago  IL  United States 2, server: 38.114.121.218, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States 3, server: 142.202.48.105, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 32, server: 38.121.43.71, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Reston  VA  United States 5, server: 69.50.93.47, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 15, server: 23.154.136.132, port: 7307, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 🇺🇸 美国Reston  VA  United States 6, server: 69.50.93.47, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 16, server: 23.154.136.132, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 33, server: 38.121.43.97, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 美国Los Angeles  CA  United States 3, server: 162.251.63.123, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 17, server: 23.154.136.44, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-YouTube-204.136.10.115:1866, server: 204.136.10.115, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇺🇸 美国Newark  NJ  United States 4, server: 142.202.48.105, port: 443, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: "🇺🇸 82|barry-far-🇺🇸 美国 CloudFlare节点-worker-general #14", server: laravel.com, port: 443, type: vmess, uuid: 3f638f34-8dba-4186-bc43-2716a7ddd4be, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hagh77.ir, network: ws, ws-opts: {path: /az05.beyondy.cfd/link, headers: {Host: hagh77.ir}}, udp: true}
+  - {name: 🇺🇸 3568 3569 3570 3589|🇸US美国2 1.9MB/s, server: 38.114.121.218, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 14 36 75 76 123 160|美国【机场推荐：https://socks.news】15, server: s5.db-link02.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.20.16.209, headers: {Host: 100-149-191-2.s5.db-link02.top}}, udp: true}
+  - {name: 🇰🇷 364|🇰🇷 KR 4, server: 52.78.138.171, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇺🇸 398|TG:@hkaa0|美国_39\r", server: 38.68.134.202, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: "🇺🇸 398|TG:@hkaa0|美国_72\r", server: 38.68.134.202, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: "🇺🇸 398|TG:@hkaa0|美国_75\r", server: 38.121.43.27, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 🇺🇸 VMESS-未知>美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-lax2.ibgfw.top:8443, server: lax2.ibgfw.top, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇺🇸 3568 3569 3589|🇺🇸US美国2 1.8MB/s, server: 38.114.121.218, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 18, server: 23.154.136.132, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴, server: nsdfryucvvr.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: "🇺🇸 398|TG:@hkaa0|美国_71\r", server: 38.68.134.202, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: "🇺🇸 398|TG:@hkaa0|美国_78\r", server: 38.121.43.27, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 🇰🇷 364|🇰🇷 KR 5, server: 43.203.122.90, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 805 3570 3575 3593|Singapore_Singapore_ss_1133, server: 13.250.103.231, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 248|美国 V2CROSS.COM, server: 170.114.46.139, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232..., server: 62.146.232.157, port: 52856, type: vmess, uuid: ed54e388-bfc5-4b36-ae4d-8b3cd460d3d4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 1602|美国 043 #4", server: 162.120.94.103, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2..., server: 154.26.129.247, port: 57143, type: vmess, uuid: 28efbf36-079a-4c98-8470-d13458db6ee6, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 351|美国 Vegasnap, server: 104.129.164.255, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇺🇸 14 75 76 160|美国【机场推荐：https://socks.news】3, server: s5.db-link01.top, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.24.108.89, headers: {Host: 100-170-6-223.s5.db-link01.top}}, udp: true}
+  - {name: "🇺🇸 76 158|美国(yudou66.com 玉豆免费节点) #49", server: s2.db-link01.top, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-65-56-224.s2.db-link01.top, network: ws, ws-opts: {path: /dabai.in104.17.133.52, headers: {Host: 100-65-56-224.s2.db-link01.top}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴, server: recvhwashhry.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴, server: tsadfhyifgk.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 Singapore 2, server: 104.129.164.255, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇺🇸 VMESS-未知>美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-uswuxian.pai50288.uk:8443, server: uswuxian.pai50288.uk, port: 8443, type: vmess, uuid: c313606f-98c2-4d7b-ba74-48b94f61b11d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: uswuxian.pai50288.uk}}, udp: true}
+  - {name: 7 14 16 59 106|🇭🇰 HK_658, server: 154.223.16.212, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23..., server: 109.123.232.74, port: 59032, type: vmess, uuid: 96ab7e1f-bf0d-45cd-8ebc-c8be2f8d43cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1..., server: 62.146.233.112, port: 36712, type: vmess, uuid: 9266df42-0830-48c2-8509-4c57b30fe29d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴 2, server: pppasdfjetyj.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Atlanta  GA  United States 34, server: 38.121.43.97, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: "🇺🇸 0 398|TG:@hkaa0|美国_76\r", server: 38.121.43.27, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴, server: recvhwashhry.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 19, server: 23.154.136.132, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233..., server: 62.146.233.53, port: 50678, type: vmess, uuid: 5d1ec6e7-fd58-4e85-91c5-6335a86d2775, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 45 75 76 83|美国 CloudFlare节点 #27", server: s2.db-link01.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.0.32, headers: {Host: 100-14-147-154.s2.db-link01.top}}, udp: true}
+  - {name: 🇺🇸 美国Dallas  TX  United States 4, server: 23.150.248.50, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 🇺🇸 _NL_荷兰->🇺🇸_US_美国, server: 193.29.139.189, port: 8080, type: ss, cipher: chacha20-ietf-poly1305, password: cvII85TrW6n0OGyfpHVS1u, udp: true}
+  - {name: 🇺🇸 美国 Amazon, server: 35.91.198.93, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇺🇸 0 259 356 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #13", server: uswuxian.pai50288.uk, port: 8443, type: vmess, uuid: c313606f-98c2-4d7b-ba74-48b94f61b11d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: uswuxian.pai50288.uk, network: ws, ws-opts: {path: /, headers: {Host: uswuxian.pai50288.uk}}, udp: true}
+  - {name: "🇺🇸 54 203 210 248 249 250 281|🇺🇸 美国 CloudFlare节点 #69", server: s2.db-link01.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.0.32, headers: {Host: 100-14-147-154.s2.db-link01.top}}, udp: true}
+  - {name: "🇺🇸 45 75 104 120|美国 CloudFlare节点 #40", server: 104.19.48.236, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.239.131, headers: {Host: 100-128-12-180.s4.db-link02.top}}, udp: true}
+  - {name: 🇭🇰 香港Hong Kong 3, server: hon5.vpntype.dev, port: 8388, type: ss, cipher: aes-256-gcm, password: 8okRF7yrZUtTlReY, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 20, server: 23.154.136.132, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1..., server: 62.146.232.156, port: 33281, type: vmess, uuid: 24eda0ea-acf0-4538-a001-f746a480237a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137..., server: 154.26.137.42, port: 44104, type: vmess, uuid: e9933a4c-e56e-458c-bcf4-9cb3875bba55, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 21, server: 23.154.136.132, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇭🇰 香港Hong Kong  Hong Kong, server: 156.245.190.16, port: 15007, type: ss, cipher: aes-256-gcm, password: MHZUEOX3KBXAV09K, udp: true}
+  - {name: "🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232... #1", server: 62.146.232.153, port: 53144, type: vmess, uuid: 13e13a3e-e981-4eea-a9fc-13e50628fd9b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_28-02, server: 104.18.149.76, port: 443, type: vmess, uuid: 506b46ce-568f-47a7-f0dd-0864fb7f8040, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: sg.kkp.me.eu.org, network: ws, ws-opts: {path: /aa, headers: {Host: sg.kkp.me.eu.org}}, udp: true}
+  - {name: "🇺🇸 0 398|TG:@hkaa0|美国_80\r", server: 38.121.43.27, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-103.36.91.23:8388, server: 103.36.91.23, port: 8388, type: ss, cipher: chacha20-ietf, password: asd123456, udp: true}
+  - {name: 🇺🇸 _US_美国_1, server: 185.237.185.160, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137..., server: 154.26.137.42, port: 44104, type: vmess, uuid: e9933a4c-e56e-458c-bcf4-9cb3875bba55, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴 2, server: tsadfhyifgk.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴 2, server: nsdfryucvvr.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 KR>加拿大 多伦多, server: si.1808.site, port: 30002, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 2, server: 154.196.244.25, port: 16015, type: ss, cipher: aes-256-gcm, password: I6DRVVQ4OOMIRMJD, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-54.201.149.176:443, server: 54.201.149.176, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 1|新加坡2 |  5.7MB/s, server: 13.250.103.231, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 5 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.232.74:59032, server: 109.123.232.74, port: 59032, type: vmess, uuid: 96ab7e1f-bf0d-45cd-8ebc-c8be2f8d43cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 香港Hong Kong 4, server: hon5.vpntype.dev, port: 8388, type: ss, cipher: aes-256-gcm, password: Kqwu6O5NIOzgvjWu, udp: true}
+  - {name: 🇸🇬 5 7 14 45 59 76 106 123|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.112:36712, server: 62.146.233.112, port: 36712, type: vmess, uuid: 9266df42-0830-48c2-8509-4c57b30fe29d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国St Louis  MO  United States 3, server: 217.77.3.48, port: 41691, type: ss, cipher: chacha20-ietf-poly1305, password: ad37dd4a0b603e59, udp: true}
+  - {name: 🇺🇸 5 6 7 14 16 59 62 106 161|🇺🇸_US_美国_3, server: 185.237.185.160, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: "🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点 3", server: s4.db-link02.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.8.26, headers: {Host: 100-145-217-186.s4.db-link02.top}}, udp: true}
+  - {name: "🇺🇸 75 76|48 164|🇺🇸 美国 CloudFlare节点 #14", server: s2.db-link01.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.68.139, headers: {Host: 100-154-72-114.s2.db-link01.top}}, udp: true}
+  - {name: 🇨🇳 台湾Taipei  TPE  Taiwan, server: 223.165.4.173, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇨🇳 0 3 602|🇨🇳TW-185.189.160.98-3166 | 18...., server: 185.189.160.98, port: 64759, type: ss, cipher: aes-256-cfb, password: qwerREWQ@@, udp: true}
+  - {name: 🇸🇬 Singapore 3, server: 27.50.48.188, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001 6, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: 1cc59a3a-9625-40f7-b0e6-e233286ae82d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：969.19 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: 363d0358-29c1-4319-9210-1b335b171501, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 0 259 260 364 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #14", server: biazh.mmzhk.website, port: 443, type: vmess, uuid: e847c424-8033-4da5-b798-c6e8384cd350, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: biazh.mmzhk.website, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🇺🇸 SS-TCP-NA 美国-35.95.37.205:443, server: 35.95.37.205, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 美国United States 3, server: 23.185.248.17, port: 17007, type: ss, cipher: aes-256-gcm, password: Z7C08JB1HBMWQHVP, udp: true}
+  - {name: 🇭🇰 中国-香港 6, server: 45.144.174.12, port: 20004, type: vmess, uuid: 363d0358-29c1-4319-9210-1b335b171501, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇸🇬 7 14 45 59 76 106 123|🇸🇬[openproxylist.com] vmess-SG #2", server: 62.146.232.153, port: 53144, type: vmess, uuid: 13e13a3e-e981-4eea-a9fc-13e50628fd9b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 351 379 669|日本(yudou66.com 玉豆免费节点) #2", server: 172.67.202.155, port: 2082, type: vmess, uuid: 5ce824bc-d76b-4420-aef3-45a7bade5228, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /@MEHDIO1, headers: {Host: zoornazanfarsineveshtam.onetwothree123.ir}}, udp: true}
+  - {name: 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-194.233.72.2..., server: 194.233.72.228, port: 27575, type: vmess, uuid: 16509262-dbe2-43ba-99ce-07913d2a18b4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 日本Japan 2, server: 156.231.104.19, port: 18009, type: ss, cipher: aes-256-gcm, password: TQQGWG024W2BF6RP, udp: true}
+  - {name: 🇺🇸 0 356|美国-18.6MB/s-08, server: 156.231.104.17, port: 18007, type: ss, cipher: aes-256-gcm, password: 1H5KX5QZBUOWP2P4, udp: true}
+  - {name: 🇺🇸 美国-拉斯维加斯-001 7, server: biazh.mmzhk.website, port: 443, type: vmess, uuid: 363d0358-29c1-4319-9210-1b335b171501, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: biazh.mmzhk.website}}, udp: true}
+  - {name: 🇺🇸 73 210 239 240 536|🇺🇸 美国 CloudFlare节点 5, server: zoornazanfarsineveshtam.onetwothree123.ir, port: 8880, type: vmess, uuid: 1bcf1eb7-d9cb-4972-f054-d9b41be3fef8, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /@MEHDIO1, headers: {Host: zoornazanfarsineveshtam.onetwothree123.ir}}, udp: true}
+  - {name: 🇺🇸 美国-纽约-001 6, server: 207.90.238.136, port: 20008, type: vmess, uuid: 1cc59a3a-9625-40f7-b0e6-e233286ae82d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇭🇰 中国-香港 7, server: 45.144.174.12, port: 20004, type: vmess, uuid: 1cc59a3a-9625-40f7-b0e6-e233286ae82d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🏳️‍🌈 剩余流量：875.16 GB, server: 5.39.252.72, port: 20008, type: vmess, uuid: 1cc59a3a-9625-40f7-b0e6-e233286ae82d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇺🇸 0 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #12", server: lax2.ibgfw.top, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇭🇰 0 364|中国-香港, server: 45.144.174.12, port: 20004, type: vmess, uuid: 1cc59a3a-9625-40f7-b0e6-e233286ae82d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 7 14 16 59 104 106|🇭🇰 HK_663, server: 154.196.244.21, port: 16011, type: ss, cipher: aes-256-gcm, password: 8WDLSCVIFB4I26GB, udp: true}
+  - {name: 🇯🇵 日本Japan 3, server: 156.231.104.20, port: 18010, type: ss, cipher: aes-256-gcm, password: 0A876XZUZX93N371, udp: true}
+  - {name: 🇺🇸 美国-纽约-001 7, server: 207.90.238.136, port: 20008, type: vmess, uuid: 363d0358-29c1-4319-9210-1b335b171501, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: "🇭🇰 3570 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1", server: 103.149.183.178, port: 54675, type: vmess, uuid: 3a907956-f668-4e6b-ea03-0949f0c9c0a5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 0 364|美国-纽约-001, server: 207.90.238.136, port: 20008, type: vmess, uuid: 1cc59a3a-9625-40f7-b0e6-e233286ae82d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 0 356|美国-21.8MB/s-09, server: 156.231.104.26, port: 18016, type: ss, cipher: aes-256-gcm, password: PGF2TGUCHQBC5IP5, udp: true}
+  - {name: 7 14 16 59 104 106|🇭🇰 HK_664, server: 154.196.244.25, port: 16015, type: ss, cipher: aes-256-gcm, password: I6DRVVQ4OOMIRMJD, udp: true}
+  - {name: 🇭🇰 香港Hong Kong  Hong Kong 2, server: 156.245.190.24, port: 15015, type: ss, cipher: aes-256-gcm, password: UQ62K8G88VGBNZXO, udp: true}
+  - {name: 🇯🇵 日本Japan 4, server: 156.231.104.26, port: 18016, type: ss, cipher: aes-256-gcm, password: PGF2TGUCHQBC5IP5, udp: true}
+  - {name: 🇸🇬 新加坡DY, server: www.visa.com.tw, port: 443, type: vmess, uuid: aab269af-a266-4d1b-b4ce-da36a4b0bdf0, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: meat-newfoundland-loads-vegas.trycloudflare.com, network: ws, ws-opts: {path: "/vmess-argo?ed=2048", headers: {Host: meat-newfoundland-loads-vegas.trycloudflare.com}}, udp: true}
+  - {name: "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1", server: 103.149.183.178, port: 27512, type: vmess, uuid: 96d38683-0817-4d91-bffa-6f03df18d9dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 0 356|美国-16.3MB/s-11, server: 156.231.104.21, port: 18011, type: ss, cipher: aes-256-gcm, password: 17J24GBDGLTUHDF3, udp: true}
+  - {name: 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183...., server: 103.149.183.178, port: 54675, type: vmess, uuid: 3a907956-f668-4e6b-ea03-0949f0c9c0a5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 7 14 45 59 75 76 104 106 123|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.178:54675, server: 103.149.183.178, port: 54675, type: vmess, uuid: 3a907956-f668-4e6b-ea03-0949f0c9c0a5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 美国United States 4, server: 23.185.248.13, port: 17003, type: ss, cipher: aes-256-gcm, password: LKG8G8VL60RSB59P, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 3, server: 154.196.244.21, port: 16011, type: ss, cipher: aes-256-gcm, password: 8WDLSCVIFB4I26GB, udp: true}
+  - {name: 🇭🇰 7 14 45 59 75 76 104 123|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.178:27512, server: 103.149.183.178, port: 27512, type: vmess, uuid: 96d38683-0817-4d91-bffa-6f03df18d9dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 4, server: 154.196.244.12, port: 16002, type: ss, cipher: aes-256-gcm, password: CZWGKVVKET2BTRBK, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴 2, server: tsadfhyifgk.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 7 14 45 59 76 104 106 123|🔒 VM-TCP-NA 🇸🇬 SG-194.233.72.228:27575, server: 194.233.72.228, port: 27575, type: vmess, uuid: 16509262-dbe2-43ba-99ce-07913d2a18b4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇺🇸 0 117 356 422 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #4", server: 23.185.248.17, port: 17007, type: ss, cipher: aes-256-gcm, password: Z7C08JB1HBMWQHVP, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 5, server: 154.196.244.24, port: 16014, type: ss, cipher: aes-256-gcm, password: Y7Y0EUXF5ZZKJTFU, udp: true}
+  - {name: 🇭🇰 3570 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183...., server: 103.149.183.178, port: 27512, type: vmess, uuid: 96d38683-0817-4d91-bffa-6f03df18d9dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 日本Japan 5, server: 156.231.104.24, port: 18014, type: ss, cipher: aes-256-gcm, password: 3JHTNK13T6BCEVNH, udp: true}
+  - {name: 🇭🇰 香港Hong Kong  Hong Kong 3, server: 156.245.190.19, port: 15010, type: ss, cipher: aes-256-gcm, password: AYC4MQ5DSGJ4QOKG, udp: true}
+  - {name: 关注电报https://t.me/mftizi, server: 156.245.190.19, port: 15010, type: ss, cipher: aes-256-gcm, password: AYC4MQ5DSGJ4QOKG, udp: true}
+  - {name: 2 5 7 14 16 59 106|🇭🇰 HK_669, server: 203.23.128.33, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 6, server: 154.196.244.20, port: 16010, type: ss, cipher: aes-256-gcm, password: 2UOL8ESS12X0J31P, udp: true}
+  - {name: "🇺🇸 0 117 356 422 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #3", server: 23.185.248.13, port: 17003, type: ss, cipher: aes-256-gcm, password: LKG8G8VL60RSB59P, udp: true}
+  - {name: 5 7 14 16 18 59 104 106|🇭🇰 HK_657, server: 154.196.244.26, port: 16016, type: ss, cipher: aes-256-gcm, password: YHK82TR73114VN9O, udp: true}
+  - {name: 🇭🇰 香港Hong Kong  Hong Kong 4, server: 156.245.190.23, port: 15014, type: ss, cipher: aes-256-gcm, password: ZDGC0Q2E112UAJO6, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 7, server: 154.196.244.26, port: 16016, type: ss, cipher: aes-256-gcm, password: YHK82TR73114VN9O, udp: true}
+  - {name: 🇯🇵 日本Japan 6, server: 156.231.104.21, port: 18011, type: ss, cipher: aes-256-gcm, password: 17J24GBDGLTUHDF3, udp: true}
+  - {name: "🇸🇬 0 1 3 117 243 259 422 442|🇸🇬SG-156.244.9.92-5915 #2", server: 156.244.9.92, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 8, server: 156.244.9.92, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇺🇸 SS-美国-ChatGPT-TikTok-YouTube-23.185.248.17:17007, server: 23.185.248.17, port: 17007, type: ss, cipher: aes-256-gcm, password: Z7C08JB1HBMWQHVP, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-23.185.248.17:17007, server: 23.185.248.17, port: 17007, type: ss, cipher: aes-256-gcm, password: Z7C08JB1HBMWQHVP, udp: true}
+  - {name: 7 14 16 59 106|🇭🇰 HK_667, server: 154.196.244.19, port: 16009, type: ss, cipher: aes-256-gcm, password: EXCB3KKW0GXQ3ECD, udp: true}
+  - {name: 🇯🇵 日本Japan 7, server: 156.231.104.18, port: 18008, type: ss, cipher: aes-256-gcm, password: 53RIUQDZR3B23TA3, udp: true}
+  - {name: 🏳️‍🌈 75|节点全红检查是否流量已用完, server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk03s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: "🇭🇰 75|?? 香港2 - 直連", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk02s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: "🇭🇰 75|?? 香港1 - 直連", server: d0be29.af6f-e047-48f3.cfd, port: 80, type: vmess, uuid: 4bf074f4-7e9c-4e4b-a10d-156e26199729, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: hk01s.af6f-e047-48f3.cfd}}, udp: true}
+  - {name: "@vpn_ioss ♻️ عضو شو", server: 3.28.107.6, port: 443, type: ss, cipher: chacha20-ietf-poly1305, password: u17T3BvpYaaiuW2c, udp: true}
+  - {name: Япония 🇯🇵, server: 156.231.104.23, port: 18013, type: ss, cipher: aes-256-gcm, password: 4OAKJ8CASERAWXI1, udp: true}
+  - {name: "🇯🇵 Japan #16645 / OutlineKeys.com", server: 156.231.104.23, port: 18013, type: ss, cipher: aes-256-gcm, password: 4OAKJ8CASERAWXI1, udp: true}
+  - {name: 🇨🇳 3492|台湾_010309115 M45 2, server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: 🇺🇸 美国Washington  DC  United States 22, server: 23.154.136.132, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇺🇸 橘子公益-美国US-9, server: s3.db-link01.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-44-69-4.s3.db-link01.top, network: ws, ws-opts: {path: /dabai.in104.16.42.241, headers: {Host: 100-44-69-4.s3.db-link01.top}}, udp: true}
+  - {name: 🇸🇬 新加坡Singapore  Singapore 9, server: 154.196.244.19, port: 16009, type: ss, cipher: aes-256-gcm, password: EXCB3KKW0GXQ3ECD, udp: true}
+  - {name: 🇺🇸 美国Tukwila  WA  United States, server: 172.232.171.192, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇯🇵 日本Tokyo  13  Japan, server: 103.106.228.132, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: "🇯🇵 [peasoft/NoMoreWalls]12|日本特殊|@ripaojiedian", server: 54.250.26.118, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇯🇵 日本Japan 8, server: 156.231.104.23, port: 18013, type: ss, cipher: aes-256-gcm, password: 4OAKJ8CASERAWXI1, udp: true}
+  - {name: "14 76|117 247 280 290 330 339 355 421 422 431 432 435 440 441 442 629|PP|www.zyw.asia ZYW免费节点 #27", server: hms02opi.fxiaomi.sbs, port: 443, type: vmess, uuid: 6c168fcc-2231-4f3b-8c1e-f6391692df4a, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, servername: hms02.fxiaomi.sbs, network: ws, ws-opts: {path: /link, headers: {Host: hms02.fxiaomi.sbs}}, udp: true}
+  - {name: "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #3", server: laravel.com, port: 443, type: vmess, uuid: d13fc2f5-3e05-4795-81eb-44143a09e552, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: creativeservices.netflix.com.wukong.asolole.biz.id, network: ws, ws-opts: {path: /sgfqkqmltcy.site/rbqqvws, headers: {Host: creativeservices.netflix.com.wukong.asolole.biz.id}}, udp: true}
+  - {name: "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #4", server: workers.dev, port: 443, type: vmess, uuid: bf67437e-6c90-45ca-abc2-c7240a5ce2aa, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: creativeservices.netflix.com.wukong.asolole.biz.id, network: ws, ws-opts: {path: /foxlux.fovi.tk/eisasqa, headers: {Host: creativeservices.netflix.com.wukong.asolole.biz.id}}, udp: true}
+  - {name: "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #6", server: www.speedtest.net, port: 443, type: vmess, uuid: bf67437e-6c90-45ca-abc2-c7240a5ce2aa, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: fastclubcloud.alpha-panel.ir, network: ws, ws-opts: {path: /foxlux.fovi.tk/eisasqa, headers: {Host: fastclubcloud.alpha-panel.ir}}, udp: true}
+  - {name: "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #9", server: auth0.openai.com, port: 443, type: vmess, uuid: bf67437e-6c90-45ca-abc2-c7240a5ce2aa, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hagh77.ir, network: ws, ws-opts: {path: /foxlux.fovi.tk/eisasqa, headers: {Host: hagh77.ir}}, udp: true}
+  - {name: 🇸🇬 0 3 79 117 422 442 602|🇸🇬SG-68.183.227.45-3183 | 28.2..., server: 68.183.227.45, port: 8080, type: ss, cipher: rc4-md5, password: 14fFPrbezE3HDZzsMOr6, udp: true}
+  - {name: 🇸🇬 0 4 233 253 354 364 639|Singapore_Singapore_ss_1133, server: 13.250.103.231, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇯🇵 3 6 56 67 72 166 201 204 207 211 215 224 225 230 260 262 275 297 301 307 329 406 417 418 419 459 486 547 549 555 556 566 568 576 577 579 580 581 582 584 590 591 607 608 632 644 652|日本_0310001, server: 152.69.197.60, port: 1069, type: vmess, uuid: ac8e26fe-8150-4b60-ae64-82fc77eba2cf, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇸🇬 117 233 259 321 354 357 364 371 422 442 508 533 536 639|Singapore_Singapore_ss_1191 #2", server: 18.140.61.7, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇨🇳 188|台湾_010309115 M45, server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: 259|🇯🇵 JP_291_0@290, server: tls.01.node-for-bigairport.win, port: 11443, type: vmess, uuid: 3519dfc0-fa27-41cc-8c19-981818f9f6d5, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: tls.01.node-for-bigairport.win}}, udp: true}
+  - {name: 🇺🇸 356|美国 CloudFlare节点_29-03, server: s4.cn-db.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.103.33, headers: {Host: 100-59-133-139.s4.cn-db.top}}, udp: true}
+  - {name: 🇯🇵 364|🇯🇵 JP 3, server: 18.183.167.187, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇸🇬 3570 3575 3593|Singapore_Singapore_ss_1132, server: 54.179.23.249, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-23.185.248.13:17003, server: 23.185.248.13, port: 17003, type: ss, cipher: aes-256-gcm, password: LKG8G8VL60RSB59P, udp: true}
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - ✅ 手动选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - 🇺🇸 美国 CloudFlare节点
+      - 🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点
+      - 🇺🇸 VM-TCP-NA 美国-15.204.86.120:35696
+      - 🇺🇸 SS-TCP-NA 美国-107.151.182.253:8080
+      - "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #10"
+      - 🇺🇸 SS-TCP-NA 美国-79.110.53.169:8080
+      - 🇺🇸 351|美国 CloudFlare节点-7
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.232.171.192:1866
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.233.128.126:1866
+      - 🇺🇸 美国 CloudFlare节点 2
+      - 🇺🇸 SS-TCP-NA 美国-23.251.121.242:8080
+      - "🇺🇸 0 3 79 243 398|TG:@hkaa0|美国_38\r"
+      - "🇺🇸 147|pawdroid-美国 CloudFlare节点-worker-general #14"
+      - 🇺🇸 SS-TCP-NA 美国-34.214.175.186:443
+      - 🇺🇸 SS-TCP-NA 美国-107.155.57.51:8080
+      - "🇺🇸 75 76|117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #54"
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-104.207.155.64:1633
+      - 🇺🇸 SS-TCP-NA 美国-184.170.241.194:443
+      - "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #7"
+      - 🇺🇸 美国Los Angeles  CA  United States
+      - "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #11"
+      - 🇺🇸 SS-TCP-NA 美国-138.199.42.68:8080
+      - 36 45 76 104 116 123 154|0|🇭🇰2 |  5.6MB/s
+      - "🇺🇸 164|🇺🇸 美国 CloudFlare节点 #21"
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.232.171.192:1866 2
+      - 🇺🇸 351 356|美国 CloudFlare节点_11-07
+      - "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #8"
+      - 🇺🇸 536|🇺🇸 美国 CloudFlare节点 4
+      - 🇺🇸 SS-TCP-NA 美国-104.192.226.106:989
+      - 🇺🇸 SS-TCP-NA 美国-194.5.215.59:8080
+      - "🇺🇸 0 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #5"
+      - 🇺🇸 259 260 522 614|VMESS-美国-NF解锁自制剧-ChatGPT-TikTo...
+      - 🇺🇸 VM-TCP-NA 美国-15.204.248.92:30562
+      - 🇺🇸 VM-TCP-NA 美国-15.204.249.0:48160
+      - "🇺🇸 34|pawdroid-美国 CloudFlare节点-worker-general #1"
+      - 🇺🇸 橘子公益-美国US-78
+      - 🇺🇸 SS-TCP-NA 美国-45.55.2.232:14293
+      - "🇺🇸 2 5 7 14 16 45 59 75 76 83 87 104 106 116 117 120 123 154|美国 加利福尼亚州洛杉矶PetaExpress #1"
+      - 🇺🇸 美国Atlanta  GA  United States
+      - "🇺🇸 0 117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #66"
+      - 🏳️‍🌈 剩余流量：1938.65 GB
+      - "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #5"
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.233.128.126:1866 2
+      - "🇺🇸 34|pawdroid-美国 CloudFlare节点-worker-general #2"
+      - 🇺🇸 橘子公益-美国US-62
+      - "🇺🇸 1602|美国 137 #4"
+      - "🇺🇸 0 79 82 117 243 364 366 422 425 442 602 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #1"
+      - "🇯🇵 0 3 201 297 301 307 356 459 547 549 555 556 566 568 576 577 579 580|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14... #13"
+      - 🇺🇸 351|美国 CloudFlare节点-5
+      - "🇺🇸 187 356 376 377|美国【机场推荐：https://socks.news】25 #1"
+      - 🇺🇸 VM-TCP-NA 美国-107.148.207.249:48712
+      - 🇺🇸 SS-TCP-NA 美国-173.244.56.9:443
+      - 🇺🇸 45|Relay_🇺🇸US-🇭🇰HK_235 |32.07Mb
+      - 🇺🇸 0 79 82 117 243 364 366 422 425 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y...
+      - 🇺🇸 橘子公益-美国US-51
+      - 🇺🇸 45 76 160|美国【机场推荐：https://socks.news】25
+      - "🇺🇸 0 79 82 117 243 364 366 422 425 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #2"
+      - "🇺🇸 69|autoproxy-🇺🇸_US_美国-worker-general #4"
+      - 🇸🇬 SG  Singapore @mfbpn
+      - "🇺🇸 147|autoproxy-🇺🇸_US_美国-worker-general #7"
+      - 🇺🇸 2 5 7 14 16 45 59 76 83 104 106 116 117 123 154|美国 加利福尼亚州圣何塞PEG TECH
+      - 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14...
+      - 🇯🇵 0 3 79 82 117 243 364 366 422 425 442 602|🇯🇵JP-149.22.87.204-3311 | 31.1...
+      - 🇯🇵 5 7 14 45 59 76 106 123|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.141:550
+      - 106|🇯🇵JP_699
+      - 🇰🇷 364|🇰🇷 KR 3
+      - "🇺🇸 64|autoproxy-🇺🇸_US_美国-worker-general #3"
+      - "🇯🇵 0 3 79 82 117 243 364 366 422 425 442 506|🇯🇵 日本4 #1"
+      - 🇸🇬 130|VIP-SG  Singapore
+      - 🇸🇬 0 3 79 82 117 364 366 422 425 442 602|🇸🇬SG-128.199.172.224-3377 | 29...
+      - 🇺🇸 美国St Louis  MO  United States
+      - 🇺🇸 美国Atlanta  GA  United States 2
+      - 🇸🇬 0 79|🇸🇬SG-68.183.235.122-3919 | 15....
+      - 🇸🇬 0 3 79 82 364 366 425 602|🇸🇬SG-68.183.227.4-3315 | 29.83...
+      - 120|🇯🇵@AZARBAYJAB1
+      - 🇺🇸 美国Denver  CO  United States
+      - 🇺🇸 SS-TCP-NA 美国-137.175.113.215:8388
+      - "@myVPN98 عضو شو"
+      - 🇺🇸 293 356|美国 CloudFlare节点_32-03
+      - "🇺🇸 6 259 260 398|TG:@hkaa0|美国_88 #1"
+      - 7 14 16 59 104 106|🇸🇬 SG_1004
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_38...
+      - 🇺🇸 美国-拉斯维加斯-001
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_63...
+      - 🇺🇸 SS-TCP-NA 美国-194.116.173.21:9038
+      - 253|❓_🇸🇬_💼_github.com/Ruk1ng001_34...
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_64...
+      - "🇸🇬 805 3537 3570 3575 3576 3577 3593|Singapore_Singapore_ss_1191 #1"
+      - 253|❓_🇸🇬_💼_github.com/Ruk1ng001_63...
+      - "🇸🇬 661|SG_Singapore_Amazon Technologi... #1"
+      - 🇸🇬 0 4 253 639|Singapore_Singapore_ss_1132
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_32...
+      - 🇸🇬 1|新加坡1 |  5.5MB/s
+      - "🇸🇬 253 661|SG_Singapore_Amazon.com  Inc._... #4"
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_37...
+      - 🇺🇸 789 1226 1323 1362 1603 3492 3505 3570 3571 3591|🇺🇸 _US_美国 22
+      - 🇺🇸 美国Seattle  WA  United States
+      - "🇸🇬 0 4 117 259 422 442 661|SG_Singapore_Amazon Technologi... #2"
+      - 🇺🇸 789 1226 1323 1362 1603 3492 3505 3571 3591|🇺🇸 _US_美国 22
+      - 🇺🇸 3 79 356|美国%2B华盛顿(Amazon)公司数据中心
+      - "🇺🇸 147|mfuu-🇺🇸 美国 CloudFlare节点-worker-general #155"
+      - 🇺🇸 美国Atlanta  GA  United States 3
+      - 7 10 14 31 59 91 104 111|🇸🇬SG_92 |45.46Mb
+      - 🇯🇵 12|日本特殊|@ripaojiedian
+      - 🇸🇬 75|?? Singapore 4 - 直连
+      - 🏳️‍🌈 75|剩余流量：1952.14 GB
+      - 🇯🇵 1 7 11 14 16 17 18 45 59 76 86 106 111 118 120 123|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.60:1069
+      - 🇯🇵 3498 3570 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6...
+      - 🇺🇸 美国Atlanta  GA  United States 4
+      - 🇸🇬 ?? Singapore 4 - 直连
+      - 🇸🇬 ?? Singapore 1 - 直连
+      - 🇺🇸 美国Atlanta  GA  United States 5
+      - 5 14 16 18 106|🇸🇬 SG_1006
+      - 🇺🇸 _US_美国_4
+      - 🇺🇸 美国Atlanta  GA  United States 6
+      - 🇺🇸 美国St Louis  MO  United States 2
+      - "🇺🇸 147|pawdroid-美国 CloudFlare节点-worker-general #13"
+      - 🇺🇸 美国Atlanta  GA  United States 7
+      - "🇺🇸 65|美国-纽约-F3-001 #1"
+      - 🏳️‍🌈 剩余流量：992.02 GB
+      - 🇸🇬 135|SG_Singapore_Amazon.com  Inc._OpenAI_Claude4
+      - 🇺🇸 美国Denver  CO  United States 2
+      - 🇸🇬 135|SG_Singapore_Amazon Technologies Inc._OpenAI_Claude2
+      - 🇺🇸 美国Denver  CO  United States 3
+      - 🇺🇸 美国 CloudFlare节点 3
+      - 🇭🇰 75|?? 香港4 - 直連
+      - 🇺🇸 美国Denver  CO  United States 4
+      - 🇭🇰 ?? 香港1 - 直連
+      - "🇸🇬 0 201 297 301 307 564 566 568 576 580 581 582 584 590|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137... #12"
+      - 🇭🇰 中国-香港
+      - "🇺🇸 247 356 376 377|美国【机场推荐：https://socks.news】32 #1"
+      - 🇭🇰 ?? 香港4 - 直連
+      - 🇺🇸 美国Atlanta  GA  United States 8
+      - 🇺🇸 美国-纽约-001
+      - 🇸🇬 7 14 16 18 59 91 104 135|SG_Singapore_Amazon Technologies Inc._OpenAI_Claude3
+      - 🇺🇸 210 356|美国 CloudFlare节点_13-07
+      - 🇭🇰 ?? 香港3 - 直連
+      - 🇺🇸 美国Atlanta  GA  United States 9
+      - 🇺🇸 美国Atlanta  GA  United States 10
+      - 🇸🇬 新加坡Singapore  Singapore
+      - "🇺🇸 1602|美国 065 #4"
+      - 104|Relay_JP-🇯🇵JP_1091 |29.09Mb
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - 🇫🇷 259 607|9|法国(yudou66.com 玉豆免费节点)
+      - 🇺🇸 美国Atlanta  GA  United States 11
+      - 🇺🇸 356 536|🇺🇸 美国 CloudFlare
+      - 🇺🇸 美国 CloudFlare节点 4
+      - 🇺🇸 美国 CloudFlare节点 5
+      - 🇺🇸 橘子公益-美国US-158
+      - "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1 2"
+      - "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1"
+      - 🇺🇸 美国 CloudFlare节点 6
+      - "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1"
+      - 🇺🇸 356|美国 CloudFlare节点_9-07
+      - 🇺🇸 356|美国 CloudFlare节点_37
+      - 🇺🇸 356|美国 CloudFlare节点_4-07
+      - 🇺🇸 美国Denver  CO  United States 5
+      - 🇸🇬 0 243|Singapore-Singapore|✭nginx_320
+      - 🇺🇸 美国Denver  CO  United States 6
+      - 🇺🇸 美国Atlanta  GA  United States 12
+      - 🇺🇸 美国Atlanta  GA  United States 13
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1"
+      - 🇺🇸 美国Atlanta  GA  United States 14
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1 2"
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴
+      - 🇺🇸 美国Atlanta  GA  United States 15
+      - "🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232... #1"
+      - 🇯🇵 65|日本
+      - 🇺🇸 美国 CloudFlare节点 7
+      - 🇺🇸 美国Atlanta  GA  United States 16
+      - "🇺🇸 82|mfuu-🇺🇸 美国 CloudFlare节点-worker-general #118"
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - 🇺🇸 美国Atlanta  GA  United States 17
+      - 🇺🇸 美国Atlanta  GA  United States 18
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴 2
+      - 🇺🇸 美国Denver  CO  United States 7
+      - "🇺🇸 54 203 249 250 281|🇺🇸 美国 CloudFlare节点 #64"
+      - 🇺🇸 美国Miami  FL  United States
+      - 🇰🇷 [1808.ga]韩国>加拿大 多伦多
+      - 🇺🇸 美国Atlanta  GA  United States 19
+      - "🇺🇸 4 54 203 249 250 281|🇺🇸 美国 CloudFlare节点 #70"
+      - 🇺🇸 橘子公益-美国US-30
+      - 🇺🇸 美国Atlanta  GA  United States 20
+      - 🇸🇬 7 14 45 59 76 104 106 120 123|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.247:57143
+      - 🇺🇸 美国Atlanta  GA  United States 21
+      - 7 45 59 75 76 83 106|🇰🇷KR_708
+      - 🇺🇸 橘子公益-美国US-25
+      - 5 7 14 16 18 59 106|🇸🇬 SG_1005
+      - 🇺🇸 美国United States
+      - 🇺🇸 356|美国 CloudFlare节点_27-03
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴
+      - 🇺🇸 橘子公益-美国US-41
+      - "🇰🇷 75 76 88 104 116 120|🇰🇷 KR>加拿大 多伦多 #1"
+      - 🇺🇸 美国Atlanta  GA  United States 22
+      - 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴
+      - 16 104 106|🇭🇰 HK_656
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴
+      - 🇺🇸 356|美国 CloudFlare节点_8-03
+      - 🇺🇸 美国Atlanta  GA  United States 23
+      - 🇺🇸 美国Atlanta  GA  United States 24
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴
+      - 🇺🇸 橘子公益-美国US-16
+      - 🇸🇬 Singapore
+      - 🇺🇸 SS-TCP-NA 美国-137.175.97.159:8388
+      - 🇺🇸 美国 CloudFlare节点 8
+      - 🇭🇰 香港Hong Kong
+      - "🇺🇸 117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #65"
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴 2
+      - 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴
+      - 🇨🇳 76|188|台湾_010309115 M45
+      - 🇨🇳 TW-185.189.160.98-0466 | 6.018MB
+      - 🇨🇳 3492|台湾_010309115 M45
+      - 🇭🇰 香港Hong Kong 2
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴 2
+      - 🇸🇬 7 14 45 59 76 104 106 123|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.156:33281
+      - 🇺🇸 356|美国+Amazon+EC2服务器_1_1-02
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴
+      - 🇺🇸 243 356|美国%2B
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 25
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 🇺🇸 橘子公益-美国US-157
+      - 🇭🇰 中国-香港 2
+      - 🏳️‍🌈 剩余流量：79 GB
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴
+      - 🇺🇸 橘子公益-美国US-69
+      - "🇸🇬 0 3 201 297 301 307 564 566 568 576 580 581 582 584 590|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23... #12"
+      - 🏳️‍🌈 剩余流量：88.93 GB
+      - 🇭🇰 中国-香港 3
+      - "🇺🇸 45 75 76 83|美国 CloudFlare节点 #8"
+      - 🇺🇸 美国 CloudFlare节点 9
+      - 🇭🇰 中国-香港 4
+      - 🇺🇸 橘子公益-美国US-93
+      - 🇸🇬 0 3 79 82 117 364 366 422 425 442 602|🇸🇬SG-68.183.227.236-3228 | 29....
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 26
+      - 🇯🇵 日本Japan
+      - 🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点 2
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴
+      - 🇺🇸 美国Atlanta  GA  United States 27
+      - 🇺🇸 356|美国 CloudFlare节点_17-06
+      - 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴
+      - 🇺🇸 117 210 290 297 301 302 355 364 421 422 431 432 435 440 441 442 459 462 463 464 652|美国_0310093
+      - 🇺🇸 美国-拉斯维加斯-001 2
+      - 🇺🇸 美国-纽约-001 2
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴 2
+      - 🇺🇸 美国-拉斯维加斯-001 3
+      - 🇺🇸 美国-拉斯维加斯-001 4
+      - 🏳️‍🌈 剩余流量：74.61 GB
+      - 🇺🇸 美国-拉斯维加斯-001 5
+      - 🇺🇸 美国-纽约-001 3
+      - 🇺🇸 美国-纽约-001 4
+      - 🇸🇬 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233.53:50678
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴
+      - 🇺🇸 45 76 77 104 107|🇺🇸 美国-拉斯维加斯-001
+      - 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴
+      - 🇺🇸 美国Atlanta  GA  United States 28
+      - "🇸🇬 7 14 45 59 76 106 123|🇸🇬[openproxylist.com] vmess-SG #1"
+      - "4 253|❓_🇨🇳:🇭🇰_💼_github.com/Ruk1ng001... #2"
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴
+      - 🇸🇬 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137.42:44104
+      - 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴
+      - "🇺🇸 75 76 83|美国 CloudFlare节点 #16"
+      - 🇭🇰 中国-香港 5
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴 2
+      - 🏳️‍🌈 剩余流量：48.08 GB
+      - 7 14 59 106|🇯🇵JP_698
+      - 🇺🇸 美国 CloudFlare节点 10
+      - 🇺🇸 美国-纽约-001 5
+      - 🇺🇸 美国Atlanta  GA  United States 29
+      - 🇺🇸 117 210 248 290 355 364 421 422 431 432 435 440 441 442 457 459 652|美国_0310094
+      - "🇺🇸 45 76 83|美国 CloudFlare节点 #35"
+      - 🇸🇬 1602 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴
+      - 🇺🇸 美国Denver  CO  United States 8
+      - 🇸🇬 602|🇸🇬SG-107.148.37.70-3896 | 13.8...
+      - 🇺🇸 美国Denver  CO  United States 9
+      - 🇺🇸 0 3 356|美国%2B华盛顿Cogent通信公司_2_2_2
+      - 🇺🇸 美国United States 2
+      - 🇺🇸 美国Denver  CO  United States 10
+      - 🇺🇸 美国Dallas  TX  United States
+      - 🇺🇸 美国Denver  CO  United States 11
+      - 🇺🇸 美国Denver  CO  United States 12
+      - 🇺🇸 美国Denver  CO  United States 13
+      - 🇺🇸 美国Denver  CO  United States 14
+      - 🇺🇸 美国Denver  CO  United States 15
+      - 🇺🇸 美国Denver  CO  United States 16
+      - 🇺🇸 美国Denver  CO  United States 17
+      - 🇺🇸 美国Dallas  TX  United States 2
+      - 🇺🇸 美国Washington  DC  United States
+      - 🇺🇸 美国Washington  DC  United States 2
+      - "🇺🇸 33 391|美国10 tg@freebaipiao #1"
+      - 🇺🇸 美国Dallas  TX  United States 3
+      - 🇺🇸 美国Chicago  IL  United States
+      - 🇺🇸 美国Denver  CO  United States 18
+      - 🇺🇸 美国Denver  CO  United States 19
+      - 🇺🇸 美国Denver  CO  United States 20
+      - 🇺🇸 美国Denver  CO  United States 21
+      - 🇺🇸 美国Denver  CO  United States 22
+      - 🇺🇸 美国Denver  CO  United States 23
+      - 🇺🇸 美国Washington  DC  United States 3
+      - 🇺🇸 美国Washington  DC  United States 4
+      - 🇺🇸 美国Washington  DC  United States 5
+      - 🇺🇸 美国Washington  DC  United States 6
+      - 🇺🇸 美国Denver  CO  United States 24
+      - 🇺🇸 美国Denver  CO  United States 25
+      - 🇺🇸 美国Denver  CO  United States 26
+      - 🇺🇸 美国Newark  NJ  United States
+      - 🇺🇸 美国Reston  VA  United States
+      - "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 6 #1"
+      - "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 12 #1"
+      - 🇺🇸 美国Washington  DC  United States 7
+      - 🇺🇸 美国Denver  CO  United States 27
+      - 🇺🇸 美国Denver  CO  United States 28
+      - 🇺🇸 美国Denver  CO  United States 29
+      - 🇺🇸 1|美国2 |  3.6MB/s
+      - 🇺🇸 美国Washington  DC  United States 8
+      - 🇺🇸 美国Washington  DC  United States 9
+      - 🇺🇸 美国Washington  DC  United States 10
+      - 🇺🇸 美国Ashburn  VA  United States
+      - "🇺🇸 33 391|美国11 tg@freebaipiao #1"
+      - "🇺🇸 33 391|美国09 tg@freebaipiao #1"
+      - 🇺🇸 美国Denver  CO  United States 30
+      - "🇺🇸 45 75 76 83|美国 CloudFlare节点 #14"
+      - "🇭🇰 0 4 117 259 422 442|🇭🇰HK-103.149.182.191-6063 #2"
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 30
+      - 🇺🇸 美国Atlanta  GA  United States 31
+      - 🇺🇸 美国Washington  DC  United States 11
+      - 🇺🇸 美国Washington  DC  United States 12
+      - 🇺🇸 美国Ashburn  VA  United States 2
+      - 🇺🇸 美国Ashburn  VA  United States 3
+      - 🇺🇸 美国Reston  VA  United States 2
+      - 🇺🇸 美国Washington  DC  United States 13
+      - 🇺🇸 美国Ashburn  VA  United States 4
+      - 🇺🇸 美国Reston  VA  United States 3
+      - 🇺🇸 美国Ashburn  VA  United States 5
+      - 🇺🇸 美国Ashburn  VA  United States 6
+      - 🇺🇸 美国Reston  VA  United States 4
+      - 🇺🇸 美国Newark  NJ  United States 2
+      - 🇺🇸 美国Washington  DC  United States 14
+      - 🇺🇸 美国Los Angeles  CA  United States 2
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 🇺🇸 美国Ashburn  VA  United States 7
+      - "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 11 #1"
+      - 🇺🇸 美国Chicago  IL  United States 2
+      - 🇺🇸 美国Newark  NJ  United States 3
+      - 🇺🇸 美国Atlanta  GA  United States 32
+      - 🇺🇸 美国Reston  VA  United States 5
+      - 🇺🇸 美国Washington  DC  United States 15
+      - 🇺🇸 美国Reston  VA  United States 6
+      - 🇺🇸 美国Washington  DC  United States 16
+      - 🇺🇸 美国Atlanta  GA  United States 33
+      - 🇺🇸 美国Los Angeles  CA  United States 3
+      - 🇺🇸 美国Washington  DC  United States 17
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-YouTube-204.136.10.115:1866
+      - 🇺🇸 美国Newark  NJ  United States 4
+      - "🇺🇸 82|barry-far-🇺🇸 美国 CloudFlare节点-worker-general #14"
+      - 🇺🇸 3568 3569 3570 3589|🇸US美国2 1.9MB/s
+      - 🇺🇸 14 36 75 76 123 160|美国【机场推荐：https://socks.news】15
+      - 🇰🇷 364|🇰🇷 KR 4
+      - "🇺🇸 398|TG:@hkaa0|美国_39\r"
+      - "🇺🇸 398|TG:@hkaa0|美国_72\r"
+      - "🇺🇸 398|TG:@hkaa0|美国_75\r"
+      - 🇺🇸 VMESS-未知>美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-lax2.ibgfw.top:8443
+      - 🇺🇸 3568 3569 3589|🇺🇸US美国2 1.8MB/s
+      - 🇺🇸 美国Washington  DC  United States 18
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴
+      - "🇺🇸 398|TG:@hkaa0|美国_71\r"
+      - "🇺🇸 398|TG:@hkaa0|美国_78\r"
+      - 🇰🇷 364|🇰🇷 KR 5
+      - 🇸🇬 805 3570 3575 3593|Singapore_Singapore_ss_1133
+      - 🇺🇸 248|美国 V2CROSS.COM
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - "🇺🇸 1602|美国 043 #4"
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇺🇸 351|美国 Vegasnap
+      - 🇺🇸 14 75 76 160|美国【机场推荐：https://socks.news】3
+      - "🇺🇸 76 158|美国(yudou66.com 玉豆免费节点) #49"
+      - 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴
+      - 🇸🇬 Singapore 2
+      - 🇺🇸 VMESS-未知>美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-uswuxian.pai50288.uk:8443
+      - 7 14 16 59 106|🇭🇰 HK_658
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 34
+      - "🇺🇸 0 398|TG:@hkaa0|美国_76\r"
+      - 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴
+      - 🇺🇸 美国Washington  DC  United States 19
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - "🇺🇸 45 75 76 83|美国 CloudFlare节点 #27"
+      - 🇺🇸 美国Dallas  TX  United States 4
+      - 🇺🇸 _NL_荷兰->🇺🇸_US_美国
+      - 🇺🇸 美国 Amazon
+      - "🇺🇸 0 259 356 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #13"
+      - "🇺🇸 54 203 210 248 249 250 281|🇺🇸 美国 CloudFlare节点 #69"
+      - "🇺🇸 45 75 104 120|美国 CloudFlare节点 #40"
+      - 🇭🇰 香港Hong Kong 3
+      - 🇺🇸 美国Washington  DC  United States 20
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137...
+      - 🇺🇸 美国Washington  DC  United States 21
+      - 🇭🇰 香港Hong Kong  Hong Kong
+      - "🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232... #1"
+      - 🇺🇸 356|美国 CloudFlare节点_28-02
+      - "🇺🇸 0 398|TG:@hkaa0|美国_80\r"
+      - 🇺🇸 SS-TCP-NA 美国-103.36.91.23:8388
+      - 🇺🇸 _US_美国_1
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137...
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴 2
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴 2
+      - 🇰🇷 KR>加拿大 多伦多
+      - 🇸🇬 新加坡Singapore  Singapore 2
+      - 🇺🇸 SS-TCP-NA 美国-54.201.149.176:443
+      - 🇸🇬 1|新加坡2 |  5.7MB/s
+      - 🇸🇬 5 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.232.74:59032
+      - 🇭🇰 香港Hong Kong 4
+      - 🇸🇬 5 7 14 45 59 76 106 123|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.112:36712
+      - 🇺🇸 美国St Louis  MO  United States 3
+      - 🇺🇸 5 6 7 14 16 59 62 106 161|🇺🇸_US_美国_3
+      - 🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点 3
+      - "🇺🇸 75 76|48 164|🇺🇸 美国 CloudFlare节点 #14"
+      - 🇨🇳 台湾Taipei  TPE  Taiwan
+      - 🇨🇳 0 3 602|🇨🇳TW-185.189.160.98-3166 | 18....
+      - 🇸🇬 Singapore 3
+      - 🇺🇸 美国-拉斯维加斯-001 6
+      - 🏳️‍🌈 剩余流量：969.19 GB
+      - "🇺🇸 0 259 260 364 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #14"
+      - 🇺🇸 SS-TCP-NA 美国-35.95.37.205:443
+      - 🇺🇸 美国United States 3
+      - 🇭🇰 中国-香港 6
+      - "🇸🇬 7 14 45 59 76 106 123|🇸🇬[openproxylist.com] vmess-SG #2"
+      - "🇯🇵 351 379 669|日本(yudou66.com 玉豆免费节点) #2"
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-194.233.72.2...
+      - 🇯🇵 日本Japan 2
+      - 🇺🇸 0 356|美国-18.6MB/s-08
+      - 🇺🇸 美国-拉斯维加斯-001 7
+      - 🇺🇸 73 210 239 240 536|🇺🇸 美国 CloudFlare节点 5
+      - 🇺🇸 美国-纽约-001 6
+      - 🇭🇰 中国-香港 7
+      - 🏳️‍🌈 剩余流量：875.16 GB
+      - "🇺🇸 0 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #12"
+      - 🇭🇰 0 364|中国-香港
+      - 7 14 16 59 104 106|🇭🇰 HK_663
+      - 🇯🇵 日本Japan 3
+      - 🇺🇸 美国-纽约-001 7
+      - "🇭🇰 3570 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 🇺🇸 0 364|美国-纽约-001
+      - 🇺🇸 0 356|美国-21.8MB/s-09
+      - 7 14 16 59 104 106|🇭🇰 HK_664
+      - 🇭🇰 香港Hong Kong  Hong Kong 2
+      - 🇯🇵 日本Japan 4
+      - 🇸🇬 新加坡DY
+      - "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 🇺🇸 0 356|美国-16.3MB/s-11
+      - 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - 🇭🇰 7 14 45 59 75 76 104 106 123|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.178:54675
+      - 🇺🇸 美国United States 4
+      - 🇸🇬 新加坡Singapore  Singapore 3
+      - 🇭🇰 7 14 45 59 75 76 104 123|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.178:27512
+      - 🇸🇬 新加坡Singapore  Singapore 4
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴 2
+      - 🇸🇬 7 14 45 59 76 104 106 123|🔒 VM-TCP-NA 🇸🇬 SG-194.233.72.228:27575
+      - "🇺🇸 0 117 356 422 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #4"
+      - 🇸🇬 新加坡Singapore  Singapore 5
+      - 🇭🇰 3570 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - 🇯🇵 日本Japan 5
+      - 🇭🇰 香港Hong Kong  Hong Kong 3
+      - 关注电报https://t.me/mftizi
+      - 2 5 7 14 16 59 106|🇭🇰 HK_669
+      - 🇸🇬 新加坡Singapore  Singapore 6
+      - "🇺🇸 0 117 356 422 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #3"
+      - 5 7 14 16 18 59 104 106|🇭🇰 HK_657
+      - 🇭🇰 香港Hong Kong  Hong Kong 4
+      - 🇸🇬 新加坡Singapore  Singapore 7
+      - 🇯🇵 日本Japan 6
+      - "🇸🇬 0 1 3 117 243 259 422 442|🇸🇬SG-156.244.9.92-5915 #2"
+      - 🇸🇬 新加坡Singapore  Singapore 8
+      - 🇺🇸 SS-美国-ChatGPT-TikTok-YouTube-23.185.248.17:17007
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-23.185.248.17:17007
+      - 7 14 16 59 106|🇭🇰 HK_667
+      - 🇯🇵 日本Japan 7
+      - 🏳️‍🌈 75|节点全红检查是否流量已用完
+      - 🇭🇰 75|?? 香港2 - 直連
+      - 🇭🇰 75|?? 香港1 - 直連
+      - "@vpn_ioss ♻️ عضو شو"
+      - Япония 🇯🇵
+      - "🇯🇵 Japan #16645 / OutlineKeys.com"
+      - 🇨🇳 3492|台湾_010309115 M45 2
+      - 🇺🇸 美国Washington  DC  United States 22
+      - 🇺🇸 橘子公益-美国US-9
+      - 🇸🇬 新加坡Singapore  Singapore 9
+      - 🇺🇸 美国Tukwila  WA  United States
+      - 🇯🇵 日本Tokyo  13  Japan
+      - 🇯🇵 [peasoft/NoMoreWalls]12|日本特殊|@ripaojiedian
+      - 🇯🇵 日本Japan 8
+      - "14 76|117 247 280 290 330 339 355 421 422 431 432 435 440 441 442 629|PP|www.zyw.asia ZYW免费节点 #27"
+      - "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #3"
+      - "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #4"
+      - "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #6"
+      - "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #9"
+      - 🇸🇬 0 3 79 117 422 442 602|🇸🇬SG-68.183.227.45-3183 | 28.2...
+      - 🇸🇬 0 4 233 253 354 364 639|Singapore_Singapore_ss_1133
+      - 🇯🇵 3 6 56 67 72 166 201 204 207 211 215 224 225 230 260 262 275 297 301 307 329 406 417 418 419 459 486 547 549 555 556 566 568 576 577 579 580 581 582 584 590 591 607 608 632 644 652|日本_0310001
+      - "🇸🇬 117 233 259 321 354 357 364 371 422 442 508 533 536 639|Singapore_Singapore_ss_1191 #2"
+      - 🇨🇳 188|台湾_010309115 M45
+      - 259|🇯🇵 JP_291_0@290
+      - 🇺🇸 356|美国 CloudFlare节点_29-03
+      - 🇯🇵 364|🇯🇵 JP 3
+      - 🇸🇬 3570 3575 3593|Singapore_Singapore_ss_1132
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-23.185.248.13:17003
+  - name: ✅ 手动选择
+    type: select
+    proxies:
+      - 🇺🇸 美国 CloudFlare节点
+      - 🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点
+      - 🇺🇸 VM-TCP-NA 美国-15.204.86.120:35696
+      - 🇺🇸 SS-TCP-NA 美国-107.151.182.253:8080
+      - "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #10"
+      - 🇺🇸 SS-TCP-NA 美国-79.110.53.169:8080
+      - 🇺🇸 351|美国 CloudFlare节点-7
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.232.171.192:1866
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.233.128.126:1866
+      - 🇺🇸 美国 CloudFlare节点 2
+      - 🇺🇸 SS-TCP-NA 美国-23.251.121.242:8080
+      - "🇺🇸 0 3 79 243 398|TG:@hkaa0|美国_38\r"
+      - "🇺🇸 147|pawdroid-美国 CloudFlare节点-worker-general #14"
+      - 🇺🇸 SS-TCP-NA 美国-34.214.175.186:443
+      - 🇺🇸 SS-TCP-NA 美国-107.155.57.51:8080
+      - "🇺🇸 75 76|117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #54"
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-104.207.155.64:1633
+      - 🇺🇸 SS-TCP-NA 美国-184.170.241.194:443
+      - "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #7"
+      - 🇺🇸 美国Los Angeles  CA  United States
+      - "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #11"
+      - 🇺🇸 SS-TCP-NA 美国-138.199.42.68:8080
+      - 36 45 76 104 116 123 154|0|🇭🇰2 |  5.6MB/s
+      - "🇺🇸 164|🇺🇸 美国 CloudFlare节点 #21"
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.232.171.192:1866 2
+      - 🇺🇸 351 356|美国 CloudFlare节点_11-07
+      - "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #8"
+      - 🇺🇸 536|🇺🇸 美国 CloudFlare节点 4
+      - 🇺🇸 SS-TCP-NA 美国-104.192.226.106:989
+      - 🇺🇸 SS-TCP-NA 美国-194.5.215.59:8080
+      - "🇺🇸 0 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #5"
+      - 🇺🇸 259 260 522 614|VMESS-美国-NF解锁自制剧-ChatGPT-TikTo...
+      - 🇺🇸 VM-TCP-NA 美国-15.204.248.92:30562
+      - 🇺🇸 VM-TCP-NA 美国-15.204.249.0:48160
+      - "🇺🇸 34|pawdroid-美国 CloudFlare节点-worker-general #1"
+      - 🇺🇸 橘子公益-美国US-78
+      - 🇺🇸 SS-TCP-NA 美国-45.55.2.232:14293
+      - "🇺🇸 2 5 7 14 16 45 59 75 76 83 87 104 106 116 117 120 123 154|美国 加利福尼亚州洛杉矶PetaExpress #1"
+      - 🇺🇸 美国Atlanta  GA  United States
+      - "🇺🇸 0 117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #66"
+      - 🏳️‍🌈 剩余流量：1938.65 GB
+      - "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #5"
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-172.233.128.126:1866 2
+      - "🇺🇸 34|pawdroid-美国 CloudFlare节点-worker-general #2"
+      - 🇺🇸 橘子公益-美国US-62
+      - "🇺🇸 1602|美国 137 #4"
+      - "🇺🇸 0 79 82 117 243 364 366 422 425 442 602 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #1"
+      - "🇯🇵 0 3 201 297 301 307 356 459 547 549 555 556 566 568 576 577 579 580|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14... #13"
+      - 🇺🇸 351|美国 CloudFlare节点-5
+      - "🇺🇸 187 356 376 377|美国【机场推荐：https://socks.news】25 #1"
+      - 🇺🇸 VM-TCP-NA 美国-107.148.207.249:48712
+      - 🇺🇸 SS-TCP-NA 美国-173.244.56.9:443
+      - 🇺🇸 45|Relay_🇺🇸US-🇭🇰HK_235 |32.07Mb
+      - 🇺🇸 0 79 82 117 243 364 366 422 425 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y...
+      - 🇺🇸 橘子公益-美国US-51
+      - 🇺🇸 45 76 160|美国【机场推荐：https://socks.news】25
+      - "🇺🇸 0 79 82 117 243 364 366 422 425 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #2"
+      - "🇺🇸 69|autoproxy-🇺🇸_US_美国-worker-general #4"
+      - 🇸🇬 SG  Singapore @mfbpn
+      - "🇺🇸 147|autoproxy-🇺🇸_US_美国-worker-general #7"
+      - 🇺🇸 2 5 7 14 16 45 59 76 83 104 106 116 117 123 154|美国 加利福尼亚州圣何塞PEG TECH
+      - 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14...
+      - 🇯🇵 0 3 79 82 117 243 364 366 422 425 442 602|🇯🇵JP-149.22.87.204-3311 | 31.1...
+      - 🇯🇵 5 7 14 45 59 76 106 123|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.141:550
+      - 106|🇯🇵JP_699
+      - 🇰🇷 364|🇰🇷 KR 3
+      - "🇺🇸 64|autoproxy-🇺🇸_US_美国-worker-general #3"
+      - "🇯🇵 0 3 79 82 117 243 364 366 422 425 442 506|🇯🇵 日本4 #1"
+      - 🇸🇬 130|VIP-SG  Singapore
+      - 🇸🇬 0 3 79 82 117 364 366 422 425 442 602|🇸🇬SG-128.199.172.224-3377 | 29...
+      - 🇺🇸 美国St Louis  MO  United States
+      - 🇺🇸 美国Atlanta  GA  United States 2
+      - 🇸🇬 0 79|🇸🇬SG-68.183.235.122-3919 | 15....
+      - 🇸🇬 0 3 79 82 364 366 425 602|🇸🇬SG-68.183.227.4-3315 | 29.83...
+      - 120|🇯🇵@AZARBAYJAB1
+      - 🇺🇸 美国Denver  CO  United States
+      - 🇺🇸 SS-TCP-NA 美国-137.175.113.215:8388
+      - "@myVPN98 عضو شو"
+      - 🇺🇸 293 356|美国 CloudFlare节点_32-03
+      - "🇺🇸 6 259 260 398|TG:@hkaa0|美国_88 #1"
+      - 7 14 16 59 104 106|🇸🇬 SG_1004
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_38...
+      - 🇺🇸 美国-拉斯维加斯-001
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_63...
+      - 🇺🇸 SS-TCP-NA 美国-194.116.173.21:9038
+      - 253|❓_🇸🇬_💼_github.com/Ruk1ng001_34...
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_64...
+      - "🇸🇬 805 3537 3570 3575 3576 3577 3593|Singapore_Singapore_ss_1191 #1"
+      - 253|❓_🇸🇬_💼_github.com/Ruk1ng001_63...
+      - "🇸🇬 661|SG_Singapore_Amazon Technologi... #1"
+      - 🇸🇬 0 4 253 639|Singapore_Singapore_ss_1132
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_32...
+      - 🇸🇬 1|新加坡1 |  5.5MB/s
+      - "🇸🇬 253 661|SG_Singapore_Amazon.com  Inc._... #4"
+      - 253|🟡_🇸🇬_💼_github.com/Ruk1ng001_37...
+      - 🇺🇸 789 1226 1323 1362 1603 3492 3505 3570 3571 3591|🇺🇸 _US_美国 22
+      - 🇺🇸 美国Seattle  WA  United States
+      - "🇸🇬 0 4 117 259 422 442 661|SG_Singapore_Amazon Technologi... #2"
+      - 🇺🇸 789 1226 1323 1362 1603 3492 3505 3571 3591|🇺🇸 _US_美国 22
+      - 🇺🇸 3 79 356|美国%2B华盛顿(Amazon)公司数据中心
+      - "🇺🇸 147|mfuu-🇺🇸 美国 CloudFlare节点-worker-general #155"
+      - 🇺🇸 美国Atlanta  GA  United States 3
+      - 7 10 14 31 59 91 104 111|🇸🇬SG_92 |45.46Mb
+      - 🇯🇵 12|日本特殊|@ripaojiedian
+      - 🇸🇬 75|?? Singapore 4 - 直连
+      - 🏳️‍🌈 75|剩余流量：1952.14 GB
+      - 🇯🇵 1 7 11 14 16 17 18 45 59 76 86 106 111 118 120 123|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.60:1069
+      - 🇯🇵 3498 3570 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6...
+      - 🇺🇸 美国Atlanta  GA  United States 4
+      - 🇸🇬 ?? Singapore 4 - 直连
+      - 🇸🇬 ?? Singapore 1 - 直连
+      - 🇺🇸 美国Atlanta  GA  United States 5
+      - 5 14 16 18 106|🇸🇬 SG_1006
+      - 🇺🇸 _US_美国_4
+      - 🇺🇸 美国Atlanta  GA  United States 6
+      - 🇺🇸 美国St Louis  MO  United States 2
+      - "🇺🇸 147|pawdroid-美国 CloudFlare节点-worker-general #13"
+      - 🇺🇸 美国Atlanta  GA  United States 7
+      - "🇺🇸 65|美国-纽约-F3-001 #1"
+      - 🏳️‍🌈 剩余流量：992.02 GB
+      - 🇸🇬 135|SG_Singapore_Amazon.com  Inc._OpenAI_Claude4
+      - 🇺🇸 美国Denver  CO  United States 2
+      - 🇸🇬 135|SG_Singapore_Amazon Technologies Inc._OpenAI_Claude2
+      - 🇺🇸 美国Denver  CO  United States 3
+      - 🇺🇸 美国 CloudFlare节点 3
+      - 🇭🇰 75|?? 香港4 - 直連
+      - 🇺🇸 美国Denver  CO  United States 4
+      - 🇭🇰 ?? 香港1 - 直連
+      - "🇸🇬 0 201 297 301 307 564 566 568 576 580 581 582 584 590|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137... #12"
+      - 🇭🇰 中国-香港
+      - "🇺🇸 247 356 376 377|美国【机场推荐：https://socks.news】32 #1"
+      - 🇭🇰 ?? 香港4 - 直連
+      - 🇺🇸 美国Atlanta  GA  United States 8
+      - 🇺🇸 美国-纽约-001
+      - 🇸🇬 7 14 16 18 59 91 104 135|SG_Singapore_Amazon Technologies Inc._OpenAI_Claude3
+      - 🇺🇸 210 356|美国 CloudFlare节点_13-07
+      - 🇭🇰 ?? 香港3 - 直連
+      - 🇺🇸 美国Atlanta  GA  United States 9
+      - 🇺🇸 美国Atlanta  GA  United States 10
+      - 🇸🇬 新加坡Singapore  Singapore
+      - "🇺🇸 1602|美国 065 #4"
+      - 104|Relay_JP-🇯🇵JP_1091 |29.09Mb
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - 🇫🇷 259 607|9|法国(yudou66.com 玉豆免费节点)
+      - 🇺🇸 美国Atlanta  GA  United States 11
+      - 🇺🇸 356 536|🇺🇸 美国 CloudFlare
+      - 🇺🇸 美国 CloudFlare节点 4
+      - 🇺🇸 美国 CloudFlare节点 5
+      - 🇺🇸 橘子公益-美国US-158
+      - "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1 2"
+      - "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1"
+      - 🇺🇸 美国 CloudFlare节点 6
+      - "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1"
+      - 🇺🇸 356|美国 CloudFlare节点_9-07
+      - 🇺🇸 356|美国 CloudFlare节点_37
+      - 🇺🇸 356|美国 CloudFlare节点_4-07
+      - 🇺🇸 美国Denver  CO  United States 5
+      - 🇸🇬 0 243|Singapore-Singapore|✭nginx_320
+      - 🇺🇸 美国Denver  CO  United States 6
+      - 🇺🇸 美国Atlanta  GA  United States 12
+      - 🇺🇸 美国Atlanta  GA  United States 13
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1"
+      - 🇺🇸 美国Atlanta  GA  United States 14
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1 2"
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴
+      - 🇺🇸 美国Atlanta  GA  United States 15
+      - "🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232... #1"
+      - 🇯🇵 65|日本
+      - 🇺🇸 美国 CloudFlare节点 7
+      - 🇺🇸 美国Atlanta  GA  United States 16
+      - "🇺🇸 82|mfuu-🇺🇸 美国 CloudFlare节点-worker-general #118"
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - 🇺🇸 美国Atlanta  GA  United States 17
+      - 🇺🇸 美国Atlanta  GA  United States 18
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴 2
+      - 🇺🇸 美国Denver  CO  United States 7
+      - "🇺🇸 54 203 249 250 281|🇺🇸 美国 CloudFlare节点 #64"
+      - 🇺🇸 美国Miami  FL  United States
+      - 🇰🇷 [1808.ga]韩国>加拿大 多伦多
+      - 🇺🇸 美国Atlanta  GA  United States 19
+      - "🇺🇸 4 54 203 249 250 281|🇺🇸 美国 CloudFlare节点 #70"
+      - 🇺🇸 橘子公益-美国US-30
+      - 🇺🇸 美国Atlanta  GA  United States 20
+      - 🇸🇬 7 14 45 59 76 104 106 120 123|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.247:57143
+      - 🇺🇸 美国Atlanta  GA  United States 21
+      - 7 45 59 75 76 83 106|🇰🇷KR_708
+      - 🇺🇸 橘子公益-美国US-25
+      - 5 7 14 16 18 59 106|🇸🇬 SG_1005
+      - 🇺🇸 美国United States
+      - 🇺🇸 356|美国 CloudFlare节点_27-03
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴
+      - 🇺🇸 橘子公益-美国US-41
+      - "🇰🇷 75 76 88 104 116 120|🇰🇷 KR>加拿大 多伦多 #1"
+      - 🇺🇸 美国Atlanta  GA  United States 22
+      - 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴
+      - 16 104 106|🇭🇰 HK_656
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴
+      - 🇺🇸 356|美国 CloudFlare节点_8-03
+      - 🇺🇸 美国Atlanta  GA  United States 23
+      - 🇺🇸 美国Atlanta  GA  United States 24
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴
+      - 🇺🇸 橘子公益-美国US-16
+      - 🇸🇬 Singapore
+      - 🇺🇸 SS-TCP-NA 美国-137.175.97.159:8388
+      - 🇺🇸 美国 CloudFlare节点 8
+      - 🇭🇰 香港Hong Kong
+      - "🇺🇸 117 210 421 422 431 432 435 440 441 442 457|美国 CloudFlare节点 #65"
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴 2
+      - 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴
+      - 🇨🇳 76|188|台湾_010309115 M45
+      - 🇨🇳 TW-185.189.160.98-0466 | 6.018MB
+      - 🇨🇳 3492|台湾_010309115 M45
+      - 🇭🇰 香港Hong Kong 2
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴 2
+      - 🇸🇬 7 14 45 59 76 104 106 123|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.156:33281
+      - 🇺🇸 356|美国+Amazon+EC2服务器_1_1-02
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴
+      - 🇺🇸 243 356|美国%2B
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 25
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 🇺🇸 橘子公益-美国US-157
+      - 🇭🇰 中国-香港 2
+      - 🏳️‍🌈 剩余流量：79 GB
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴
+      - 🇺🇸 橘子公益-美国US-69
+      - "🇸🇬 0 3 201 297 301 307 564 566 568 576 580 581 582 584 590|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23... #12"
+      - 🏳️‍🌈 剩余流量：88.93 GB
+      - 🇭🇰 中国-香港 3
+      - "🇺🇸 45 75 76 83|美国 CloudFlare节点 #8"
+      - 🇺🇸 美国 CloudFlare节点 9
+      - 🇭🇰 中国-香港 4
+      - 🇺🇸 橘子公益-美国US-93
+      - 🇸🇬 0 3 79 82 117 364 366 422 425 442 602|🇸🇬SG-68.183.227.236-3228 | 29....
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 26
+      - 🇯🇵 日本Japan
+      - 🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点 2
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴
+      - 🇺🇸 美国Atlanta  GA  United States 27
+      - 🇺🇸 356|美国 CloudFlare节点_17-06
+      - 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴
+      - 🇺🇸 117 210 290 297 301 302 355 364 421 422 431 432 435 440 441 442 459 462 463 464 652|美国_0310093
+      - 🇺🇸 美国-拉斯维加斯-001 2
+      - 🇺🇸 美国-纽约-001 2
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴 2
+      - 🇺🇸 美国-拉斯维加斯-001 3
+      - 🇺🇸 美国-拉斯维加斯-001 4
+      - 🏳️‍🌈 剩余流量：74.61 GB
+      - 🇺🇸 美国-拉斯维加斯-001 5
+      - 🇺🇸 美国-纽约-001 3
+      - 🇺🇸 美国-纽约-001 4
+      - 🇸🇬 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233.53:50678
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴
+      - 🇺🇸 45 76 77 104 107|🇺🇸 美国-拉斯维加斯-001
+      - 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴
+      - 🇺🇸 美国Atlanta  GA  United States 28
+      - "🇸🇬 7 14 45 59 76 106 123|🇸🇬[openproxylist.com] vmess-SG #1"
+      - "4 253|❓_🇨🇳:🇭🇰_💼_github.com/Ruk1ng001... #2"
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴
+      - 🇸🇬 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137.42:44104
+      - 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴
+      - "🇺🇸 75 76 83|美国 CloudFlare节点 #16"
+      - 🇭🇰 中国-香港 5
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴 2
+      - 🏳️‍🌈 剩余流量：48.08 GB
+      - 7 14 59 106|🇯🇵JP_698
+      - 🇺🇸 美国 CloudFlare节点 10
+      - 🇺🇸 美国-纽约-001 5
+      - 🇺🇸 美国Atlanta  GA  United States 29
+      - 🇺🇸 117 210 248 290 355 364 421 422 431 432 435 440 441 442 457 459 652|美国_0310094
+      - "🇺🇸 45 76 83|美国 CloudFlare节点 #35"
+      - 🇸🇬 1602 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴
+      - 🇺🇸 美国Denver  CO  United States 8
+      - 🇸🇬 602|🇸🇬SG-107.148.37.70-3896 | 13.8...
+      - 🇺🇸 美国Denver  CO  United States 9
+      - 🇺🇸 0 3 356|美国%2B华盛顿Cogent通信公司_2_2_2
+      - 🇺🇸 美国United States 2
+      - 🇺🇸 美国Denver  CO  United States 10
+      - 🇺🇸 美国Dallas  TX  United States
+      - 🇺🇸 美国Denver  CO  United States 11
+      - 🇺🇸 美国Denver  CO  United States 12
+      - 🇺🇸 美国Denver  CO  United States 13
+      - 🇺🇸 美国Denver  CO  United States 14
+      - 🇺🇸 美国Denver  CO  United States 15
+      - 🇺🇸 美国Denver  CO  United States 16
+      - 🇺🇸 美国Denver  CO  United States 17
+      - 🇺🇸 美国Dallas  TX  United States 2
+      - 🇺🇸 美国Washington  DC  United States
+      - 🇺🇸 美国Washington  DC  United States 2
+      - "🇺🇸 33 391|美国10 tg@freebaipiao #1"
+      - 🇺🇸 美国Dallas  TX  United States 3
+      - 🇺🇸 美国Chicago  IL  United States
+      - 🇺🇸 美国Denver  CO  United States 18
+      - 🇺🇸 美国Denver  CO  United States 19
+      - 🇺🇸 美国Denver  CO  United States 20
+      - 🇺🇸 美国Denver  CO  United States 21
+      - 🇺🇸 美国Denver  CO  United States 22
+      - 🇺🇸 美国Denver  CO  United States 23
+      - 🇺🇸 美国Washington  DC  United States 3
+      - 🇺🇸 美国Washington  DC  United States 4
+      - 🇺🇸 美国Washington  DC  United States 5
+      - 🇺🇸 美国Washington  DC  United States 6
+      - 🇺🇸 美国Denver  CO  United States 24
+      - 🇺🇸 美国Denver  CO  United States 25
+      - 🇺🇸 美国Denver  CO  United States 26
+      - 🇺🇸 美国Newark  NJ  United States
+      - 🇺🇸 美国Reston  VA  United States
+      - "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 6 #1"
+      - "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 12 #1"
+      - 🇺🇸 美国Washington  DC  United States 7
+      - 🇺🇸 美国Denver  CO  United States 27
+      - 🇺🇸 美国Denver  CO  United States 28
+      - 🇺🇸 美国Denver  CO  United States 29
+      - 🇺🇸 1|美国2 |  3.6MB/s
+      - 🇺🇸 美国Washington  DC  United States 8
+      - 🇺🇸 美国Washington  DC  United States 9
+      - 🇺🇸 美国Washington  DC  United States 10
+      - 🇺🇸 美国Ashburn  VA  United States
+      - "🇺🇸 33 391|美国11 tg@freebaipiao #1"
+      - "🇺🇸 33 391|美国09 tg@freebaipiao #1"
+      - 🇺🇸 美国Denver  CO  United States 30
+      - "🇺🇸 45 75 76 83|美国 CloudFlare节点 #14"
+      - "🇭🇰 0 4 117 259 422 442|🇭🇰HK-103.149.182.191-6063 #2"
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 30
+      - 🇺🇸 美国Atlanta  GA  United States 31
+      - 🇺🇸 美国Washington  DC  United States 11
+      - 🇺🇸 美国Washington  DC  United States 12
+      - 🇺🇸 美国Ashburn  VA  United States 2
+      - 🇺🇸 美国Ashburn  VA  United States 3
+      - 🇺🇸 美国Reston  VA  United States 2
+      - 🇺🇸 美国Washington  DC  United States 13
+      - 🇺🇸 美国Ashburn  VA  United States 4
+      - 🇺🇸 美国Reston  VA  United States 3
+      - 🇺🇸 美国Ashburn  VA  United States 5
+      - 🇺🇸 美国Ashburn  VA  United States 6
+      - 🇺🇸 美国Reston  VA  United States 4
+      - 🇺🇸 美国Newark  NJ  United States 2
+      - 🇺🇸 美国Washington  DC  United States 14
+      - 🇺🇸 美国Los Angeles  CA  United States 2
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 🇺🇸 美国Ashburn  VA  United States 7
+      - "🇺🇸 30 71|🇺🇸 美国 - Ashburn - GTHost - 11 #1"
+      - 🇺🇸 美国Chicago  IL  United States 2
+      - 🇺🇸 美国Newark  NJ  United States 3
+      - 🇺🇸 美国Atlanta  GA  United States 32
+      - 🇺🇸 美国Reston  VA  United States 5
+      - 🇺🇸 美国Washington  DC  United States 15
+      - 🇺🇸 美国Reston  VA  United States 6
+      - 🇺🇸 美国Washington  DC  United States 16
+      - 🇺🇸 美国Atlanta  GA  United States 33
+      - 🇺🇸 美国Los Angeles  CA  United States 3
+      - 🇺🇸 美国Washington  DC  United States 17
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-YouTube-204.136.10.115:1866
+      - 🇺🇸 美国Newark  NJ  United States 4
+      - "🇺🇸 82|barry-far-🇺🇸 美国 CloudFlare节点-worker-general #14"
+      - 🇺🇸 3568 3569 3570 3589|🇸US美国2 1.9MB/s
+      - 🇺🇸 14 36 75 76 123 160|美国【机场推荐：https://socks.news】15
+      - 🇰🇷 364|🇰🇷 KR 4
+      - "🇺🇸 398|TG:@hkaa0|美国_39\r"
+      - "🇺🇸 398|TG:@hkaa0|美国_72\r"
+      - "🇺🇸 398|TG:@hkaa0|美国_75\r"
+      - 🇺🇸 VMESS-未知>美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-lax2.ibgfw.top:8443
+      - 🇺🇸 3568 3569 3589|🇺🇸US美国2 1.8MB/s
+      - 🇺🇸 美国Washington  DC  United States 18
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴
+      - "🇺🇸 398|TG:@hkaa0|美国_71\r"
+      - "🇺🇸 398|TG:@hkaa0|美国_78\r"
+      - 🇰🇷 364|🇰🇷 KR 5
+      - 🇸🇬 805 3570 3575 3593|Singapore_Singapore_ss_1133
+      - 🇺🇸 248|美国 V2CROSS.COM
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - "🇺🇸 1602|美国 043 #4"
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇺🇸 351|美国 Vegasnap
+      - 🇺🇸 14 75 76 160|美国【机场推荐：https://socks.news】3
+      - "🇺🇸 76 158|美国(yudou66.com 玉豆免费节点) #49"
+      - 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴
+      - 🇸🇬 Singapore 2
+      - 🇺🇸 VMESS-未知>美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-uswuxian.pai50288.uk:8443
+      - 7 14 16 59 106|🇭🇰 HK_658
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴 2
+      - 🇺🇸 美国Atlanta  GA  United States 34
+      - "🇺🇸 0 398|TG:@hkaa0|美国_76\r"
+      - 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴
+      - 🇺🇸 美国Washington  DC  United States 19
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - "🇺🇸 45 75 76 83|美国 CloudFlare节点 #27"
+      - 🇺🇸 美国Dallas  TX  United States 4
+      - 🇺🇸 _NL_荷兰->🇺🇸_US_美国
+      - 🇺🇸 美国 Amazon
+      - "🇺🇸 0 259 356 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #13"
+      - "🇺🇸 54 203 210 248 249 250 281|🇺🇸 美国 CloudFlare节点 #69"
+      - "🇺🇸 45 75 104 120|美国 CloudFlare节点 #40"
+      - 🇭🇰 香港Hong Kong 3
+      - 🇺🇸 美国Washington  DC  United States 20
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137...
+      - 🇺🇸 美国Washington  DC  United States 21
+      - 🇭🇰 香港Hong Kong  Hong Kong
+      - "🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232... #1"
+      - 🇺🇸 356|美国 CloudFlare节点_28-02
+      - "🇺🇸 0 398|TG:@hkaa0|美国_80\r"
+      - 🇺🇸 SS-TCP-NA 美国-103.36.91.23:8388
+      - 🇺🇸 _US_美国_1
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-154.26.137...
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴 2
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴 2
+      - 🇰🇷 KR>加拿大 多伦多
+      - 🇸🇬 新加坡Singapore  Singapore 2
+      - 🇺🇸 SS-TCP-NA 美国-54.201.149.176:443
+      - 🇸🇬 1|新加坡2 |  5.7MB/s
+      - 🇸🇬 5 7 14 45 59 76 106 123|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.232.74:59032
+      - 🇭🇰 香港Hong Kong 4
+      - 🇸🇬 5 7 14 45 59 76 106 123|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.112:36712
+      - 🇺🇸 美国St Louis  MO  United States 3
+      - 🇺🇸 5 6 7 14 16 59 62 106 161|🇺🇸_US_美国_3
+      - 🇺🇸 [Rawdroid/Free-servers]美国 CloudFlare节点 3
+      - "🇺🇸 75 76|48 164|🇺🇸 美国 CloudFlare节点 #14"
+      - 🇨🇳 台湾Taipei  TPE  Taiwan
+      - 🇨🇳 0 3 602|🇨🇳TW-185.189.160.98-3166 | 18....
+      - 🇸🇬 Singapore 3
+      - 🇺🇸 美国-拉斯维加斯-001 6
+      - 🏳️‍🌈 剩余流量：969.19 GB
+      - "🇺🇸 0 259 260 364 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #14"
+      - 🇺🇸 SS-TCP-NA 美国-35.95.37.205:443
+      - 🇺🇸 美国United States 3
+      - 🇭🇰 中国-香港 6
+      - "🇸🇬 7 14 45 59 76 106 123|🇸🇬[openproxylist.com] vmess-SG #2"
+      - "🇯🇵 351 379 669|日本(yudou66.com 玉豆免费节点) #2"
+      - 🇸🇬 3570 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-194.233.72.2...
+      - 🇯🇵 日本Japan 2
+      - 🇺🇸 0 356|美国-18.6MB/s-08
+      - 🇺🇸 美国-拉斯维加斯-001 7
+      - 🇺🇸 73 210 239 240 536|🇺🇸 美国 CloudFlare节点 5
+      - 🇺🇸 美国-纽约-001 6
+      - 🇭🇰 中国-香港 7
+      - 🏳️‍🌈 剩余流量：875.16 GB
+      - "🇺🇸 0 614|VMESS-未知>美国-NF解锁自制剧-ChatGPT-Ti... #12"
+      - 🇭🇰 0 364|中国-香港
+      - 7 14 16 59 104 106|🇭🇰 HK_663
+      - 🇯🇵 日本Japan 3
+      - 🇺🇸 美国-纽约-001 7
+      - "🇭🇰 3570 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 🇺🇸 0 364|美国-纽约-001
+      - 🇺🇸 0 356|美国-21.8MB/s-09
+      - 7 14 16 59 104 106|🇭🇰 HK_664
+      - 🇭🇰 香港Hong Kong  Hong Kong 2
+      - 🇯🇵 日本Japan 4
+      - 🇸🇬 新加坡DY
+      - "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 🇺🇸 0 356|美国-16.3MB/s-11
+      - 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - 🇭🇰 7 14 45 59 75 76 104 106 123|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.178:54675
+      - 🇺🇸 美国United States 4
+      - 🇸🇬 新加坡Singapore  Singapore 3
+      - 🇭🇰 7 14 45 59 75 76 104 123|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.178:27512
+      - 🇸🇬 新加坡Singapore  Singapore 4
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴 2
+      - 🇸🇬 7 14 45 59 76 104 106 123|🔒 VM-TCP-NA 🇸🇬 SG-194.233.72.228:27575
+      - "🇺🇸 0 117 356 422 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #4"
+      - 🇸🇬 新加坡Singapore  Singapore 5
+      - 🇭🇰 3570 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - 🇯🇵 日本Japan 5
+      - 🇭🇰 香港Hong Kong  Hong Kong 3
+      - 关注电报https://t.me/mftizi
+      - 2 5 7 14 16 59 106|🇭🇰 HK_669
+      - 🇸🇬 新加坡Singapore  Singapore 6
+      - "🇺🇸 0 117 356 422 442 461 614|SS-美国-NF解锁自制剧-ChatGPT-TikTok-Y... #3"
+      - 5 7 14 16 18 59 104 106|🇭🇰 HK_657
+      - 🇭🇰 香港Hong Kong  Hong Kong 4
+      - 🇸🇬 新加坡Singapore  Singapore 7
+      - 🇯🇵 日本Japan 6
+      - "🇸🇬 0 1 3 117 243 259 422 442|🇸🇬SG-156.244.9.92-5915 #2"
+      - 🇸🇬 新加坡Singapore  Singapore 8
+      - 🇺🇸 SS-美国-ChatGPT-TikTok-YouTube-23.185.248.17:17007
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-23.185.248.17:17007
+      - 7 14 16 59 106|🇭🇰 HK_667
+      - 🇯🇵 日本Japan 7
+      - 🏳️‍🌈 75|节点全红检查是否流量已用完
+      - 🇭🇰 75|?? 香港2 - 直連
+      - 🇭🇰 75|?? 香港1 - 直連
+      - "@vpn_ioss ♻️ عضو شو"
+      - Япония 🇯🇵
+      - "🇯🇵 Japan #16645 / OutlineKeys.com"
+      - 🇨🇳 3492|台湾_010309115 M45 2
+      - 🇺🇸 美国Washington  DC  United States 22
+      - 🇺🇸 橘子公益-美国US-9
+      - 🇸🇬 新加坡Singapore  Singapore 9
+      - 🇺🇸 美国Tukwila  WA  United States
+      - 🇯🇵 日本Tokyo  13  Japan
+      - 🇯🇵 [peasoft/NoMoreWalls]12|日本特殊|@ripaojiedian
+      - 🇯🇵 日本Japan 8
+      - "14 76|117 247 280 290 330 339 355 421 422 431 432 435 440 441 442 629|PP|www.zyw.asia ZYW免费节点 #27"
+      - "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #3"
+      - "🇺🇸 64|pawdroid-美国 CloudFlare节点-worker-general #4"
+      - "🇺🇸 70|pawdroid-美国 CloudFlare节点-worker-general #6"
+      - "🇺🇸 82|pawdroid-美国 CloudFlare节点-worker-general #9"
+      - 🇸🇬 0 3 79 117 422 442 602|🇸🇬SG-68.183.227.45-3183 | 28.2...
+      - 🇸🇬 0 4 233 253 354 364 639|Singapore_Singapore_ss_1133
+      - 🇯🇵 3 6 56 67 72 166 201 204 207 211 215 224 225 230 260 262 275 297 301 307 329 406 417 418 419 459 486 547 549 555 556 566 568 576 577 579 580 581 582 584 590 591 607 608 632 644 652|日本_0310001
+      - "🇸🇬 117 233 259 321 354 357 364 371 422 442 508 533 536 639|Singapore_Singapore_ss_1191 #2"
+      - 🇨🇳 188|台湾_010309115 M45
+      - 259|🇯🇵 JP_291_0@290
+      - 🇺🇸 356|美国 CloudFlare节点_29-03
+      - 🇯🇵 364|🇯🇵 JP 3
+      - 🇸🇬 3570 3575 3593|Singapore_Singapore_ss_1132
+      - 🇺🇸 SS-美国-NF解锁自制剧-ChatGPT-TikTok-YouTube-23.185.248.13:17003
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🚫 拒接访问
+    type: select
+    proxies:
+      - REJECT
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+  - name: 🌍 国外加速
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 📲 电报信息
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+  - name: Ⓜ️ 微软服务
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+  - name: 🛑 全球拦截
+    type: select
+    proxies:
+      - 🚫 拒接访问
+      - 🎯 全球直连
+rules:
+  - DOMAIN-SUFFIX,googleapis.cn,🌍 国外加速
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🎯 全球直连
+  - DOMAIN-SUFFIX,xn--ngstr-cn-8za9o.com,🎯 全球直连
+  - DOMAIN-KEYWORD,kgithub,🎯 全球直连
+  - DOMAIN-KEYWORD,fastgit,🎯 全球直连
+  - DOMAIN-KEYWORD,ghproxy,🎯 全球直连
+  - DOMAIN-KEYWORD,gitmirror,🎯 全球直连
+  - DOMAIN-SUFFIX,gitclone.com,🎯 全球直连
+  - DOMAIN-SUFFIX,gh.api.99988866.xyz,🎯 全球直连
+  - DOMAIN-SUFFIX,weserv.nl,🎯 全球直连
+  - DOMAIN-SUFFIX,wsrv.nl,🎯 全球直连
+  - PROCESS-NAME,v2ray,🎯 全球直连
+  - PROCESS-NAME,xray,🎯 全球直连
+  - PROCESS-NAME,naive,🎯 全球直连
+  - PROCESS-NAME,trojan,🎯 全球直连
+  - PROCESS-NAME,trojan-go,🎯 全球直连
+  - PROCESS-NAME,ss-local,🎯 全球直连
+  - PROCESS-NAME,privoxy,🎯 全球直连
+  - PROCESS-NAME,leaf,🎯 全球直连
+  - PROCESS-NAME,v2ray.exe,🎯 全球直连
+  - PROCESS-NAME,xray.exe,🎯 全球直连
+  - PROCESS-NAME,naive.exe,🎯 全球直连
+  - PROCESS-NAME,trojan.exe,🎯 全球直连
+  - PROCESS-NAME,trojan-go.exe,🎯 全球直连
+  - PROCESS-NAME,ss-local.exe,🎯 全球直连
+  - PROCESS-NAME,privoxy.exe,🎯 全球直连
+  - PROCESS-NAME,leaf.exe,🎯 全球直连
+  - PROCESS-NAME,Surge,🎯 全球直连
+  - PROCESS-NAME,Surge 2,🎯 全球直连
+  - PROCESS-NAME,Surge 3,🎯 全球直连
+  - PROCESS-NAME,Surge 4,🎯 全球直连
+  - PROCESS-NAME,Surge%202,🎯 全球直连
+  - PROCESS-NAME,Surge%203,🎯 全球直连
+  - PROCESS-NAME,Surge%204,🎯 全球直连
+  - PROCESS-NAME,Thunder,🎯 全球直连
+  - PROCESS-NAME,DownloadService,🎯 全球直连
+  - PROCESS-NAME,qBittorrent,🎯 全球直连
+  - PROCESS-NAME,Transmission,🎯 全球直连
+  - PROCESS-NAME,fdm,🎯 全球直连
+  - PROCESS-NAME,aria2c,🎯 全球直连
+  - PROCESS-NAME,Folx,🎯 全球直连
+  - PROCESS-NAME,NetTransport,🎯 全球直连
+  - PROCESS-NAME,uTorrent,🎯 全球直连
+  - PROCESS-NAME,WebTorrent,🎯 全球直连
+  - PROCESS-NAME,aria2c.exe,🎯 全球直连
+  - PROCESS-NAME,BitComet.exe,🎯 全球直连
+  - PROCESS-NAME,fdm.exe,🎯 全球直连
+  - PROCESS-NAME,NetTransport.exe,🎯 全球直连
+  - PROCESS-NAME,qbittorrent.exe,🎯 全球直连
+  - PROCESS-NAME,Thunder.exe,🎯 全球直连
+  - PROCESS-NAME,ThunderVIP.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-daemon.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-qt.exe,🎯 全球直连
+  - PROCESS-NAME,uTorrent.exe,🎯 全球直连
+  - PROCESS-NAME,WebTorrent.exe,🎯 全球直连
+  - DOMAIN,steamstore-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,steamcdn-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,api.steampowered.com,🎯 全球直连
+  - DOMAIN,store.steampowered.com,🎯 全球直连
+  - DOMAIN,clash.razord.top,🎯 全球直连
+  - DOMAIN,yacd.haishan.me,🎯 全球直连
+  - DOMAIN,www.biqugeu.net,🌍 国外加速
+  - DOMAIN,www.cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,diyibanzhu,🌍 国外加速
+  - DOMAIN-SUFFIX,cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,cunhua,🌍 国外加速
+  - RULE-SET,自定义广告白名单,🎯 全球直连
+  - RULE-SET,自定义广告拦截,🛑 全球拦截
+  - RULE-SET,adblock,🛑 全球拦截
+  - IP-CIDR,0.0.0.0/32,🛑 全球拦截
+  - RULE-SET,MetaCubeX-cn-domain,🎯 全球直连
+  - GEOIP,private,🎯 全球直连,no-resolve
+  - GEOIP,JP,🌍 国外加速
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,ChinaCompanyIp,🎯 全球直连
+  - RULE-SET,ChinaDomain,🎯 全球直连
+  - RULE-SET,ChinaMedia,🎯 全球直连
+  - RULE-SET,ChinaIp,🎯 全球直连
+  - RULE-SET,LocalAreaNetwork,🎯 全球直连
+  - DOMAIN-SUFFIX,cn,🎯 全球直连
+  - DOMAIN-KEYWORD,-cn,🎯 全球直连
+  - RULE-SET,region,🌍 国外加速
+  - RULE-SET,direct,🎯 全球直连
+  - RULE-SET,direct2,🎯 全球直连
+  - RULE-SET,ProxyGFWlist,🌍 国外加速
+  - RULE-SET,telegramcidr,📲 电报信息
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,proxy,🌍 国外加速
+  - MATCH,🐟 漏网之鱼
