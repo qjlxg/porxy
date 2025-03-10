@@ -1,0 +1,1006 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver: [223.5.5.5, 119.29.29.29]
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  nameserver: [https://853.66a.net:443/dns-query, https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+  fallback: [https://doh.dns.sb/dns-query, https://dns.cloudflare.com/dns-query, https://dns.twnic.tw/dns-query, tls://8.8.4.4:853]
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    geosite:
+      - gfw
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - +.google.com
+      - +.facebook.com
+      - +.youtube.com
+  nameserver-policy:
+    geosite:cn,private,apple:
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    www.baidu.com,+.google.cn: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:自定义广告白名单: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:adblock,自定义广告拦截: rcode://success
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+rule-providers:
+  adblock:
+    type: http
+    behavior: classical
+    path: ./rule_providers/adblock.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/adblock.yml
+    interval: 21600
+    format: yaml
+  proxy:
+    type: http
+    behavior: classical
+    path: ./rule_providers/proxy.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/proxy.yml
+    interval: 86400
+    format: yaml
+  direct:
+    type: http
+    behavior: classical
+    path: ./rule_providers/direct.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/direct.yml
+    interval: 86400
+    format: yaml
+  region:
+    type: http
+    behavior: classical
+    path: ./rule_providers/region.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/region.yml
+    interval: 86400
+    format: yaml
+  direct2:
+    behavior: domain
+    type: http
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    interval: 86400
+    path: ./ruleset/direct2.yaml
+    format: yaml
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+    format: yaml
+  ProxyGFWlist:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyGFWlist.yaml
+    path: ./ruleset/ProxyGFWlist.yaml
+    interval: 86400
+    format: yaml
+  ChinaCompanyIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaCompanyIp.yaml
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+    format: yaml
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaDomain.yaml
+    path: ./ruleset/ChinaDomain.yaml
+    interval: 86400
+    format: yaml
+  ChinaIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaIp.yaml
+    path: ./ruleset/ChinaIp.yaml
+    interval: 86400
+    format: yaml
+  ChinaMedia:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaMedia.yaml
+    path: ./ruleset/ChinaMedia.yaml
+    interval: 86400
+    format: yaml
+  LocalAreaNetwork:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml
+    path: ./ruleset/LocalAreaNetwork.yaml
+    interval: 86400
+    format: yaml
+  自定义广告拦截:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com//HDYOU/ClashADRule/main/self_payload_ad.yml
+    path: ./ruleset/自定义广告拦截.yaml
+    interval: 86400
+    format: yaml
+  自定义广告白名单:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/HDYOU/ClashADRule/main/self_payload_whitelist.yml
+    path: ./ruleset/自定义广告白名单.yaml
+    interval: 86400
+    format: yaml
+  MetaCubeX-cn-domain:
+    behavior: domain
+    interval: 86400
+    path: ./ruleset/cn_domain.yaml
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/cn_domain.yaml
+proxies:
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10158, server: 172.67.220.10, port: 443, type: vmess, uuid: 39cec18f-a439-427c-9a4e-aeb6fcdf6f53, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linja05.hwcar.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linja05.hwcar.sbs}}, udp: true}
+  - {name: 3571|4Mohsen-11589, server: afrhms16v.bestxray.buzz, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.249.0..., server: 15.204.249.0, port: 48160, type: vmess, uuid: 5b113c12-4dd4-4bb5-9c01-cff092b559e3, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.248.9..., server: 15.204.248.92, port: 30562, type: vmess, uuid: 82466715-6a58-4046-a363-a0d18e5b2ab4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3571|4Mohsen-8648, server: 104.21.15.36, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 3571|4Mohsen-9927, server: 172.67.153.156, port: 8443, type: vmess, uuid: c313606f-98c2-4d7b-ba74-48b94f61b11d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: uswuxian.pai50288.uk, network: ws, ws-opts: {path: /, headers: {Host: uswuxian.pai50288.uk}}, udp: true}
+  - {name: 3568|🏁RELAY-172.67.153.156-004, server: uswuxian.pai50288.uk, port: 8443, type: vmess, uuid: c313606f-98c2-4d7b-ba74-48b94f61b11d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: uswuxian.pai50288.uk}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8901, server: 104.21.95.16, port: 443, type: vmess, uuid: fa5b55cd-cafc-4de0-a4c8-722e02a9f58e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hms03.dongfeng.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: hms03.dongfeng.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8894, server: 104.21.83.208, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10153, server: 172.67.219.194, port: 443, type: vmess, uuid: b321fd5d-e6ec-4293-a644-164e3885f52e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: adenc36v.xtooltech.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: adenc36v.xtooltech.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10335, server: 188.114.97.8, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.86.12..., server: 15.204.86.120, port: 35696, type: vmess, uuid: cad0504a-a9dc-4d29-8844-b11b69f14a8d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-9950, server: 172.67.169.40, port: 443, type: vmess, uuid: fa5b55cd-cafc-4de0-a4c8-722e02a9f58e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hms03.dongfeng.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: hms03.dongfeng.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-9945, server: 172.67.164.164, port: 443, type: vmess, uuid: a1655f51-1e20-4a92-8a11-b7ca30a7a353, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms07.xfixedfloat.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms07.xfixedfloat.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8859, server: 104.21.74.239, port: 443, type: vmess, uuid: a1655f51-1e20-4a92-8a11-b7ca30a7a353, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms07.xfixedfloat.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms07.xfixedfloat.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-9964, server: 172.67.175.56, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10080, server: 172.67.132.209, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 3582|🔒 VM-WS-NA 🇺🇸 US-74.48.159.226..., server: 74.48.159.226, port: 38848, type: vmess, uuid: 20fed645-619c-4ca1-c00e-743ea8a3b51f, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /6c8e5a1b}, udp: true}
+  - {name: 🇭🇰 HK, server: 54.186.195.135, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10759, server: 213.241.198.57, port: 8443, type: vmess, uuid: 191babc5-2aaf-4fe5-a563-f14244aefb4e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax1.ibgfw.top, network: ws, ws-opts: {path: /xrenvws, headers: {Host: lax1.ibgfw.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8653, server: 104.21.18.227, port: 443, type: vmess, uuid: 950db6aa-4926-4616-816e-ec0312dcb87b, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: jahfkjha.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: jahfkjha.cfd}}, udp: true}
+  - {name: 🇺🇸 US, server: 35.87.121.216, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇨🇦 3571 3582|🔒 VM-TCP-NA 🇨🇦 CA-38.111.114.1..., server: 38.111.114.153, port: 14812, type: vmess, uuid: 0146fc40-5962-4e9a-b36a-2b606d001467, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3571|4Mohsen-9970, server: 172.67.179.199, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 🇺🇸 3568|🇺🇸US-172.233.128.126-009, server: 172.233.128.126, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 3568 3589|US44 53.0MB/s, server: 172.232.171.192, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 3571|4Mohsen-8238, server: 104.16.155.10, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.175.137, headers: {Host: 100-102-247-92.s1.db-link02.top}}, udp: true}
+  - {name: 3571|4Mohsen-10327, server: 188.114.97.6, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 3571|4Mohsen-9955, server: 172.67.170.11, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8247, server: 104.16.155.10, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.20.16.209, headers: {Host: 100-149-191-2.s5.db-link02.top}}, udp: true}
+  - {name: 🇫🇷 3492 3498|🆔@LuxyNet💎❖🇷❖FR❖1037, server: 195.154.169.198, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇳🇱 3492 3498|🆔@LuxyNet💎❖❖NL❖1634, server: 109.201.152.181, port: 443, type: ss, cipher: aes-128-cfb, password: shadowsocks, udp: true}
+  - {name: 🇺🇸 3492 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-107.148.207...., server: 107.148.207.249, port: 48712, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3589|未知47 1.4MB/s, server: 89.221.224.166, port: 8388, type: ss, cipher: chacha20-ietf-poly1305, password: ODMwZWIz, udp: true}
+  - {name: 🇳🇱 3492 3498|🆔@LuxyNet💎❖🇳🇱❖NL❖631, server: 51.15.27.48, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3492 3589|US38 118.9MB/s, server: 104.207.155.64, port: 1633, type: ss, cipher: chacha20-ietf-poly1305, password: o_A7inN1yqeWtOTL, udp: true}
+  - {name: 3571|4Mohsen-12038, server: s1.db-link02.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.75.187, headers: {Host: 100-44-70-80.s1.db-link02.top}}, udp: true}
+  - {name: 1361 3492 3498 3539 3540 3568 3569 3589|未知52 3.6MB/s, server: 212.102.53.196, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 3571|4Mohsen-10314, server: 188.114.96.5, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖❖AF❖1626, server: 121.127.46.147, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3499 3571|4Mohsen-12099, server: s5.db-link02.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.98.224, headers: {Host: 100-68-4-71.s5.db-link02.top}}, udp: true}
+  - {name: "🇩🇪 3492|Germany #2", server: hms23.fixedfloati.cfd, port: 443, type: vmess, uuid: 9072d339-3885-4fe1-b0bc-29fa7505410e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: fixedfloati.cfd, network: ws, ws-opts: {path: /linkwsd, headers: {Host: fixedfloati.cfd}}, udp: true}
+  - {name: 3492 3589|未知20 1.7MB/s, server: 195.181.160.6, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3492 3589|未知5 2.0MB/s, server: 212.102.53.79, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 3492 3589|未知82 3.7MB/s, server: 212.102.53.193, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-172.99.190.2..., server: 172.99.190.207, port: 55577, type: vmess, uuid: e922d485-98a7-475a-9a47-cde3722ac82e, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10372, server: 188.114.99.205, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 🇬🇧 3492 3512|英国_Tg:univstar_40, server: 212.102.53.81, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇬🇧 3492 3498 3512|英国_Tg:univstar_39, server: 212.102.53.78, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: "🇺🇸 3492|United States #13", server: 23.166.88.183, port: 22324, type: vmess, uuid: 04621bae-ab36-11ec-b909-0242ac120002, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-149.7.16.149..., server: 149.7.16.149, port: 37101, type: vmess, uuid: fb3fc243-4698-49c4-8c44-0415f68a4d25, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11659, server: denc36.xtooltech.cfd, port: 443, type: vmess, uuid: b321fd5d-e6ec-4293-a644-164e3885f52e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: adenc36v.xtooltech.cfd}}, udp: true}
+  - {name: 3589|US41 19.8MB/s, server: 38.121.43.97, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10333, server: 188.114.97.79, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 3499 3571|4Mohsen-12036, server: s1.db-link02.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.249.215, headers: {Host: 100-103-58-39.s1.db-link02.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-9702, server: 162.159.152.2, port: 443, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇸❖RS❖1039, server: 194.71.126.31, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8832, server: 104.21.4.6, port: 443, type: vmess, uuid: 1052f24e-7b09-45eb-b0c5-d858eb124192, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: glweidf.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: glweidf.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12035, server: s1.db-link01.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-151-164-47.s1.db-link01.top, network: ws, ws-opts: {path: /dabai.in172.67.2.142, headers: {Host: 100-151-164-47.s1.db-link01.top}}, udp: true}
+  - {name: 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-193.108.117...., server: 193.108.117.143, port: 24164, type: vmess, uuid: aa3c5c18-6578-4de3-b890-2fd25c3a8f35, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10322, server: 188.114.96.2, port: 443, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-193.108.118...., server: 193.108.118.136, port: 15713, type: vmess, uuid: f74e277e-84b3-46a2-8abd-2777fa5e4af9, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8844, server: 104.21.53.183, port: 443, type: vmess, uuid: 1052f24e-7b09-45eb-b0c5-d858eb124192, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: glweidf.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: glweidf.cfd}}, udp: true}
+  - {name: 🇬🇧 1292 3492 3512|英国_Tg:univstar_37, server: 212.102.53.194, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 3571|4Mohsen-11625, server: glweidf.cfd, port: 443, type: vmess, uuid: 1052f24e-7b09-45eb-b0c5-d858eb124192, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: glweidf.cfd}}, udp: true}
+  - {name: 🇺🇸 3492 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-142.4.104.33..., server: 142.4.104.33, port: 52143, type: vmess, uuid: 418048af-a293-4b99-9b0c-98ca3580dd24, alterId: 64, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10325, server: 188.114.96.3, port: 443, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12087, server: s4.db-link02.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.239.131, headers: {Host: 100-128-12-180.s4.db-link02.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3499 3505 3571|4Mohsen-12133, server: www.speedtest.net, port: 2095, type: vmess, uuid: f4f01d19-1782-4b85-9317-0d3cee0f91e2, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt-Seyyedmt?ed=1024", headers: {Host: panel2.SEYYEDmtmodidandansax.bloG.}}, udp: true}
+  - {name: 🇬🇧 3492 3498 3512|英国_Tg:univstar_38, server: 212.102.53.197, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14..., server: 20.78.127.141, port: 550, type: vmess, uuid: 9e11e992-c3a4-45fb-bb67-5f4f42fcd551, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10371, server: 188.114.99.183, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11808, server: irhms03.dongfeng.cfd, port: 443, type: vmess, uuid: fa5b55cd-cafc-4de0-a4c8-722e02a9f58e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: hms03.dongfeng.cfd}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10015, server: 172.67.198.187, port: 443, type: vmess, uuid: 93ea486a-bada-42a4-ac38-d088b320fa1e, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: xmivideo.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: xmivideo.cfd}}, udp: true}
+  - {name: 3571|4Mohsen-10861, server: 31.129.105.239, port: 16231, type: vmess, uuid: 793e03cc-2b08-4d1b-bb0b-592567d19043, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: 31.129.105.239}}, udp: true}
+  - {name: 🇨🇳 TW, server: 54.168.167.163, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-38.114.120.1..., server: 38.114.120.12, port: 47567, type: vmess, uuid: cda5dfaa-99e8-42d6-9f0b-6ef30f76e92c, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 3571 3582|🔒 VM-WS-NA 🇺🇸 US-2.58.87.221:1..., server: 2.58.87.221, port: 12269, type: vmess, uuid: db85ff0e-c33f-401d-c415-4c7cce135704, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /}, udp: true}
+  - {name: 🇺🇸 3492|🇺🇸US(AzadNet.t.me)_3378, server: 2.58.87.221, port: 46628, type: vmess, uuid: f6ba9e5a-711c-496f-be60-ac5464dec2b8, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3589|US3 16.9MB/s, server: 139.64.165.101, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 🇯🇵 JP, server: 54.248.37.117, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1131, server: 54.199.0.211, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-68.168.31.18..., server: 68.168.31.184, port: 26924, type: vmess, uuid: 9f8b16a8-369d-4b79-af82-201c089dadd2, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11748, server: hms07.xfixedfloat.cfd, port: 443, type: vmess, uuid: a1655f51-1e20-4a92-8a11-b7ca30a7a353, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms07.xfixedfloat.cfd}}, udp: true}
+  - {name: 🇷🇺 3571 3582|🔒 VM-TCP-NA 🇷🇺 RU-46.29.166.23..., server: 46.29.166.237, port: 47555, type: vmess, uuid: 0c49cd19-2758-4d38-e6a8-11f2d6635860, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1161, server: 57.180.243.140, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇫🇷 3571 3582|🔒 VM-TCP-NONE 🇫🇷 FR-38.109.228..., server: 38.109.228.113, port: 21809, type: vmess, uuid: a6179475-489c-4bcc-b05c-481386295b93, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10350, server: 188.114.97.3, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 🇮🇳 3571 3582|🔒 VM-TCP-NA 🇮🇳 IN-4.240.73.55:..., server: 4.240.73.55, port: 14118, type: vmess, uuid: d513bfb2-b7c2-4dc6-a3f9-55145f198705, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11884, server: linde06.indiavideo.sbs, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: "🇨🇦 789 1362 3505|加拿大 014 #2", server: s1.db-link01.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.95.35, headers: {Host: 100-250-32-53.s1.db-link01.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8317, server: 104.17.221.248, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.249.215, headers: {Host: 100-103-58-39.s1.db-link02.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-12088, server: s4.db-link02.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.8.26, headers: {Host: 100-145-217-186.s4.db-link02.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-12075, server: s4.cn-db.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, servername: 100-59-178-247.s4.cn-db.top, network: ws, ws-opts: {path: /dabai.in104.19.101.110, headers: {Host: 100-59-178-247.s4.cn-db.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12085, server: s4.db-link02.top, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.8.3, headers: {Host: 100-116-85-183.s4.db-link02.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-12071, server: s3.db-link01.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.16.42.241, headers: {Host: 100-44-69-4.s3.db-link01.top}}, udp: true}
+  - {name: 🇦🇺 3571 3582|🔒 VM-TCP-NA 🇦🇺 AU-154.26.153.1..., server: 154.26.153.173, port: 28686, type: vmess, uuid: 6df7d56f-4953-4a10-be2e-a88cc9f94e48, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-WS-NA 🇸🇬 SG-140.245.41.11..., server: 140.245.41.111, port: 23452, type: vmess, uuid: e6592058-1e2d-4068-8d4a-6f4e2d044008, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: westsg2-ddns.oraclenat.cc}}, udp: true}
+  - {name: 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-23.158.56.21..., server: 23.158.56.21, port: 48961, type: vmess, uuid: 6eef3448-bbc0-4933-894a-72b3e8786109, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-9940, server: 172.67.161.77, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10368, server: 188.114.99.134, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10344, server: 188.114.97.210, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 3499 3571|4Mohsen-12058, server: s2.db-link01.top, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.21.133.12, headers: {Host: 100-130-136-50.s2.db-link01.top}}, udp: true}
+  - {name: 🇬🇧 3492 3498|🆔@LuxyNet💎❖🇧❖GB❖949, server: 212.102.53.80, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1", server: uzl8g-g01.jp07-1f28-vm0.entry.fr0307a.art, port: 28783, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3499 3571|4Mohsen-8240, server: 104.16.155.10, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.20.27.115, headers: {Host: 100-209-47-141.s2.db-link02.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10337, server: 188.114.97.1, port: 443, type: vmess, uuid: edbb1059-1633-4271-b66e-ed4fba47a1bf, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: linde06.indiavideo.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: linde06.indiavideo.sbs}}, udp: true}
+  - {name: 3571|4Mohsen-12062, server: s2.db-link02.top, port: 80, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.20.76.67, headers: {Host: 100-66-201-35.s2.db-link02.top}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1", server: 7a7cu-g01.jp04-3771-vm0.entry.fr0307a.art, port: 444, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1", server: 88dn0-g01.jp03-7d22-vm0.entry.fr0307a.art, port: 21581, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: 3492 3589|未知16 2.2MB/s, server: 141.98.101.178, port: 443, type: ss, cipher: aes-128-gcm, password: shadowsocks, udp: true}
+  - {name: 3499 3571|4Mohsen-12059, server: s2.db-link01.top, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.24.227.22, headers: {Host: 100-189-132-241.s2.db-link01.top}}, udp: true}
+  - {name: 3571|4Mohsen-12060, server: s2.db-link01.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.0.32, headers: {Host: 100-14-147-154.s2.db-link01.top}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1", server: a57r2-g01.jp05-6786-vm0.entry.fr0307a.art, port: 46482, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3571|4Mohsen-12090, server: s4.db-link02.top, port: 8080, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.25.238.226, headers: {Host: 100-217-184-172.s4.db-link02.top}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1", server: 189jw-g01.jp06-7c5a-vm0.entry.fr0307a.art, port: 28783, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12089, server: s4.db-link02.top, port: 2095, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in104.19.97.91, headers: {Host: 100-187-244-205.s4.db-link02.top}}, udp: true}
+  - {name: 3499 3571|4Mohsen-12057, server: s2.db-link01.top, port: 80, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.60.154, headers: {Host: 100-55-60-174.s2.db-link01.top}}, udp: true}
+  - {name: 🇮🇳 3571 3582|🔒 VM-TCP-NA 🇮🇳 IN-94.136.184.1..., server: 94.136.184.156, port: 38872, type: vmess, uuid: 220732cc-9e43-4453-83f1-c9435be25b5b, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3589|未知68, server: 194.246.114.54, port: 8443, type: ss, cipher: aes-256-gcm, password: 1336c3f1-53de-48a0-8e94-90720da19ee8, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1", server: x8vqu-g01.jp01-0986-vm0.entry.fr0307a.art, port: 21581, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3499 3505 3571|4Mohsen-12082, server: s4.db-link01.top, port: 8880, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.5.70, headers: {Host: 100-44-229-26.s4.db-link01.top}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1", server: 72l2e-g01.jp02-9a99-vm0.entry.fr0307a.art, port: 11773, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-12098, server: s5.cn-db.top, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.19.89, headers: {Host: 100-164-83-9.s5.cn-db.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8334, server: 104.18.149.76, port: 443, type: vmess, uuid: de94cc0a-0592-4969-b1fc-97ea8f0ea0b3, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: us.kkp.me.eu.org, network: ws, ws-opts: {path: /aa, headers: {Host: us.kkp.me.eu.org}}, udp: true}
+  - {name: 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-46.250.253.2..., server: 46.250.253.232, port: 46617, type: vmess, uuid: 55b88b14-0ff3-4f25-8983-e73d1f9f3a0a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3571 3582|🔒 VM-TCP-NA 🇮🇩 ID-103.67.79.15..., server: 103.67.79.157, port: 45365, type: vmess, uuid: 7d2a4e66-152c-49f5-9ff5-c19a836e8c89, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇰🇷 3492|South Korea, server: 146.56.112.110, port: 8888, type: vmess, uuid: e7c302f3-90d6-42dd-9d7d-94a3683a3707, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3571|4Mohsen-8542, server: 104.19.48.236, port: 2052, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.71.198, headers: {Host: 100-41-36-35.s2.db-link01.top}}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴, server: recvhwashhry.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴, server: tsadfhyifgk.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴, server: tsadfhyifgk.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11762, server: hms26.xpengmotors.sbs, port: 443, type: vmess, uuid: fb0a2de6-bf06-4ff0-97ce-c21abcdc2d55, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: /linkws, headers: {Host: hms26.xpengmotors.sbs}}, udp: true}
+  - {name: 3571|4Mohsen-8311, server: 104.17.213.241, port: 2082, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.67.8.3, headers: {Host: 100-116-85-183.s4.db-link02.top}}, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2..., server: 154.26.129.247, port: 57143, type: vmess, uuid: 28efbf36-079a-4c98-8470-d13458db6ee6, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴, server: recvhwashhry.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴, server: pppasdfjetyj.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴, server: pppasdfjetyj.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴, server: nsdfryucvvr.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇲🇾 3571 3582|🔒 VM-TCP-NA 🇲🇾 MY-101.99.91.23..., server: 101.99.91.234, port: 36700, type: vmess, uuid: 127ff43c-1851-4b2d-ba8c-6afba21ec04d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3571|4Mohsen-8313, server: 104.17.221.248, port: 2086, type: vmess, uuid: 4b36625c-b9d9-3ea6-aed5-86d62c70e16d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /dabai.in172.64.43.14, headers: {Host: 100-171-104-238.s2.db-link02.top}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴, server: tsadfhyifgk.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴, server: pppasdfjetyj.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴, server: recvhwashhry.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 3589|未知84 1.8MB/s, server: 198.244.142.16, port: 11205, type: ss, cipher: chacha20-ietf-poly1305, password: 7b6c5a7d36f65bc7, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴, server: pppasdfjetyj.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇩🇰 3492 3498|🆔@LuxyNet💎❖❖DK❖1049, server: 192.36.27.94, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 789 1226 1323 1362 1586 1603 3505 3571|4Mohsen-11972, server: si.1808.site, port: 30002, type: vmess, uuid: 05641cf5-58d2-4ba4-a9f1-b3cda0b1fb1d, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: obdii.cfd, network: ws, ws-opts: {path: /linkws, headers: {Host: obdii.cfd}}, udp: true}
+  - {name: 3589|未知67 1.5MB/s, server: 185.177.229.245, port: 1866, type: ss, cipher: chacha20-ietf-poly1305, password: oXGp1+ihlfKg826H, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴, server: tsadfhyifgk.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴, server: tsadfhyifgk.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴, server: recvhwashhry.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 3589|未知37 121.0KB/s, server: 45.87.175.58, port: 8080, type: ss, cipher: chacha20-ietf-poly1305, password: oZIoA69Q8yhcQV8ka3Pa3A, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3568 3569 3571 3582|🔒 VM-TCP-NONE 🇫🇮 FI-31.58.137...., server: 31.58.137.67, port: 39447, type: vmess, uuid: 724fb93e-ace8-4733-b04a-72fcc9b80b1f, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴, server: recvhwashhry.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴, server: tsadfhyifgk.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇪❖BE❖1048, server: 192.71.249.78, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3589|US34 1.8MB/s, server: 38.121.43.71, port: 8882, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 3492 3589|US12 1.9MB/s, server: 142.202.49.122, port: 7306, type: ss, cipher: aes-256-gcm, password: FoOiGlkAA9yPEGP, udp: true}
+  - {name: 3589|US39 1.8MB/s, server: 23.154.136.132, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 3589|US42 1.9MB/s, server: 23.154.136.132, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 3589|US5 1.9MB/s, server: 69.50.93.47, port: 5004, type: ss, cipher: aes-256-gcm, password: g5MeD6Ft3CWlJId, udp: true}
+  - {name: 3492 3589|US11 1.8MB/s, server: 142.202.49.84, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: https://t.me/dafeiji100, server: 38.121.43.71, port: 6697, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: https://t.me/dafeiji100 2, server: 38.121.43.71, port: 8009, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 3589|US19 1.9MB/s, server: 38.121.43.71, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: https://t.me/dafeiji100 3, server: 38.121.43.71, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23..., server: 109.123.232.74, port: 59032, type: vmess, uuid: 96ab7e1f-bf0d-45cd-8ebc-c8be2f8d43cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3589|US17 1.9MB/s, server: 69.50.95.86, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1..., server: 62.146.233.112, port: 36712, type: vmess, uuid: 9266df42-0830-48c2-8509-4c57b30fe29d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇳❖VN❖2004, server: 103.163.218.2, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3492 3589|US6 1.9MB/s, server: 38.121.43.27, port: 2375, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 🇬🇧 3492 3498|🆔@LuxyNet💎❖🇬🇧❖GB❖619, server: 51.68.206.229, port: 8080, type: ss, cipher: aes-256-gcm, password: KixLvKzwjekG00rm, udp: true}
+  - {name: 3589|US21 1.9MB/s, server: 38.121.43.71, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴, server: pppasdfjetyj.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 3492 3589|未知102 1.7MB/s, server: 145.239.6.202, port: 8008, type: ss, cipher: aes-256-gcm, password: XKFKl2rULjIp74, udp: true}
+  - {name: 3492 3589|未知122 1.7MB/s, server: 145.239.6.202, port: 8118, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 3492 3589|US2 1.8MB/s, server: 38.121.43.27, port: 3389, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 3492 3589|未知110 1.3MB/s, server: 217.182.198.219, port: 4444, type: ss, cipher: aes-256-gcm, password: pKEW8JPByTVTLtM, udp: true}
+  - {name: 3492 3589|未知62 1.6MB/s, server: 217.182.198.219, port: 2376, type: ss, cipher: aes-256-gcm, password: faBAoD54k87UJG7, udp: true}
+  - {name: 3492 3589| 1.4MB/s, server: 149.202.82.172, port: 6379, type: ss, cipher: aes-256-gcm, password: zDNVedRFPQexG9v, udp: true}
+  - {name: 3492 3589|未知28 1.2MB/s, server: 51.77.53.200, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 3492 3589|未知132 1.6MB/s, server: 149.202.82.172, port: 6679, type: ss, cipher: aes-256-gcm, password: TEzjfAYq2IjtuoS, udp: true}
+  - {name: 3589|未知29 1.0MB/s, server: 51.77.53.200, port: 8090, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 3492 3589|未知73 1.7MB/s, server: 51.77.53.200, port: 3306, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 3492 3589|未知26 728.6KB/s, server: 54.36.174.181, port: 8119, type: ss, cipher: aes-256-gcm, password: cdBIDV42DCwnfIN, udp: true}
+  - {name: 3492 3589|US32 1.8MB/s, server: 38.121.43.27, port: 9101, type: ss, cipher: aes-256-gcm, password: e4FCWrgpkji3QY, udp: true}
+  - {name: 3492 3589|未知53 1.1MB/s, server: 54.36.174.181, port: 8091, type: ss, cipher: aes-256-gcm, password: PCnnH6SQSnfoS27, udp: true}
+  - {name: 3492 3589|未知58 1.1MB/s, server: 54.36.174.181, port: 7001, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232..., server: 62.146.232.157, port: 52856, type: vmess, uuid: ed54e388-bfc5-4b36-ae4d-8b3cd460d3d4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇦🇪 106|🚀ae 阿联酋·🌟阿布扎比节点 🌴, server: tsadfhyifgk.461553.best, port: 25772, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 3492 3589|US16 1.9MB/s, server: 67.220.95.102, port: 7002, type: ss, cipher: aes-256-gcm, password: RexnBgU7EV5ADxG, udp: true}
+  - {name: 3589|US30 1.9MB/s, server: 23.154.136.44, port: 8881, type: ss, cipher: aes-256-gcm, password: kDWvXYZoTBcGkC4, udp: true}
+  - {name: 3571|4Mohsen-11399, server: 89.117.112.235, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 3582|🔒 VM-WS-TLS 🏴‍☠️ NA-104.21.13...., server: 104.21.13.222, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-11419, server: 92.53.189.151, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴, server: nsdfryucvvr.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 3589|未知124 660.7KB/s, server: 185.47.255.22, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴, server: pppasdfjetyj.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10867, server: 31.22.116.136, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 3498|🆔@LuxyNet💎❖🇷❖TR❖693, server: 45.89.52.66, port: 9040, type: ss, cipher: aes-256-cfb, password: p9z5BVADH2YFs3MN, udp: true}
+  - {name: 3498|🆔@LuxyNet💎❖🇮❖FI❖803, server: 37.143.129.230, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖695, server: 45.89.52.66, port: 9031, type: ss, cipher: aes-256-cfb, password: BwcAUZk8hUFAkDGN, udp: true}
+  - {name: "🇫🇷 789 1226 1323 1362 1603 3505|法国 005 #5", server: 141.11.203.194, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖690, server: 45.89.52.66, port: 9043, type: ss, cipher: aes-256-cfb, password: HSZuyJQcWe8dxNdF, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖691, server: 45.89.52.66, port: 9042, type: ss, cipher: aes-256-cfb, password: S7KwUu7yBy58S3Ga, udp: true}
+  - {name: 3589|未知8 2.0MB/s, server: 45.158.171.66, port: 8080, type: ss, cipher: chacha20-ietf-poly1305, password: oZIoA69Q8yhcQV8ka3Pa3A, udp: true}
+  - {name: 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖692, server: 45.89.52.66, port: 9041, type: ss, cipher: aes-256-cfb, password: U6qnYRhfyDmn8sgn, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-9299, server: 147.78.140.50, port: 8443, type: vmess, uuid: e88b85c6-93b4-47f6-b3fb-2c55dcb1289f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: lax2.ibgfw.top, network: ws, ws-opts: {path: /dyajvws, headers: {Host: lax2.ibgfw.top}}, udp: true}
+  - {name: 3571|4Mohsen-9954, server: 172.67.170.103, port: 443, type: vmess, uuid: 76221bfb-e92f-4e80-81c5-6fe48f50ac0b, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: glweidf.sbs, network: ws, ws-opts: {path: /linkws, headers: {Host: glweidf.sbs}}, udp: true}
+  - {name: 3492 3589|未知24 1.1MB/s, server: 54.36.174.181, port: 5601, type: ss, cipher: aes-256-gcm, password: Y6R9pAtvxxzmGC, udp: true}
+  - {name: 3492 3589|未知109 1.0MB/s, server: 94.131.123.147, port: 7383, type: ss, cipher: chacha20-ietf-poly1305, password: eSHEdJz96rqNkOCAzd5Csv, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1..., server: 62.146.232.156, port: 33281, type: vmess, uuid: 24eda0ea-acf0-4538-a001-f746a480237a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-11744, server: hms02opi.fxiaomi.sbs, port: 443, type: vmess, uuid: 6c168fcc-2231-4f3b-8c1e-f6391692df4a, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hms02.fxiaomi.sbs, network: ws, ws-opts: {path: /link, headers: {Host: hms02.fxiaomi.sbs}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10164, server: 172.67.223.119, port: 443, type: vmess, uuid: 6c168fcc-2231-4f3b-8c1e-f6391692df4a, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hms02.fxiaomi.sbs, network: ws, ws-opts: {path: /link, headers: {Host: hms02.fxiaomi.sbs}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10560, server: 190.93.247.58, port: 443, type: vmess, uuid: 6c168fcc-2231-4f3b-8c1e-f6391692df4a, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: hms02.fxiaomi.sbs, network: ws, ws-opts: {path: /link, headers: {Host: hms02.fxiaomi.sbs}}, udp: true}
+  - {name: 🇺🇸 US 2, server: 34.222.44.5, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇨🇦 3571 3582|🔒 VM-TCP-NA 🇨🇦 CA-23.162.200.9..., server: 23.162.200.91, port: 20182, type: vmess, uuid: cc9b66b7-1de7-4aa9-9642-575a8ae3ff19, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233..., server: 62.146.233.53, port: 50678, type: vmess, uuid: 5d1ec6e7-fd58-4e85-91c5-6335a86d2775, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3498|🆔@LuxyNet💎❖❖MK❖686, server: 46.183.185.37, port: 989, type: ss, cipher: aes-256-cfb, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 3571|4Mohsen-12141, server: www.visa.com.tw, port: 443, type: vmess, uuid: aab269af-a266-4d1b-b4ce-da36a4b0bdf0, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, network: ws, ws-opts: {path: "/vmess-argo?ed=2048", headers: {Host: meat-newfoundland-loads-vegas.trycloudflare.com}}, udp: true}
+  - {name: 3571|4Mohsen-10409, server: 194.233.72.228, port: 27575, type: vmess, uuid: 16509262-dbe2-43ba-99ce-07913d2a18b4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183...., server: 103.149.183.178, port: 54675, type: vmess, uuid: 3a907956-f668-4e6b-ea03-0949f0c9c0a5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-11218, server: 51.79.103.76, port: 80, type: vmess, uuid: 58fe1542-5290-40ad-815a-77707a81afe5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /IOebhLMhl1CTbFHbL95myfRX2, headers: {Host: wrmelmwxlf.gktevlrqznwqqozy.fabpfs66gizmnojhcvqxwl.kytrcfzqla87gvgvs6c7kjnrubuh.cc}}, udp: true}
+  - {name: "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1", server: 103.149.183.178, port: 27512, type: vmess, uuid: 96d38683-0817-4d91-bffa-6f03df18d9dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 3589|未知56 332.3KB/s, server: 154.196.244.12, port: 16002, type: ss, cipher: aes-256-gcm, password: CZWGKVVKET2BTRBK, udp: true}
+  - {name: 🇺🇸 3568|🇺🇸US-23.185.248.17-008, server: 23.185.248.17, port: 17007, type: ss, cipher: aes-256-gcm, password: Z7C08JB1HBMWQHVP, udp: true}
+  - {name: 🇺🇸 3568|🇺🇸US-23.185.248.13-006, server: 23.185.248.13, port: 17003, type: ss, cipher: aes-256-gcm, password: LKG8G8VL60RSB59P, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8355, server: 104.18.5.250, port: 80, type: vmess, uuid: c4ee5942-8911-4b6e-b7a5-1486bd28fb56, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: fl.likelike.us.kg}}, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-8352, server: 104.18.4.250, port: 80, type: vmess, uuid: c4ee5942-8911-4b6e-b7a5-1486bd28fb56, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: fl.likelike.us.kg}}, udp: true}
+  - {name: 3589|未知94 28.5KB/s, server: 156.231.104.18, port: 18008, type: ss, cipher: aes-256-gcm, password: 53RIUQDZR3B23TA3, udp: true}
+  - {name: 3589|未知17 55.9KB/s, server: 129.232.134.112, port: 990, type: ss, cipher: chacha20-ietf-poly1305, password: f8f7aCzcPKbsF8p3, udp: true}
+  - {name: 789 1226 1323 1362 1603 3505 3571|4Mohsen-10326, server: 188.114.97.4, port: 443, type: vmess, uuid: f584de15-2034-4170-a723-f48c2bae5e0f, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: afrhms16v.bestxray.buzz, network: ws, ws-opts: {path: /linkws, headers: {Host: afrhms16v.bestxray.buzz}}, udp: true}
+  - {name: 🇺🇸 805|United States_Boardman_ss_1169, server: 35.86.111.233, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇯🇵 805|Japan_Tokyo_ss_1194, server: 18.181.167.38, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: "🇺🇸 3492|United States #21", server: 172.67.204.19, port: 443, type: vmess, uuid: 5f726fe3-d82e-4da5-a711-8af0cbb2b682, alterId: 0, cipher: auto, tls: true, skip-cert-verify: true, servername: 1a2d514b-37cf-499f-8d08-d017a92ab5bb.asoul-ava.top, network: ws, ws-opts: {path: /azumase.ren, headers: {Host: 1a2d514b-37cf-499f-8d08-d017a92ab5bb.asoul-ava.top}}, udp: true}
+  - {name: 🇨🇳 3492|台湾_010309115 M45, server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: 🇯🇵 3498 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6..., server: 152.69.197.60, port: 1069, type: vmess, uuid: ac8e26fe-8150-4b60-ae64-82fc77eba2cf, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1160, server: 54.250.26.118, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+  - {name: 🇨🇦 CA, server: 54.200.183.45, port: 443, type: ss, cipher: aes-256-cfb, password: amazonskr05, udp: true}
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - ✅ 手动选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10158
+      - 3571|4Mohsen-11589
+      - 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.249.0...
+      - 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.248.9...
+      - 3571|4Mohsen-8648
+      - 3571|4Mohsen-9927
+      - 3568|🏁RELAY-172.67.153.156-004
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8901
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8894
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10153
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10335
+      - 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.86.12...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9950
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9945
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8859
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9964
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10080
+      - 🇺🇸 3582|🔒 VM-WS-NA 🇺🇸 US-74.48.159.226...
+      - 🇭🇰 HK
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10759
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8653
+      - 🇺🇸 US
+      - 🇨🇦 3571 3582|🔒 VM-TCP-NA 🇨🇦 CA-38.111.114.1...
+      - 3571|4Mohsen-9970
+      - 🇺🇸 3568|🇺🇸US-172.233.128.126-009
+      - 3568 3589|US44 53.0MB/s
+      - 3571|4Mohsen-8238
+      - 3571|4Mohsen-10327
+      - 3571|4Mohsen-9955
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8247
+      - 🇫🇷 3492 3498|🆔@LuxyNet💎❖🇷❖FR❖1037
+      - 🇳🇱 3492 3498|🆔@LuxyNet💎❖❖NL❖1634
+      - 🇺🇸 3492 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-107.148.207....
+      - 3589|未知47 1.4MB/s
+      - 🇳🇱 3492 3498|🆔@LuxyNet💎❖🇳🇱❖NL❖631
+      - 3492 3589|US38 118.9MB/s
+      - 3571|4Mohsen-12038
+      - 1361 3492 3498 3539 3540 3568 3569 3589|未知52 3.6MB/s
+      - 3571|4Mohsen-10314
+      - 3492 3498|🆔@LuxyNet💎❖❖AF❖1626
+      - 3499 3571|4Mohsen-12099
+      - "🇩🇪 3492|Germany #2"
+      - 3492 3589|未知20 1.7MB/s
+      - 3492 3589|未知5 2.0MB/s
+      - 3492 3589|未知82 3.7MB/s
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-172.99.190.2...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10372
+      - 🇬🇧 3492 3512|英国_Tg:univstar_40
+      - 🇬🇧 3492 3498 3512|英国_Tg:univstar_39
+      - "🇺🇸 3492|United States #13"
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-149.7.16.149...
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11659
+      - 3589|US41 19.8MB/s
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10333
+      - 3499 3571|4Mohsen-12036
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9702
+      - 3492 3498|🆔@LuxyNet💎❖🇸❖RS❖1039
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8832
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12035
+      - 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-193.108.117....
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10322
+      - 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-193.108.118....
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8844
+      - 🇬🇧 1292 3492 3512|英国_Tg:univstar_37
+      - 3571|4Mohsen-11625
+      - 🇺🇸 3492 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-142.4.104.33...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10325
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12087
+      - 789 1226 1323 1362 1602 1603 3499 3505 3571|4Mohsen-12133
+      - 🇬🇧 3492 3498 3512|英国_Tg:univstar_38
+      - 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10371
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11808
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10015
+      - 3571|4Mohsen-10861
+      - 🇨🇳 TW
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-38.114.120.1...
+      - 🇺🇸 3571 3582|🔒 VM-WS-NA 🇺🇸 US-2.58.87.221:1...
+      - 🇺🇸 3492|🇺🇸US(AzadNet.t.me)_3378
+      - 3589|US3 16.9MB/s
+      - 🇯🇵 JP
+      - 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1131
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-68.168.31.18...
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11748
+      - 🇷🇺 3571 3582|🔒 VM-TCP-NA 🇷🇺 RU-46.29.166.23...
+      - 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1161
+      - 🇫🇷 3571 3582|🔒 VM-TCP-NONE 🇫🇷 FR-38.109.228...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10350
+      - 🇮🇳 3571 3582|🔒 VM-TCP-NA 🇮🇳 IN-4.240.73.55:...
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11884
+      - "🇨🇦 789 1362 3505|加拿大 014 #2"
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8317
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12088
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12075
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12085
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12071
+      - 🇦🇺 3571 3582|🔒 VM-TCP-NA 🇦🇺 AU-154.26.153.1...
+      - 🇸🇬 3571 3582|🔒 VM-WS-NA 🇸🇬 SG-140.245.41.11...
+      - 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-23.158.56.21...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9940
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10368
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10344
+      - 3499 3571|4Mohsen-12058
+      - 🇬🇧 3492 3498|🆔@LuxyNet💎❖🇧❖GB❖949
+      - "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1"
+      - 3499 3571|4Mohsen-8240
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10337
+      - 3571|4Mohsen-12062
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1"
+      - 3492 3589|未知16 2.2MB/s
+      - 3499 3571|4Mohsen-12059
+      - 3571|4Mohsen-12060
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1"
+      - 3571|4Mohsen-12090
+      - "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1"
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12089
+      - 3499 3571|4Mohsen-12057
+      - 🇮🇳 3571 3582|🔒 VM-TCP-NA 🇮🇳 IN-94.136.184.1...
+      - 3589|未知68
+      - "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1"
+      - 789 1226 1323 1362 1602 1603 3499 3505 3571|4Mohsen-12082
+      - "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1"
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12098
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8334
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-46.250.253.2...
+      - 3571 3582|🔒 VM-TCP-NA 🇮🇩 ID-103.67.79.15...
+      - 🇰🇷 3492|South Korea
+      - 3571|4Mohsen-8542
+      - 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11762
+      - 3571|4Mohsen-8311
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴
+      - 🇲🇾 3571 3582|🔒 VM-TCP-NA 🇲🇾 MY-101.99.91.23...
+      - 3571|4Mohsen-8313
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴
+      - 3589|未知84 1.8MB/s
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴
+      - 🇩🇰 3492 3498|🆔@LuxyNet💎❖❖DK❖1049
+      - 789 1226 1323 1362 1586 1603 3505 3571|4Mohsen-11972
+      - 3589|未知67 1.5MB/s
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴
+      - 3589|未知37 121.0KB/s
+      - 789 1226 1323 1362 1602 1603 3505 3568 3569 3571 3582|🔒 VM-TCP-NONE 🇫🇮 FI-31.58.137....
+      - 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴
+      - 3492 3498|🆔@LuxyNet💎❖🇪❖BE❖1048
+      - 3589|US34 1.8MB/s
+      - 3492 3589|US12 1.9MB/s
+      - 3589|US39 1.8MB/s
+      - 3589|US42 1.9MB/s
+      - 3589|US5 1.9MB/s
+      - 3492 3589|US11 1.8MB/s
+      - https://t.me/dafeiji100
+      - https://t.me/dafeiji100 2
+      - 3589|US19 1.9MB/s
+      - https://t.me/dafeiji100 3
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 3589|US17 1.9MB/s
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 3492 3498|🆔@LuxyNet💎❖🇳❖VN❖2004
+      - 3492 3589|US6 1.9MB/s
+      - 🇬🇧 3492 3498|🆔@LuxyNet💎❖🇬🇧❖GB❖619
+      - 3589|US21 1.9MB/s
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴
+      - 3492 3589|未知102 1.7MB/s
+      - 3492 3589|未知122 1.7MB/s
+      - 3492 3589|US2 1.8MB/s
+      - 3492 3589|未知110 1.3MB/s
+      - 3492 3589|未知62 1.6MB/s
+      - 3492 3589| 1.4MB/s
+      - 3492 3589|未知28 1.2MB/s
+      - 3492 3589|未知132 1.6MB/s
+      - 3589|未知29 1.0MB/s
+      - 3492 3589|未知73 1.7MB/s
+      - 3492 3589|未知26 728.6KB/s
+      - 3492 3589|US32 1.8MB/s
+      - 3492 3589|未知53 1.1MB/s
+      - 3492 3589|未知58 1.1MB/s
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - 🇦🇪 106|🚀ae 阿联酋·🌟阿布扎比节点 🌴
+      - 3492 3589|US16 1.9MB/s
+      - 3589|US30 1.9MB/s
+      - 3571|4Mohsen-11399
+      - 3582|🔒 VM-WS-TLS 🏴‍☠️ NA-104.21.13....
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-11419
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴
+      - 3589|未知124 660.7KB/s
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10867
+      - 3498|🆔@LuxyNet💎❖🇷❖TR❖693
+      - 3498|🆔@LuxyNet💎❖🇮❖FI❖803
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖695
+      - "🇫🇷 789 1226 1323 1362 1603 3505|法国 005 #5"
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖690
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖691
+      - 3589|未知8 2.0MB/s
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖692
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-9299
+      - 3571|4Mohsen-9954
+      - 3492 3589|未知24 1.1MB/s
+      - 3492 3589|未知109 1.0MB/s
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-11744
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10164
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10560
+      - 🇺🇸 US 2
+      - 🇨🇦 3571 3582|🔒 VM-TCP-NA 🇨🇦 CA-23.162.200.9...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - 3498|🆔@LuxyNet💎❖❖MK❖686
+      - 3571|4Mohsen-12141
+      - 3571|4Mohsen-10409
+      - 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-11218
+      - "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 3589|未知56 332.3KB/s
+      - 🇺🇸 3568|🇺🇸US-23.185.248.17-008
+      - 🇺🇸 3568|🇺🇸US-23.185.248.13-006
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8355
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8352
+      - 3589|未知94 28.5KB/s
+      - 3589|未知17 55.9KB/s
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10326
+      - 🇺🇸 805|United States_Boardman_ss_1169
+      - 🇯🇵 805|Japan_Tokyo_ss_1194
+      - "🇺🇸 3492|United States #21"
+      - 🇨🇳 3492|台湾_010309115 M45
+      - 🇯🇵 3498 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6...
+      - 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1160
+      - 🇨🇦 CA
+  - name: ✅ 手动选择
+    type: select
+    proxies:
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10158
+      - 3571|4Mohsen-11589
+      - 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.249.0...
+      - 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.248.9...
+      - 3571|4Mohsen-8648
+      - 3571|4Mohsen-9927
+      - 3568|🏁RELAY-172.67.153.156-004
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8901
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8894
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10153
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10335
+      - 🇺🇸 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-15.204.86.12...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9950
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9945
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8859
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9964
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10080
+      - 🇺🇸 3582|🔒 VM-WS-NA 🇺🇸 US-74.48.159.226...
+      - 🇭🇰 HK
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10759
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8653
+      - 🇺🇸 US
+      - 🇨🇦 3571 3582|🔒 VM-TCP-NA 🇨🇦 CA-38.111.114.1...
+      - 3571|4Mohsen-9970
+      - 🇺🇸 3568|🇺🇸US-172.233.128.126-009
+      - 3568 3589|US44 53.0MB/s
+      - 3571|4Mohsen-8238
+      - 3571|4Mohsen-10327
+      - 3571|4Mohsen-9955
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8247
+      - 🇫🇷 3492 3498|🆔@LuxyNet💎❖🇷❖FR❖1037
+      - 🇳🇱 3492 3498|🆔@LuxyNet💎❖❖NL❖1634
+      - 🇺🇸 3492 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-107.148.207....
+      - 3589|未知47 1.4MB/s
+      - 🇳🇱 3492 3498|🆔@LuxyNet💎❖🇳🇱❖NL❖631
+      - 3492 3589|US38 118.9MB/s
+      - 3571|4Mohsen-12038
+      - 1361 3492 3498 3539 3540 3568 3569 3589|未知52 3.6MB/s
+      - 3571|4Mohsen-10314
+      - 3492 3498|🆔@LuxyNet💎❖❖AF❖1626
+      - 3499 3571|4Mohsen-12099
+      - "🇩🇪 3492|Germany #2"
+      - 3492 3589|未知20 1.7MB/s
+      - 3492 3589|未知5 2.0MB/s
+      - 3492 3589|未知82 3.7MB/s
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-172.99.190.2...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10372
+      - 🇬🇧 3492 3512|英国_Tg:univstar_40
+      - 🇬🇧 3492 3498 3512|英国_Tg:univstar_39
+      - "🇺🇸 3492|United States #13"
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-149.7.16.149...
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11659
+      - 3589|US41 19.8MB/s
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10333
+      - 3499 3571|4Mohsen-12036
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9702
+      - 3492 3498|🆔@LuxyNet💎❖🇸❖RS❖1039
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8832
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12035
+      - 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-193.108.117....
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10322
+      - 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-193.108.118....
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8844
+      - 🇬🇧 1292 3492 3512|英国_Tg:univstar_37
+      - 3571|4Mohsen-11625
+      - 🇺🇸 3492 3571 3582|🔒 VM-TCP-NA 🇺🇸 US-142.4.104.33...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10325
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12087
+      - 789 1226 1323 1362 1602 1603 3499 3505 3571|4Mohsen-12133
+      - 🇬🇧 3492 3498 3512|英国_Tg:univstar_38
+      - 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10371
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11808
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10015
+      - 3571|4Mohsen-10861
+      - 🇨🇳 TW
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-38.114.120.1...
+      - 🇺🇸 3571 3582|🔒 VM-WS-NA 🇺🇸 US-2.58.87.221:1...
+      - 🇺🇸 3492|🇺🇸US(AzadNet.t.me)_3378
+      - 3589|US3 16.9MB/s
+      - 🇯🇵 JP
+      - 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1131
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-68.168.31.18...
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11748
+      - 🇷🇺 3571 3582|🔒 VM-TCP-NA 🇷🇺 RU-46.29.166.23...
+      - 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1161
+      - 🇫🇷 3571 3582|🔒 VM-TCP-NONE 🇫🇷 FR-38.109.228...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10350
+      - 🇮🇳 3571 3582|🔒 VM-TCP-NA 🇮🇳 IN-4.240.73.55:...
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11884
+      - "🇨🇦 789 1362 3505|加拿大 014 #2"
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8317
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12088
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12075
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12085
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12071
+      - 🇦🇺 3571 3582|🔒 VM-TCP-NA 🇦🇺 AU-154.26.153.1...
+      - 🇸🇬 3571 3582|🔒 VM-WS-NA 🇸🇬 SG-140.245.41.11...
+      - 🇩🇪 3571 3582|🔒 VM-TCP-NA 🇩🇪 DE-23.158.56.21...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-9940
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10368
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10344
+      - 3499 3571|4Mohsen-12058
+      - 🇬🇧 3492 3498|🆔@LuxyNet💎❖🇧❖GB❖949
+      - "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1"
+      - 3499 3571|4Mohsen-8240
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10337
+      - 3571|4Mohsen-12062
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1"
+      - 3492 3589|未知16 2.2MB/s
+      - 3499 3571|4Mohsen-12059
+      - 3571|4Mohsen-12060
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1"
+      - 3571|4Mohsen-12090
+      - "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1"
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-12089
+      - 3499 3571|4Mohsen-12057
+      - 🇮🇳 3571 3582|🔒 VM-TCP-NA 🇮🇳 IN-94.136.184.1...
+      - 3589|未知68
+      - "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1"
+      - 789 1226 1323 1362 1602 1603 3499 3505 3571|4Mohsen-12082
+      - "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1"
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-12098
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-8334
+      - 🇬🇧 3571 3582|🔒 VM-TCP-NA 🇬🇧 GB-46.250.253.2...
+      - 3571 3582|🔒 VM-TCP-NA 🇮🇩 ID-103.67.79.15...
+      - 🇰🇷 3492|South Korea
+      - 3571|4Mohsen-8542
+      - 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴
+      - 789 1226 1323 1362 1603 3492 3505 3571|4Mohsen-11762
+      - 3571|4Mohsen-8311
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴
+      - 🇲🇾 3571 3582|🔒 VM-TCP-NA 🇲🇾 MY-101.99.91.23...
+      - 3571|4Mohsen-8313
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴
+      - 3589|未知84 1.8MB/s
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴
+      - 🇩🇰 3492 3498|🆔@LuxyNet💎❖❖DK❖1049
+      - 789 1226 1323 1362 1586 1603 3505 3571|4Mohsen-11972
+      - 3589|未知67 1.5MB/s
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴
+      - 3589|未知37 121.0KB/s
+      - 789 1226 1323 1362 1602 1603 3505 3568 3569 3571 3582|🔒 VM-TCP-NONE 🇫🇮 FI-31.58.137....
+      - 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴
+      - 3492 3498|🆔@LuxyNet💎❖🇪❖BE❖1048
+      - 3589|US34 1.8MB/s
+      - 3492 3589|US12 1.9MB/s
+      - 3589|US39 1.8MB/s
+      - 3589|US42 1.9MB/s
+      - 3589|US5 1.9MB/s
+      - 3492 3589|US11 1.8MB/s
+      - https://t.me/dafeiji100
+      - https://t.me/dafeiji100 2
+      - 3589|US19 1.9MB/s
+      - https://t.me/dafeiji100 3
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 3589|US17 1.9MB/s
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 3492 3498|🆔@LuxyNet💎❖🇳❖VN❖2004
+      - 3492 3589|US6 1.9MB/s
+      - 🇬🇧 3492 3498|🆔@LuxyNet💎❖🇬🇧❖GB❖619
+      - 3589|US21 1.9MB/s
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴
+      - 3492 3589|未知102 1.7MB/s
+      - 3492 3589|未知122 1.7MB/s
+      - 3492 3589|US2 1.8MB/s
+      - 3492 3589|未知110 1.3MB/s
+      - 3492 3589|未知62 1.6MB/s
+      - 3492 3589| 1.4MB/s
+      - 3492 3589|未知28 1.2MB/s
+      - 3492 3589|未知132 1.6MB/s
+      - 3589|未知29 1.0MB/s
+      - 3492 3589|未知73 1.7MB/s
+      - 3492 3589|未知26 728.6KB/s
+      - 3492 3589|US32 1.8MB/s
+      - 3492 3589|未知53 1.1MB/s
+      - 3492 3589|未知58 1.1MB/s
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - 🇦🇪 106|🚀ae 阿联酋·🌟阿布扎比节点 🌴
+      - 3492 3589|US16 1.9MB/s
+      - 3589|US30 1.9MB/s
+      - 3571|4Mohsen-11399
+      - 3582|🔒 VM-WS-TLS 🏴‍☠️ NA-104.21.13....
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-11419
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴
+      - 3589|未知124 660.7KB/s
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-10867
+      - 3498|🆔@LuxyNet💎❖🇷❖TR❖693
+      - 3498|🆔@LuxyNet💎❖🇮❖FI❖803
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖695
+      - "🇫🇷 789 1226 1323 1362 1603 3505|法国 005 #5"
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖690
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖691
+      - 3589|未知8 2.0MB/s
+      - 3492 3498|🆔@LuxyNet💎❖🇷❖TR❖692
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-9299
+      - 3571|4Mohsen-9954
+      - 3492 3589|未知24 1.1MB/s
+      - 3492 3589|未知109 1.0MB/s
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-11744
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10164
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10560
+      - 🇺🇸 US 2
+      - 🇨🇦 3571 3582|🔒 VM-TCP-NA 🇨🇦 CA-23.162.200.9...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - 3498|🆔@LuxyNet💎❖❖MK❖686
+      - 3571|4Mohsen-12141
+      - 3571|4Mohsen-10409
+      - 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - 789 1226 1323 1362 1602 1603 3505 3571|4Mohsen-11218
+      - "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 3589|未知56 332.3KB/s
+      - 🇺🇸 3568|🇺🇸US-23.185.248.17-008
+      - 🇺🇸 3568|🇺🇸US-23.185.248.13-006
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8355
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-8352
+      - 3589|未知94 28.5KB/s
+      - 3589|未知17 55.9KB/s
+      - 789 1226 1323 1362 1603 3505 3571|4Mohsen-10326
+      - 🇺🇸 805|United States_Boardman_ss_1169
+      - 🇯🇵 805|Japan_Tokyo_ss_1194
+      - "🇺🇸 3492|United States #21"
+      - 🇨🇳 3492|台湾_010309115 M45
+      - 🇯🇵 3498 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6...
+      - 🇯🇵 3537 3575 3576 3577 3593|Japan_Tokyo_ss_1160
+      - 🇨🇦 CA
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🚫 拒接访问
+    type: select
+    proxies:
+      - REJECT
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+  - name: 🌍 国外加速
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 📲 电报信息
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+  - name: Ⓜ️ 微软服务
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+  - name: 🛑 全球拦截
+    type: select
+    proxies:
+      - 🚫 拒接访问
+      - 🎯 全球直连
+rules:
+  - DOMAIN-SUFFIX,googleapis.cn,🌍 国外加速
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🎯 全球直连
+  - DOMAIN-SUFFIX,xn--ngstr-cn-8za9o.com,🎯 全球直连
+  - DOMAIN-KEYWORD,kgithub,🎯 全球直连
+  - DOMAIN-KEYWORD,fastgit,🎯 全球直连
+  - DOMAIN-KEYWORD,ghproxy,🎯 全球直连
+  - DOMAIN-KEYWORD,gitmirror,🎯 全球直连
+  - DOMAIN-SUFFIX,gitclone.com,🎯 全球直连
+  - DOMAIN-SUFFIX,gh.api.99988866.xyz,🎯 全球直连
+  - DOMAIN-SUFFIX,weserv.nl,🎯 全球直连
+  - DOMAIN-SUFFIX,wsrv.nl,🎯 全球直连
+  - PROCESS-NAME,v2ray,🎯 全球直连
+  - PROCESS-NAME,xray,🎯 全球直连
+  - PROCESS-NAME,naive,🎯 全球直连
+  - PROCESS-NAME,trojan,🎯 全球直连
+  - PROCESS-NAME,trojan-go,🎯 全球直连
+  - PROCESS-NAME,ss-local,🎯 全球直连
+  - PROCESS-NAME,privoxy,🎯 全球直连
+  - PROCESS-NAME,leaf,🎯 全球直连
+  - PROCESS-NAME,v2ray.exe,🎯 全球直连
+  - PROCESS-NAME,xray.exe,🎯 全球直连
+  - PROCESS-NAME,naive.exe,🎯 全球直连
+  - PROCESS-NAME,trojan.exe,🎯 全球直连
+  - PROCESS-NAME,trojan-go.exe,🎯 全球直连
+  - PROCESS-NAME,ss-local.exe,🎯 全球直连
+  - PROCESS-NAME,privoxy.exe,🎯 全球直连
+  - PROCESS-NAME,leaf.exe,🎯 全球直连
+  - PROCESS-NAME,Surge,🎯 全球直连
+  - PROCESS-NAME,Surge 2,🎯 全球直连
+  - PROCESS-NAME,Surge 3,🎯 全球直连
+  - PROCESS-NAME,Surge 4,🎯 全球直连
+  - PROCESS-NAME,Surge%202,🎯 全球直连
+  - PROCESS-NAME,Surge%203,🎯 全球直连
+  - PROCESS-NAME,Surge%204,🎯 全球直连
+  - PROCESS-NAME,Thunder,🎯 全球直连
+  - PROCESS-NAME,DownloadService,🎯 全球直连
+  - PROCESS-NAME,qBittorrent,🎯 全球直连
+  - PROCESS-NAME,Transmission,🎯 全球直连
+  - PROCESS-NAME,fdm,🎯 全球直连
+  - PROCESS-NAME,aria2c,🎯 全球直连
+  - PROCESS-NAME,Folx,🎯 全球直连
+  - PROCESS-NAME,NetTransport,🎯 全球直连
+  - PROCESS-NAME,uTorrent,🎯 全球直连
+  - PROCESS-NAME,WebTorrent,🎯 全球直连
+  - PROCESS-NAME,aria2c.exe,🎯 全球直连
+  - PROCESS-NAME,BitComet.exe,🎯 全球直连
+  - PROCESS-NAME,fdm.exe,🎯 全球直连
+  - PROCESS-NAME,NetTransport.exe,🎯 全球直连
+  - PROCESS-NAME,qbittorrent.exe,🎯 全球直连
+  - PROCESS-NAME,Thunder.exe,🎯 全球直连
+  - PROCESS-NAME,ThunderVIP.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-daemon.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-qt.exe,🎯 全球直连
+  - PROCESS-NAME,uTorrent.exe,🎯 全球直连
+  - PROCESS-NAME,WebTorrent.exe,🎯 全球直连
+  - DOMAIN,steamstore-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,steamcdn-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,api.steampowered.com,🎯 全球直连
+  - DOMAIN,store.steampowered.com,🎯 全球直连
+  - DOMAIN,clash.razord.top,🎯 全球直连
+  - DOMAIN,yacd.haishan.me,🎯 全球直连
+  - DOMAIN,www.biqugeu.net,🌍 国外加速
+  - DOMAIN,www.cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,diyibanzhu,🌍 国外加速
+  - DOMAIN-SUFFIX,cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,cunhua,🌍 国外加速
+  - RULE-SET,自定义广告白名单,🎯 全球直连
+  - RULE-SET,自定义广告拦截,🛑 全球拦截
+  - RULE-SET,adblock,🛑 全球拦截
+  - IP-CIDR,0.0.0.0/32,🛑 全球拦截
+  - RULE-SET,MetaCubeX-cn-domain,🎯 全球直连
+  - GEOIP,private,🎯 全球直连,no-resolve
+  - GEOIP,JP,🌍 国外加速
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,ChinaCompanyIp,🎯 全球直连
+  - RULE-SET,ChinaDomain,🎯 全球直连
+  - RULE-SET,ChinaMedia,🎯 全球直连
+  - RULE-SET,ChinaIp,🎯 全球直连
+  - RULE-SET,LocalAreaNetwork,🎯 全球直连
+  - DOMAIN-SUFFIX,cn,🎯 全球直连
+  - DOMAIN-KEYWORD,-cn,🎯 全球直连
+  - RULE-SET,region,🌍 国外加速
+  - RULE-SET,direct,🎯 全球直连
+  - RULE-SET,direct2,🎯 全球直连
+  - RULE-SET,ProxyGFWlist,🌍 国外加速
+  - RULE-SET,telegramcidr,📲 电报信息
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,proxy,🌍 国外加速
+  - MATCH,🐟 漏网之鱼

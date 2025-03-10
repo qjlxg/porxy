@@ -1,0 +1,400 @@
+mixed-port: 7890
+allow-lan: true
+bind-address: "*"
+mode: rule
+log-level: info
+external-controller: 127.0.0.1:9090
+dns:
+  enable: true
+  ipv6: false
+  default-nameserver: [223.5.5.5, 119.29.29.29]
+  enhanced-mode: fake-ip
+  fake-ip-range: 198.18.0.1/16
+  use-hosts: true
+  nameserver: [https://853.66a.net:443/dns-query, https://doh.pub/dns-query, https://dns.alidns.com/dns-query]
+  fallback: [https://doh.dns.sb/dns-query, https://dns.cloudflare.com/dns-query, https://dns.twnic.tw/dns-query, tls://8.8.4.4:853]
+  fallback-filter:
+    geoip: true
+    geoip-code: CN
+    geosite:
+      - gfw
+    ipcidr:
+      - 240.0.0.0/4
+    domain:
+      - +.google.com
+      - +.facebook.com
+      - +.youtube.com
+  nameserver-policy:
+    geosite:cn,private,apple:
+      - https://doh.pub/dns-query
+      - https://dns.alidns.com/dns-query
+    www.baidu.com,+.google.cn: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:自定义广告白名单: [223.5.5.5, https://dns.alidns.com/dns-query]
+    rule-set:adblock,自定义广告拦截: rcode://success
+  fake-ip-filter:
+    - "*.lan"
+    - localhost.ptlogin2.qq.com
+rule-providers:
+  adblock:
+    type: http
+    behavior: classical
+    path: ./rule_providers/adblock.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/adblock.yml
+    interval: 21600
+    format: yaml
+  proxy:
+    type: http
+    behavior: classical
+    path: ./rule_providers/proxy.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/proxy.yml
+    interval: 86400
+    format: yaml
+  direct:
+    type: http
+    behavior: classical
+    path: ./rule_providers/direct.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/direct.yml
+    interval: 86400
+    format: yaml
+  region:
+    type: http
+    behavior: classical
+    path: ./rule_providers/region.yml
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/peasoft/NoMoreWalls/master/snippets/region.yml
+    interval: 86400
+    format: yaml
+  direct2:
+    behavior: domain
+    type: http
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/direct.txt
+    interval: 86400
+    path: ./ruleset/direct2.yaml
+    format: yaml
+  telegramcidr:
+    type: http
+    behavior: ipcidr
+    url: https://cdn.jsdelivr.net/gh/Loyalsoldier/clash-rules@release/telegramcidr.txt
+    path: ./ruleset/telegramcidr.yaml
+    interval: 86400
+    format: yaml
+  ProxyGFWlist:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ProxyGFWlist.yaml
+    path: ./ruleset/ProxyGFWlist.yaml
+    interval: 86400
+    format: yaml
+  ChinaCompanyIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaCompanyIp.yaml
+    path: ./ruleset/gfw.yaml
+    interval: 86400
+    format: yaml
+  ChinaDomain:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaDomain.yaml
+    path: ./ruleset/ChinaDomain.yaml
+    interval: 86400
+    format: yaml
+  ChinaIp:
+    type: http
+    behavior: ipcidr
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaIp.yaml
+    path: ./ruleset/ChinaIp.yaml
+    interval: 86400
+    format: yaml
+  ChinaMedia:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/ChinaMedia.yaml
+    path: ./ruleset/ChinaMedia.yaml
+    interval: 86400
+    format: yaml
+  LocalAreaNetwork:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/Providers/LocalAreaNetwork.yaml
+    path: ./ruleset/LocalAreaNetwork.yaml
+    interval: 86400
+    format: yaml
+  自定义广告拦截:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com//HDYOU/ClashADRule/main/self_payload_ad.yml
+    path: ./ruleset/自定义广告拦截.yaml
+    interval: 86400
+    format: yaml
+  自定义广告白名单:
+    type: http
+    behavior: classical
+    url: https://mirror.ghproxy.com/https://raw.githubusercontent.com/HDYOU/ClashADRule/main/self_payload_whitelist.yml
+    path: ./ruleset/自定义广告白名单.yaml
+    interval: 86400
+    format: yaml
+  MetaCubeX-cn-domain:
+    behavior: domain
+    interval: 86400
+    path: ./ruleset/cn_domain.yaml
+    type: http
+    url: https://testingcf.jsdelivr.net/gh/MetaCubeX/meta-rules-dat@release/cn_domain.yaml
+proxies:
+  - {name: 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14..., server: 20.78.127.141, port: 550, type: vmess, uuid: 9e11e992-c3a4-45fb-bb67-5f4f42fcd551, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-WS-NA 🇸🇬 SG-140.245.41.11..., server: 140.245.41.111, port: 23452, type: vmess, uuid: e6592058-1e2d-4068-8d4a-6f4e2d044008, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /, headers: {Host: westsg2-ddns.oraclenat.cc}}, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1", server: uzl8g-g01.jp07-1f28-vm0.entry.fr0307a.art, port: 28783, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1", server: 7a7cu-g01.jp04-3771-vm0.entry.fr0307a.art, port: 444, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1", server: 88dn0-g01.jp03-7d22-vm0.entry.fr0307a.art, port: 21581, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1", server: a57r2-g01.jp05-6786-vm0.entry.fr0307a.art, port: 46482, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1", server: 189jw-g01.jp06-7c5a-vm0.entry.fr0307a.art, port: 28783, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1", server: x8vqu-g01.jp01-0986-vm0.entry.fr0307a.art, port: 21581, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: true, skip-cert-verify: true, udp: true}
+  - {name: "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1", server: 72l2e-g01.jp02-9a99-vm0.entry.fr0307a.art, port: 11773, type: vmess, uuid: c2365e4e-3700-323a-b889-fea7677ef8d1, alterId: 1, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴, server: recvhwashhry.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴, server: tsadfhyifgk.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴, server: tsadfhyifgk.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2..., server: 154.26.129.247, port: 57143, type: vmess, uuid: 28efbf36-079a-4c98-8470-d13458db6ee6, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴, server: recvhwashhry.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴, server: pppasdfjetyj.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴, server: pppasdfjetyj.461553.best, port: 85, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴, server: nsdfryucvvr.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴, server: tsadfhyifgk.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴, server: pppasdfjetyj.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴, server: recvhwashhry.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴, server: pppasdfjetyj.461553.best, port: 25766, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴, server: tsadfhyifgk.461553.best, port: 25769, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴, server: tsadfhyifgk.461553.best, port: 25770, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴, server: recvhwashhry.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴, server: recvhwashhry.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴, server: tsadfhyifgk.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23..., server: 109.123.232.74, port: 59032, type: vmess, uuid: 96ab7e1f-bf0d-45cd-8ebc-c8be2f8d43cd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1..., server: 62.146.233.112, port: 36712, type: vmess, uuid: 9266df42-0830-48c2-8509-4c57b30fe29d, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴, server: pppasdfjetyj.461553.best, port: 25768, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232..., server: 62.146.232.157, port: 52856, type: vmess, uuid: ed54e388-bfc5-4b36-ae4d-8b3cd460d3d4, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴, server: nsdfryucvvr.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴, server: pppasdfjetyj.461553.best, port: 25765, type: vmess, uuid: 194a0dcb-1026-4153-a7d2-80c0df0b19bd, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: "/www.coursera.org?ed=1024", headers: {Host: www.douyin.com}}, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1..., server: 62.146.232.156, port: 33281, type: vmess, uuid: 24eda0ea-acf0-4538-a001-f746a480237a, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233..., server: 62.146.233.53, port: 50678, type: vmess, uuid: 5d1ec6e7-fd58-4e85-91c5-6335a86d2775, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183...., server: 103.149.183.178, port: 54675, type: vmess, uuid: 3a907956-f668-4e6b-ea03-0949f0c9c0a5, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1", server: 103.149.183.178, port: 27512, type: vmess, uuid: 96d38683-0817-4d91-bffa-6f03df18d9dc, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+  - {name: 🇨🇳 3492|台湾_010309115 M45, server: 45.43.59.150, port: 10053, type: vmess, uuid: d4851289-5ce7-4da7-a4c5-09649ace4a93, alterId: 16, cipher: auto, tls: false, skip-cert-verify: true, network: ws, ws-opts: {path: /pfzkm599xxckddt3, headers: {Host: www.baidu.com}}, udp: true}
+  - {name: 🇯🇵 3498 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6..., server: 152.69.197.60, port: 1069, type: vmess, uuid: ac8e26fe-8150-4b60-ae64-82fc77eba2cf, alterId: 0, cipher: auto, tls: false, skip-cert-verify: true, udp: true}
+proxy-groups:
+  - name: 🚀 节点选择
+    type: select
+    proxies:
+      - ♻️ 自动选择
+      - ✅ 手动选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: ♻️ 自动选择
+    type: url-test
+    url: http://www.gstatic.com/generate_204
+    interval: 300
+    tolerance: 50
+    proxies:
+      - 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14...
+      - 🇸🇬 3571 3582|🔒 VM-WS-NA 🇸🇬 SG-140.245.41.11...
+      - "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1"
+      - 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴
+      - 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 🇨🇳 3492|台湾_010309115 M45
+      - 🇯🇵 3498 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6...
+  - name: ✅ 手动选择
+    type: select
+    proxies:
+      - 🇯🇵 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-20.78.127.14...
+      - 🇸🇬 3571 3582|🔒 VM-WS-NA 🇸🇬 SG-140.245.41.11...
+      - "🇯🇵 487|🇯🇵 免费-日本7-Ver.1 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本4-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本3-Ver.6 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本5-Ver.8 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本6-Ver.7 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本1-Ver.6 #1"
+      - "🇯🇵 487|🇯🇵 免费-日本2-Ver.7 #1"
+      - 🇨🇳 106|🚀tw 台湾 03·🌟彰化节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 02·🌟彰化节点 🌴
+      - 🇯🇵 106|🚀jp 日本 02·🌟东京节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-154.26.129.2...
+      - 🇸🇬 106|🚀sg 新加坡 03·🌟淡馬錫节点 🌴
+      - 🇸🇬 106|🚀sg 新加坡 01·🌟淡馬錫节点 🌴
+      - 🇨🇳 106|🚀tw 台湾 01·🌟彰化节点 🌴
+      - 🇭🇰 106|🚀hk 香港 04·🌟维多利亚节点 🌴
+      - 🇭🇰 106|🚀hk 香港 02·🌟维多利亚节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 01·🌟春川节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 03·🌟春川节点 🌴
+      - 🇯🇵 106|🚀jp 日本 01·🌟东京节点 🌴
+      - 🇸🇬 106|🚀sg 新加坡 02·🌟淡馬錫节点 🌴
+      - 🇰🇷 106|🚀kr 韩国 02·🌟春川节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 03·🌟洛杉矶节点 🌴
+      - 🇭🇰 106|🚀hk 香港 03·🌟维多利亚节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 02·🌟洛杉矶节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-109.123.23...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.233.1...
+      - 🇭🇰 106|🚀hk 香港 01·🌟维多利亚节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.232...
+      - 🇺🇸 106|🚀🇺🇸 美国 04·🌟洛杉矶节点 🌴
+      - 🇺🇸 106|🚀🇺🇸 美国 01·🌟洛杉矶节点 🌴
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NA 🇸🇬 SG-62.146.232.1...
+      - 🇸🇬 3571 3582|🔒 VM-TCP-NONE 🇸🇬 SG-62.146.233...
+      - 🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183....
+      - "🇭🇰 3571 3582|🔒 VM-TCP-NA 🇭🇰 HK-103.149.183.... #1"
+      - 🇨🇳 3492|台湾_010309115 M45
+      - 🇯🇵 3498 3571 3582|🔒 VM-TCP-NA 🇯🇵 JP-152.69.197.6...
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🐟 漏网之鱼
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 🚫 拒接访问
+    type: select
+    proxies:
+      - REJECT
+  - name: 🎯 全球直连
+    type: select
+    proxies:
+      - DIRECT
+  - name: 🌍 国外加速
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+      - 🚫 拒接访问
+  - name: 📲 电报信息
+    type: select
+    proxies:
+      - 🚀 节点选择
+      - 🎯 全球直连
+  - name: Ⓜ️ 微软服务
+    type: select
+    proxies:
+      - 🎯 全球直连
+      - 🚀 节点选择
+  - name: 🛑 全球拦截
+    type: select
+    proxies:
+      - 🚫 拒接访问
+      - 🎯 全球直连
+rules:
+  - DOMAIN-SUFFIX,googleapis.cn,🌍 国外加速
+  - DOMAIN-SUFFIX,xn--ngstr-lra8j.com,🎯 全球直连
+  - DOMAIN-SUFFIX,xn--ngstr-cn-8za9o.com,🎯 全球直连
+  - DOMAIN-KEYWORD,kgithub,🎯 全球直连
+  - DOMAIN-KEYWORD,fastgit,🎯 全球直连
+  - DOMAIN-KEYWORD,ghproxy,🎯 全球直连
+  - DOMAIN-KEYWORD,gitmirror,🎯 全球直连
+  - DOMAIN-SUFFIX,gitclone.com,🎯 全球直连
+  - DOMAIN-SUFFIX,gh.api.99988866.xyz,🎯 全球直连
+  - DOMAIN-SUFFIX,weserv.nl,🎯 全球直连
+  - DOMAIN-SUFFIX,wsrv.nl,🎯 全球直连
+  - PROCESS-NAME,v2ray,🎯 全球直连
+  - PROCESS-NAME,xray,🎯 全球直连
+  - PROCESS-NAME,naive,🎯 全球直连
+  - PROCESS-NAME,trojan,🎯 全球直连
+  - PROCESS-NAME,trojan-go,🎯 全球直连
+  - PROCESS-NAME,ss-local,🎯 全球直连
+  - PROCESS-NAME,privoxy,🎯 全球直连
+  - PROCESS-NAME,leaf,🎯 全球直连
+  - PROCESS-NAME,v2ray.exe,🎯 全球直连
+  - PROCESS-NAME,xray.exe,🎯 全球直连
+  - PROCESS-NAME,naive.exe,🎯 全球直连
+  - PROCESS-NAME,trojan.exe,🎯 全球直连
+  - PROCESS-NAME,trojan-go.exe,🎯 全球直连
+  - PROCESS-NAME,ss-local.exe,🎯 全球直连
+  - PROCESS-NAME,privoxy.exe,🎯 全球直连
+  - PROCESS-NAME,leaf.exe,🎯 全球直连
+  - PROCESS-NAME,Surge,🎯 全球直连
+  - PROCESS-NAME,Surge 2,🎯 全球直连
+  - PROCESS-NAME,Surge 3,🎯 全球直连
+  - PROCESS-NAME,Surge 4,🎯 全球直连
+  - PROCESS-NAME,Surge%202,🎯 全球直连
+  - PROCESS-NAME,Surge%203,🎯 全球直连
+  - PROCESS-NAME,Surge%204,🎯 全球直连
+  - PROCESS-NAME,Thunder,🎯 全球直连
+  - PROCESS-NAME,DownloadService,🎯 全球直连
+  - PROCESS-NAME,qBittorrent,🎯 全球直连
+  - PROCESS-NAME,Transmission,🎯 全球直连
+  - PROCESS-NAME,fdm,🎯 全球直连
+  - PROCESS-NAME,aria2c,🎯 全球直连
+  - PROCESS-NAME,Folx,🎯 全球直连
+  - PROCESS-NAME,NetTransport,🎯 全球直连
+  - PROCESS-NAME,uTorrent,🎯 全球直连
+  - PROCESS-NAME,WebTorrent,🎯 全球直连
+  - PROCESS-NAME,aria2c.exe,🎯 全球直连
+  - PROCESS-NAME,BitComet.exe,🎯 全球直连
+  - PROCESS-NAME,fdm.exe,🎯 全球直连
+  - PROCESS-NAME,NetTransport.exe,🎯 全球直连
+  - PROCESS-NAME,qbittorrent.exe,🎯 全球直连
+  - PROCESS-NAME,Thunder.exe,🎯 全球直连
+  - PROCESS-NAME,ThunderVIP.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-daemon.exe,🎯 全球直连
+  - PROCESS-NAME,transmission-qt.exe,🎯 全球直连
+  - PROCESS-NAME,uTorrent.exe,🎯 全球直连
+  - PROCESS-NAME,WebTorrent.exe,🎯 全球直连
+  - DOMAIN,steamstore-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,steamcdn-a.akamaihd.net,🎯 全球直连
+  - DOMAIN,api.steampowered.com,🎯 全球直连
+  - DOMAIN,store.steampowered.com,🎯 全球直连
+  - DOMAIN,clash.razord.top,🎯 全球直连
+  - DOMAIN,yacd.haishan.me,🎯 全球直连
+  - DOMAIN,www.biqugeu.net,🌍 国外加速
+  - DOMAIN,www.cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,diyibanzhu,🌍 国外加速
+  - DOMAIN-SUFFIX,cool18.com,🌍 国外加速
+  - DOMAIN-KEYWORD,cunhua,🌍 国外加速
+  - RULE-SET,自定义广告白名单,🎯 全球直连
+  - RULE-SET,自定义广告拦截,🛑 全球拦截
+  - RULE-SET,adblock,🛑 全球拦截
+  - IP-CIDR,0.0.0.0/32,🛑 全球拦截
+  - RULE-SET,MetaCubeX-cn-domain,🎯 全球直连
+  - GEOIP,private,🎯 全球直连,no-resolve
+  - GEOIP,JP,🌍 国外加速
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,ChinaCompanyIp,🎯 全球直连
+  - RULE-SET,ChinaDomain,🎯 全球直连
+  - RULE-SET,ChinaMedia,🎯 全球直连
+  - RULE-SET,ChinaIp,🎯 全球直连
+  - RULE-SET,LocalAreaNetwork,🎯 全球直连
+  - DOMAIN-SUFFIX,cn,🎯 全球直连
+  - DOMAIN-KEYWORD,-cn,🎯 全球直连
+  - RULE-SET,region,🌍 国外加速
+  - RULE-SET,direct,🎯 全球直连
+  - RULE-SET,direct2,🎯 全球直连
+  - RULE-SET,ProxyGFWlist,🌍 国外加速
+  - RULE-SET,telegramcidr,📲 电报信息
+  - GEOIP,CN,🎯 全球直连
+  - RULE-SET,proxy,🌍 国外加速
+  - MATCH,🐟 漏网之鱼
